@@ -535,12 +535,10 @@ public class KeyEventBox : EventBox{
 			 int modi = winMain.active_modifier[4]*winMain.MODIFIER_MASK[4]
 								+ winMain.active_modifier[5]*winMain.MODIFIER_MASK[5];
 		   if( ks < 1 ) return false;
-		   this.cmd = @"./keysend/keysend $(ks) $(modi)";
-		   GLib.stdout.printf("%s\n", this.cmd);
-		   Posix.system( this.cmd ); 
-		    return false;
-		    });
 
+			 keysend(ks,modi);
+		   return false;
+		});
 	}
 
 	public KeyEventBox.modifier(NeoWindow winMain, int width, int height , int modifier_index ){

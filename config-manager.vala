@@ -5,9 +5,11 @@ namespace NeoLayoutViewer{
 				//public Gee.HashMap<string,string> config = new Gee.HashMax<string,string>();
 				//public Gee.HashMap<string,string> config { get; set; default = new Gee.HashMap<string, string>();};
 				public Gee.HashMap<string,string> config;// { get; set; };
+				private Gee.HashMap<string,string> description;// allows to comment config entrys. 
 
 						public ConfigManager(string conffile) {
 								this.config =  new Gee.HashMap<string, string>();
+								this.description =  new Gee.HashMap<string, string>();
 
 								//add defaults values, if key not set in the config file
 								add_defaults();
@@ -30,19 +32,27 @@ namespace NeoLayoutViewer{
 							Standardwerte der Einstellungen. Sie werden in eine Konfigurationsdatei geschrieben, falls
 							diese Datei nicht vorhanden ist.
 						*/
+
+						private void addSetting(string name, string val, string? comment){
+							config.set(name, val);
+							if( comment != null )
+								description.set(name, comment);
+						}
+
 						public void add_defaults(){
-										//config.set("show_shortcut","<Mod4><Super_L>N");
-										config.set("show_shortcut","<Ctrl><Alt>N");
-										config.set("on_top","1");
-									  config.set("position","5");
-									  config.set("width","1000");//Skalierung, sofern wert zwischen width(resolution)*max_width und width(resolution)*min_width
-									  config.set("min_width","0.25");//Relativ zur Auflösung
-									  config.set("max_width","0.5");//Relativ zur Auflösung
-									  //config.set("move_shortcut","<Mod4><Super_L>R");
-									  config.set("move_shortcut","<Ctrl><Alt>R");
-									  //config.set("position_cycle","3 3 9 1 3 9 1 7 7");
-									  config.set("position_cycle","2 3 6 1 3 9 4 7 8");
-										config.set("display_numblock","1");
+										//config.set("show_shortcut","<Mod4><Super_L>N", "Toggle the visibility of the window.");
+										addSetting("show_shortcut","<Ctrl><Alt>Q", "Toggle the visibility of the window.");
+										addSetting("on_top","1", "Show window on top.");
+									  addSetting("position","3", "Window position on startup (num pad orientation)");
+									  addSetting("width","1000","With in Pixel. Min_width and max_width bound sensible values. ");//Skalierung, sofern wert zwischen width(resolution)*max_width und width(resolution)*min_width
+									  addSetting("min_width","0.25", "Minimal width. 1=full screen width");//Relativ zur Auflösung
+									  addSetting("max_width","0.5", "Minimal height. 1=full screen height");//Relativ zur Auflösung
+									  //addSetting("move_shortcut","<Mod4><Super_L>R", "Circle the window posisition");
+									  addSetting("move_shortcut","<Ctrl><Alt>N", "Circle the window posisition");
+									  //addSetting("position_cycle","3 3 9 1 3 9 1 7 7", "List of positions (num pad orientation)");
+									  addSetting("position_cycle","2 3 6 1 3 9 4 7 8", "List of positions (num pad orientation)");
+										addSetting("display_numblock","1", null);
+										addSetting("window_selectable","1","To use the keyboard window as virtual keyboard, disable this entry.");
 						}
 
 						/*
@@ -79,6 +89,9 @@ namespace NeoLayoutViewer{
 										data_stream.put_string ("on_top=1\n");
 										*/
 										foreach( Gee.Map.Entry<string, string> e in this.config.entries){
+											if( this.description.has_key(e.key) ){
+												data_stream.put_string ( "# "+ this.description.get(e.key) +"\n" );
+											}
 											data_stream.put_string ( e.key+" = "+e.value+"\n" );
 										}
 									 } // Streams 
