@@ -46,10 +46,10 @@ namespace NeoLayoutViewer{
 
 						private void about_clicked() {
 								var about = new AboutDialog();
-								about.set_version("0.0.1");
+								about.set_version("0.21");
 								about.set_program_name("Neo2.0 Ebenenanzeige");
-								about.set_comments("Erleichtert das Nachschlagen von Tastenkombinationen.\n\n Olaf Schulz\n schulz-AT-math.hu-berlin.de ");
-								about.set_copyright("GPLv?");
+								about.set_comments("Erleichtert das Nachschlagen von Tastenkombinationen.\n\n Olaf Schulz\n yggtrash-AT-googlemail.com ");
+								about.set_copyright("GPLv3");
 								about.run();
 								about.hide();
 						}

@@ -31,13 +31,15 @@ namespace NeoLayoutViewer{
 							diese Datei nicht vorhanden ist.
 						*/
 						public void add_defaults(){
-										config.set("show_shortcut","<Mod4><Super_L>N");
+										//config.set("show_shortcut","<Mod4><Super_L>N");
+										config.set("show_shortcut","<Ctrl><Alt>N");
 										config.set("on_top","1");
 									  config.set("position","5");
 									  config.set("width","1000");//Skalierung, sofern wert zwischen width(resolution)*max_width und width(resolution)*min_width
 									  config.set("min_width","0.25");//Relativ zur Auflösung
 									  config.set("max_width","0.5");//Relativ zur Auflösung
-									  config.set("move_shortcut","<Mod4><Super_L>R");
+									  //config.set("move_shortcut","<Mod4><Super_L>R");
+									  config.set("move_shortcut","<Ctrl><Alt>R");
 									  //config.set("position_cycle","3 3 9 1 3 9 1 7 7");
 									  config.set("position_cycle","2 3 6 1 3 9 4 7 8");
 										config.set("display_numblock","1");
