@@ -1,0 +1,4 @@
+4182c4182
+< 		public weak GLib.List children;
+---
+> 		public weak GLib.List<TableChild> children;

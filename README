@@ -1,0 +1,9 @@
+
+
+
+Errors:
+
+Not all keysyms found. make returns i.e.
+[..]/key-overlay.c:1744: error: ‘XK_logicalor’ undeclared (first use in this function)
+
+Solution: define all groups in /etc/include/X11/keysym.def. I.e. add “#define XK_TECHNICAL“.
