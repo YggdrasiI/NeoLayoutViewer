@@ -235,7 +235,7 @@ namespace NeoLayoutViewer{
 		}
 
 		public Gdk.Pixbuf open_image (int ebene) {
-			var bildpfad = "assets/neo2.1/tastatur_neo_Ebene%i.png".printf(ebene);
+			var bildpfad = "assets/neo2.0/tastatur_neo_Ebene%i.png".printf(ebene);
 			return open_image_str(bildpfad);
 			//return new Image_from_pixpuf(open_image_str(bildpfad));
 		}
