@@ -123,7 +123,7 @@ namespace NeoLayoutViewer{
 								keysyms.set(88, new ArrayBox({XK_KP_2, 0, XK_downarrow, XK_union, XK_KP_Down, XK_KP_Down, 0}));
 								keysyms.set(89, new ArrayBox({XK_KP_3, 0, 0, XK_greaterthanequal, XK_KP_Next, XK_KP_Next, 0}));
 								keysyms.set(90, new ArrayBox({XK_KP_0, 0, XK_percent, 0, XK_KP_Insert, XK_KP_Insert, 0}));
-								keysyms.set(91, new ArrayBox({XK_KP_Decimal, XK_comma, XK_period, XK_apostrophe, XK_KP_Delete, XK_KP_Delete, XK_quotedbl}));
+								keysyms.set(91, new ArrayBox({XK_comma, XK_KP_Decimal, XK_period, XK_apostrophe, XK_KP_Delete, XK_KP_Delete, XK_quotedbl}));
 								keysyms.set(92, new ArrayBox({XK_ISO_Level3_Shift, 0, XK_ISO_Level3_Shift}));
 								keysyms.set(93, new ArrayBox({XK_Zenkaku_Hankaku, 0, XK_Zenkaku_Hankaku}));
 								keysyms.set(94, new ArrayBox({XK_ISO_Level5_Shift, 0, XK_ISO_Level5_Shift}));
@@ -340,10 +340,16 @@ scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scal
 scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 21 , false, winMain, hboxes[0], 0);
 
 				if( winMain.config.get("display_numblock")!="0" ){
-
+					scaledBox(78.0-1.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 22 , false, winMain, hboxes[0], 0);
+								//free space
+								scaledBox(174.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[0], 3);
+								//num key, divide, times, and minus
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 77 , false, winMain, hboxes[0], 0);
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 106 , false, winMain, hboxes[0], 0);
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 63 , false, winMain, hboxes[0], 0);
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 82 , true, winMain, hboxes[0], 0);
 				}else{
-
-scaledBox(78.0-1.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 22 , true, winMain, hboxes[0], 0);
+					scaledBox(78.0-1.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 22 , true, winMain, hboxes[0], 0);
 				}
 				//Reset right shift. 
 				posXUnscaled = 0.0;
@@ -363,8 +369,22 @@ scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scal
 scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 33 , false, winMain, hboxes[1], 0);
 scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 34 , false, winMain, hboxes[1], 0);
 scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 35 , false, winMain, hboxes[1], 0);
-//Halve of Return/Enter
-scaledBox(62.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 36 , true, winMain, hboxes[1], 0);
+
+if( winMain.config.get("display_numblock")!="0" ){
+								//Halve of Return/Enter
+								scaledBox(62.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 36 , false, winMain, hboxes[1], 0);
+								//free space
+								scaledBox(174.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[1], 3);
+								//7, 8, 9, and halve of plus
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 79 , false, winMain, hboxes[1], 0);
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 80 , false, winMain, hboxes[1], 0);
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 81 , false, winMain, hboxes[1], 0);
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 86 , true, winMain, hboxes[1], 0);
+				}else{
+								//Halve of Return/Enter
+								scaledBox(62.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 36 , true, winMain, hboxes[1], 0);
+				}
+
 		//Reset right shift. 
 		posXUnscaled = 0.0;
 		posX = 0;
@@ -386,8 +406,22 @@ scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scal
 scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 48 , false, winMain, hboxes[2], 0);
 //right mod3
 scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 2/*51*/ , false, winMain, hboxes[2], 1);
-//Second halve of Enter/Return
-scaledBox(49.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 36 , true, winMain, hboxes[2], 0);
+
+if( winMain.config.get("display_numblock")!="0" ){
+								//Second halve of Enter/Return
+								scaledBox(49.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 36 , false, winMain, hboxes[2], 0);
+								//free space
+								scaledBox(174.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[2], 3);
+								//4, 5, 6, and halve of plus
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 83 , false, winMain, hboxes[2], 0);
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 84 , false, winMain, hboxes[2], 0);
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 85 , false, winMain, hboxes[2], 0);
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 86 , true, winMain, hboxes[2], 0);
+				}else{
+								//Second halve of Enter/Return
+								scaledBox(49.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 36 , true, winMain, hboxes[2], 0);
+				}
+
 		//Reset right shift. 
 		posXUnscaled = 0.0;
 		posX = 0;
@@ -407,8 +441,20 @@ scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scal
 scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 59 , false, winMain, hboxes[3], 0);
 scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 60 , false, winMain, hboxes[3], 0);
 scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 61 , false, winMain, hboxes[3], 0);
-//right shift
-scaledBox(114.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 1 /*62*/ , true, winMain, hboxes[3], 1);
+if( winMain.config.get("display_numblock")!="0" ){
+								//right shift
+								scaledBox(114.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 1 /*62*/ , false, winMain, hboxes[3], 1);
+								//free space
+								scaledBox(174.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[3], 3);
+								//1, 2, 3, and halve of enter 
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 87 , false, winMain, hboxes[3], 0);
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 88 , false, winMain, hboxes[3], 0);
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 89 , false, winMain, hboxes[3], 0);
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 104 , true, winMain, hboxes[3], 0);
+				}else{
+								//right shift
+								scaledBox(114.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 1 /*62*/ , true, winMain, hboxes[3], 1);
+				}
 		//Reset right shift. 
 		posXUnscaled = 0.0;
 		posX = 0;
@@ -426,15 +472,27 @@ scaledBox(316.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, sca
 scaledBox(61.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 3/*94*/ , false, winMain, hboxes[4], 1);
 //free space
 scaledBox(40.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[4], 3);
-// right ctrl
-scaledBox(61.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 4/*105*/ , false, winMain, hboxes[4], 2);
+
+if( winMain.config.get("display_numblock")!="0" ){
+								// right ctrl
+								scaledBox(61.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 4/*105*/ , false, winMain, hboxes[4], 2);
+								//free space
+								scaledBox(174.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[4], 3);
+								//0, comma, and halve of enter 
+								scaledBox(88.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 90 , false, winMain, hboxes[4], 0);
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 91 , false, winMain, hboxes[4], 0);
+								scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 104 , false, winMain, hboxes[4], 0);
+				}else{
+								// right ctrl
+								scaledBox(61.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 4/*105*/ , false, winMain, hboxes[4], 2);
+				}
 
 //++ End fivth row ++
 		}
 
 
  /*
- Gibt scalierte EventBox zurück. Damit sich die Rundungfehler durch int-Cast nicht aufzusummieren,
+ Gibt skalierte EventBox zurück. Damit sich die Rundungfehler durch int-Cast nicht aufzusummieren,
  basieren die Werte auf der bis zu diesem Zeitpunkt zu erwartenden Gesamtbreite/höhe.
 */
          private KeyEventBox scaledBox(double widthUnscaled, double heightUnscaled,
