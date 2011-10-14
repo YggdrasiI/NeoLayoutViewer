@@ -24,31 +24,31 @@ namespace NeoLayoutViewer{
 		public int[] NEO_MODIFIER_MASK;
 		public int[] MODIFIER_MASK;
 
-//		/* Modifier-codes für CTLR, ALT, ... */
-//		public int[] OTHER_MODIFIER_MASK;
+		//		/* Modifier-codes für CTLR, ALT, ... */
+		//		public int[] OTHER_MODIFIER_MASK;
 
-/* Die Keycodes von ShiftL, ShiftR, Mod3 (Alt Gr,<) und Mod4 (CapsLock, #)... in der Uni schon mal keine Übereinstimmung*/
+		/* Die Keycodes von ShiftL, ShiftR, Mod3 (Alt Gr,<) und Mod4 (CapsLock, #)... in der Uni schon mal keine Übereinstimmung*/
 		//private int[] MODIFIER_KEY_CODES = {65505,65506,65027,65041};//home
 		//private int[] MODIFIER_KEY_CODES = {65505,65506,65406,65027};//uni
 
-/* Falls ein Modifier (oder eine andere Taste) gedrückt wird und schon Modifier gedrückt sind, gibt die Map an, welche Ebene dann aktiviert ist. */
+		/* Falls ein Modifier (oder eine andere Taste) gedrückt wird und schon Modifier gedrückt sind, gibt die Map an, welche Ebene dann aktiviert ist. */
 		private short[,] MODIFIER_MAP = {
 			{0,1,2,3,4,5},
 			{1,1,4,3,4,5},
 			{2,4,2,5,4,5},
 			{3,3,5,3,4,5} };
 
-  /* [0,1]^3->{0,5}, Bildet aktive Modifier auf angezeigte Ebene ab.
-  Interpretationsreihenfolge der Dimensionen: Shift,Neo-Mod3, Neo-Mod4. */
+		/* [0,1]^3->{0,5}, Bildet aktive Modifier auf angezeigte Ebene ab.
+			 Interpretationsreihenfolge der Dimensionen: Shift,Neo-Mod3, Neo-Mod4. */
 		private short[,,] MODIFIER_MAP2 = {
-		  { {0 , 3}, {2 , 5 } },  // 000, 001; 010, 011
-		  { {1 , 3}, {4 , 5}}	  // 100, 101; 110, 111
+			{ {0 , 3}, {2 , 5 } },  // 000, 001; 010, 011
+			{ {1 , 3}, {4 , 5}}	  // 100, 101; 110, 111
 		};
 
-/* Analog zu oben für den Fall, dass eine Taste losgelassen wird. Funktioniert nicht immer.
-   Ist beispielsweise ShiftL und ShiftR gedrückt und eine wird losgelassen, so wechelt die Anzeige zur ersten Ebene.
-   Die Fehler sind imo zu vernachlässigen.
-*/
+		/* Analog zu oben für den Fall, dass eine Taste losgelassen wird. Funktioniert nicht immer.
+			 Ist beispielsweise ShiftL und ShiftR gedrückt und eine wird losgelassen, so wechelt die Anzeige zur ersten Ebene.
+			 Die Fehler sind imo zu vernachlässigen.
+		 */
 		private short[,] MODIFIER_MAP_RELEASE = {
 			{0,0,0,0,0,0},
 			{0,0,2,3,2,5},
@@ -58,7 +58,7 @@ namespace NeoLayoutViewer{
 		public NeoWindow (string sebene, Gee.HashMap<string, string> config) {
 			this.config = config;
 			this.minimized = true;
-			
+
 			this.NEO_MODIFIER_MASK = {
 				0,
 				Gdk.ModifierType.SHIFT_MASK, //1
@@ -68,31 +68,31 @@ namespace NeoLayoutViewer{
 				Gdk.ModifierType.MOD5_MASK+Gdk.ModifierType.LOCK_MASK+Gdk.ModifierType.MOD3_MASK //128+2+32
 			};
 			/*
-			this.OTHER_MODIFIER_MASK = {
-			  Gdk.ModifierType.CONTROL_MASK,
-			  Gdk.ModifierType.MOD1_MASK
-			};*/
+				 this.OTHER_MODIFIER_MASK = {
+				 Gdk.ModifierType.CONTROL_MASK,
+				 Gdk.ModifierType.MOD1_MASK
+				 };*/
 			this.MODIFIER_MASK = {
-			  0,
-			  Gdk.ModifierType.SHIFT_MASK, //1
-			  Gdk.ModifierType.MOD5_MASK,//128
-			  Gdk.ModifierType.MOD3_MASK, //32
-			  Gdk.ModifierType.CONTROL_MASK,
-			  Gdk.ModifierType.MOD1_MASK // Alt-Mask do not work :-(
+				0,
+				Gdk.ModifierType.SHIFT_MASK, //1
+				Gdk.ModifierType.MOD5_MASK,//128
+				Gdk.ModifierType.MOD3_MASK, //32
+				Gdk.ModifierType.CONTROL_MASK,
+				Gdk.ModifierType.MOD1_MASK // Alt-Mask do not work :-(
 			};
 			this.active_modifier = {0,0,0,0,0,0};
 
 			this.position_num = int.max(int.min(int.parse(config.get("position")),9),1);
 			//Anlegen des Arrays, welches den Positionsdurchlauf beschreibt.
 			try{
-							var space = new Regex(" ");
-							string[] split = space.split(config.get("position_cycle"));
-							position_cycle = new int[int.max(9,split.length)];
-							for(int i=0;i<split.length;i++){
-								position_cycle[i] = int.max(int.min(int.parse(split[i]),9),1);//Zulässiger Bereich: 1-9
-							}
+				var space = new Regex(" ");
+				string[] split = space.split(config.get("position_cycle"));
+				position_cycle = new int[int.max(9,split.length)];
+				for(int i=0;i<split.length;i++){
+					position_cycle[i] = int.max(int.min(int.parse(split[i]),9),1);//Zulässiger Bereich: 1-9
+				}
 			} catch (RegexError e) {
-					position_cycle = {3,3,9,1,3,9,1,7,7};
+				position_cycle = {3,3,9,1,3,9,1,7,7};
 			}
 
 
@@ -123,11 +123,11 @@ namespace NeoLayoutViewer{
 			//this.move(-100,-100);
 			/*GdkGeometry size_hints = {
 				100, 50, 0, 0, 100, 50, 10, 10, 0.0, 0.0, GDK_GRAVITY_NORTH_WEST
-			};
+				};
 
-			gtk_window_set_geometry_hints (GTK_WINDOW (this), this, &size_hints,
-					GDK_HINT_MIN_SIZE |  GDK_HINT_BASE_SIZE |  GDK_HINT_RESIZE_INC);
-			*/
+				gtk_window_set_geometry_hints (GTK_WINDOW (this), this, &size_hints,
+				GDK_HINT_MIN_SIZE |  GDK_HINT_BASE_SIZE |  GDK_HINT_RESIZE_INC);
+			 */
 			//this.window_position = WindowPosition.CENTER;
 
 			//this.default_height = int.parse( config.get("height") );
@@ -149,35 +149,35 @@ namespace NeoLayoutViewer{
 			this.set_accept_focus( (config.get("window_selectable")!="0") );
 		}
 
-			public override void show_all(){
-				this.minimized = false;
-				base.show_all();
-				//this.present();
-				//set_visible(true);
-				this.numkeypad_move(this.position_num);
+		public override void show_all(){
+			this.minimized = false;
+			base.show_all();
+			//this.present();
+			//set_visible(true);
+			this.numkeypad_move(this.position_num);
 
-				if( config.get("on_top")=="1")
-					this.set_keep_above(true);
-				else
-					this.present();
-			}
+			if( config.get("on_top")=="1")
+				this.set_keep_above(true);
+			else
+				this.present();
+		}
 
-			public override void hide_all(){
-				this.minimized = true;
-				base.hide_all();
-				//set_visible(false);
-			}
+		public override void hide_all(){
+			this.minimized = true;
+			base.hide_all();
+			//set_visible(false);
+		}
 
-			public bool toggle(){
-				if(this.minimized) show_all();
-				else hide_all();
-				return this.minimized;
-			}
+		public bool toggle(){
+			if(this.minimized) show_all();
+			else hide_all();
+			return this.minimized;
+		}
 
 		/* Falsche Werte bei „Tiled Window Managern“. */
-	        public void get_size2(out int width, out int height){
-				width = this.image_buffer[1].width;
-				height = this.image_buffer[1].height;
+		public void get_size2(out int width, out int height){
+			width = this.image_buffer[1].width;
+			height = this.image_buffer[1].height;
 		}
 
 		public void numkeypad_move(int pos){
@@ -187,7 +187,7 @@ namespace NeoLayoutViewer{
 			this.get_size(out w,out h);
 
 			switch (pos){
-			  case 0: //Zur nächsten Position wechseln
+				case 0: //Zur nächsten Position wechseln
 					numkeypad_move(this.position_cycle[this.position_num-1]);
 					return;
 				case 7:
@@ -222,13 +222,13 @@ namespace NeoLayoutViewer{
 					x = (screen_width-w)/2;
 					y = screen_height-h;
 					break;
-				//case 3:	//=default case
-				//		;
+					//case 3:	//=default case
+					//		;
 				default:
 					x = screen_width-w;
 					y = screen_height-h;
 					break;
-				}
+			}
 
 			this.position_num = pos;
 			this.move(x,y);
@@ -273,7 +273,7 @@ namespace NeoLayoutViewer{
 				//Bilder einmaling beim Laden skalieren. (Keine spätere Skalierung durch Größenänderung des Fensters)
 				w = this.image_buffer[i].width;
 				h = this.image_buffer[i].height;
-					this.image_buffer[i] = this.image_buffer[i].scale_simple(width, h*width/w,Gdk.InterpType.BILINEAR);
+				this.image_buffer[i] = this.image_buffer[i].scale_simple(width, h*width/w,Gdk.InterpType.BILINEAR);
 			}
 		}
 
@@ -296,32 +296,32 @@ namespace NeoLayoutViewer{
 				}
 			}
 			/*else{
-				//Finde die aktuelle Taste und die derzeit gedrückten Modifier
-				int iet1 = 0;
-				int iet2 = 0;
-debug("%u".printf(key.keyval));
-				if( key.keyval == MODIFIER_KEY_CODES[0] || key.keyval == MODIFIER_KEY_CODES[1]){
-					iet1=1;
-				}else if( key.keyval == MODIFIER_KEY_CODES[2]){
-					iet1=2;
-				}else if( key.keyval == MODIFIER_KEY_CODES[3]){
-					iet1=3;
-				}
+			//Finde die aktuelle Taste und die derzeit gedrückten Modifier
+			int iet1 = 0;
+			int iet2 = 0;
+			debug("%u".printf(key.keyval));
+			if( key.keyval == MODIFIER_KEY_CODES[0] || key.keyval == MODIFIER_KEY_CODES[1]){
+			iet1=1;
+			}else if( key.keyval == MODIFIER_KEY_CODES[2]){
+			iet1=2;
+			}else if( key.keyval == MODIFIER_KEY_CODES[3]){
+			iet1=3;
+			}
 
-				for(int i=0; i<6; i++){
-					if( key.state == NEO_MODIFIER_MASK[i]){
-						iet2=i;
-						break;
-					}
-				}
+			for(int i=0; i<6; i++){
+			if( key.state == NEO_MODIFIER_MASK[i]){
+			iet2=i;
+			break;
+			}
+			}
 
-				iet1 =  this.MODIFIER_MAP[iet1,iet2]+1;
-				check_modifier(iet1);
+			iet1 =  this.MODIFIER_MAP[iet1,iet2]+1;
+			check_modifier(iet1);
 			}*/
 
-/*
-stdout.printf("Aktuell: %i  \nModifierids: %i %i %i %i\n %i %i %i %i \n %i %i %i %i %i\n\n",
-key.state, Gdk.ModifierType.SHIFT_MASK, Gdk.ModifierType.LOCK_MASK, Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.SUPER_MASK, Gdk.ModifierType.HYPER_MASK, Gdk.ModifierType.META_MASK, Gdk.ModifierType.RELEASE_MASK, Gdk.ModifierType.MODIFIER_MASK, Gdk.ModifierType.MOD1_MASK, Gdk.ModifierType.MOD2_MASK, Gdk.ModifierType.MOD3_MASK, Gdk.ModifierType.MOD4_MASK, Gdk.ModifierType.MOD5_MASK);*/
+			/*
+				 stdout.printf("Aktuell: %i  \nModifierids: %i %i %i %i\n %i %i %i %i \n %i %i %i %i %i\n\n",
+				 key.state, Gdk.ModifierType.SHIFT_MASK, Gdk.ModifierType.LOCK_MASK, Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.SUPER_MASK, Gdk.ModifierType.HYPER_MASK, Gdk.ModifierType.META_MASK, Gdk.ModifierType.RELEASE_MASK, Gdk.ModifierType.MODIFIER_MASK, Gdk.ModifierType.MOD1_MASK, Gdk.ModifierType.MOD2_MASK, Gdk.ModifierType.MOD3_MASK, Gdk.ModifierType.MOD4_MASK, Gdk.ModifierType.MOD5_MASK);*/
 
 
 			return false;
@@ -329,20 +329,20 @@ key.state, Gdk.ModifierType.SHIFT_MASK, Gdk.ModifierType.LOCK_MASK, Gdk.Modifier
 
 		private void check_modifier(int iet1){
 
-				if(iet1 != this.ebene){
-					this.ebene = iet1;
-					render_page ();
-				}
+			if(iet1 != this.ebene){
+				this.ebene = iet1;
+				render_page ();
+			}
 		}
 
 		public void redraw(){
-		  this.ebene = this.MODIFIER_MAP2[
-		      this.active_modifier[1], //shift
-		      this.active_modifier[2], //neo-mod3
-		      this.active_modifier[3] //neo-mod4
-		      ] + 1;
+			this.ebene = this.MODIFIER_MAP2[
+				this.active_modifier[1], //shift
+				this.active_modifier[2], //neo-mod3
+				this.active_modifier[3] //neo-mod4
+					] + 1;
 
-		  render_page();
+			render_page();
 		}
 
 
@@ -355,39 +355,39 @@ key.state, Gdk.ModifierType.SHIFT_MASK, Gdk.ModifierType.LOCK_MASK, Gdk.Modifier
 		}
 
 		public void external_key_press(int iet1, int modifier_mask){
-				for(int iet2=0; iet2<4; iet2++){
-					if(this.NEO_MODIFIER_MASK[iet2]==modifier_mask){
-//debug("(Press)  e1=%i, e2=%i\n".printf(iet1,iet2));
-						iet1 =  this.MODIFIER_MAP[iet1,iet2]+1;
-						this.check_modifier(iet1);
-						return;
-					}
+			for(int iet2=0; iet2<4; iet2++){
+				if(this.NEO_MODIFIER_MASK[iet2]==modifier_mask){
+					//debug("(Press)  e1=%i, e2=%i\n".printf(iet1,iet2));
+					iet1 =  this.MODIFIER_MAP[iet1,iet2]+1;
+					this.check_modifier(iet1);
+					return;
 				}
-				iet1 =  this.MODIFIER_MAP[iet1,0]+1;
-				this.check_modifier(iet1);
+			}
+			iet1 =  this.MODIFIER_MAP[iet1,0]+1;
+			this.check_modifier(iet1);
 		}
 
 		public void external_key_release(int iet1, int modifier_mask){
-				for(int iet2=0; iet2<4; iet2++){
-					if(this.NEO_MODIFIER_MASK[iet2]==modifier_mask){
-//debug("(Relase) e1=%i, e2=%i\n\n".printf(iet1,iet2));
-						iet1 =  this.MODIFIER_MAP_RELEASE[iet1,iet2]+1;
-						this.check_modifier(iet1);
-						return;
-					}
+			for(int iet2=0; iet2<4; iet2++){
+				if(this.NEO_MODIFIER_MASK[iet2]==modifier_mask){
+					//debug("(Relase) e1=%i, e2=%i\n\n".printf(iet1,iet2));
+					iet1 =  this.MODIFIER_MAP_RELEASE[iet1,iet2]+1;
+					this.check_modifier(iet1);
+					return;
 				}
+			}
 
-				iet1 =  this.MODIFIER_MAP_RELEASE[iet1,0]+1;
-				this.check_modifier(iet1);
+			iet1 =  this.MODIFIER_MAP_RELEASE[iet1,0]+1;
+			this.check_modifier(iet1);
 		}
 
 		/*public void updateLayer(int iet){
 			if( 0<iet && iet<7 && this.ebene==iet){
-				this.ebene = iet;
-				render_page();
+			this.ebene = iet;
+			render_page();
 			}
-		}*/
+			}*/
 
- } //End class NeoWindow
+	} //End class NeoWindow
 
 }
