@@ -46,9 +46,9 @@ namespace NeoLayoutViewer{
 
 		private void about_clicked() {
 			var about = new AboutDialog();
-			about.set_version("0.21");
+			about.set_version("0.25");
 			about.set_program_name("Neo2.0 Ebenenanzeige");
-			about.set_comments("Erleichtert das Nachschlagen von Tastenkombinationen.\n\n Olaf Schulz\n yggtrash-AT-googlemail.com ");
+			about.set_comments(@"Erleichtert das Nachschlagen von Tastenkombinationen im Neo 2.0-Layout.\n\n Olaf Schulz\n yggtrash-AT-googlemail.com\n\n\nTastenkombinationen:\n Beenden - q\n Ein-/Ausblenden - $(neo_win.config.get("show_shortcut"))\n Bewegen - $(neo_win.config.get("move_shortcut"))\n");
 			about.set_copyright("GPLv3");
 			about.run();
 			about.hide();

@@ -2,21 +2,25 @@ using X;
 
 namespace NeoLayoutViewer{
 
+	public NeoWindow neo_win;
+	public AppStatusIcon neo_tray;
+	public KeybindingManager manager;
+	public ConfigManager configm;
+
 	public static int main (string[] args) {
-		string sebene;
+		string slayer;
 		if( args.length<2) {
-			sebene="1";
+			slayer="1";
 		}else{
-			sebene=args[1];
+			slayer=args[1];
 		}
 
 		Gtk.init (ref args);
 
-		var configm = new ConfigManager("neo_layout_viewer.conf");
-
-		var neo_win = new NeoWindow (sebene, configm.getConfig());
-		var neo_tray = new AppStatusIcon(neo_win);
-		var manager = new KeybindingManager(neo_win);
+		configm = new ConfigManager("neo_layout_viewer.conf");
+		neo_win = new NeoWindow (slayer, configm.getConfig());
+		neo_tray = new AppStatusIcon(neo_win);
+		manager = new KeybindingManager(neo_win);
 
 		manager.bind(configm.getConfig().get("show_shortcut"), ()=>{neo_win.toggle();});
 		manager.bind(configm.getConfig().get("move_shortcut"), ()=>{neo_win.numkeypad_move(0);});
@@ -24,7 +28,7 @@ namespace NeoLayoutViewer{
 		//neo_win.show_all ();
 		//neo_win.hide_all();
 
-		//move window (Fehlerquelle: config von configm, nicht neo_win. Derzeit gleiches Objekt.)
+		//move window (Fehlerquelle: config von configm ist im allgemeinen nicht gleich neo_win.config?! Derzeit gleiches Objekt.)
 
 		Gtk.main ();
 

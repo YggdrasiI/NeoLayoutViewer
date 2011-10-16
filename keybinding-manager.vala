@@ -16,7 +16,6 @@ namespace NeoLayoutViewer{
 		 */
 		private Gee.List<Keybinding> bindings = new Gee.ArrayList<Keybinding>();
 		private Gee.List<ModifierKeybinding> modifier_bindings = new Gee.ArrayList<ModifierKeybinding>();
-		private Gee.List<ModifierKeybinding> modifier_timeout_store = new Gee.ArrayList<ModifierKeybinding>();
 		/**
 		 * locked modifiers used to grab all keys whatever lock key
 		 * is pressed.
@@ -272,7 +271,7 @@ namespace NeoLayoutViewer{
 			}
 
 			if(xevent->type == X.EventType.KeyPress) {
-				uint event_mods = xevent.xkey.state;
+				//uint event_mods = xevent.xkey.state;
 				foreach(ModifierKeybinding binding in modifier_bindings) {
 					if(xevent->xkey.keycode == binding.keycode) {
 						//neo_win.external_key_press(binding.ebene,(int)event_mods);
@@ -286,8 +285,7 @@ namespace NeoLayoutViewer{
 			}
 
 			if(xevent->type == X.EventType.KeyRelease) {
-				uint event_mods = xevent.xkey.state;
-
+				//uint event_mods = xevent.xkey.state;
 				foreach(ModifierKeybinding binding in modifier_bindings) {
 					if(xevent->xkey.keycode == binding.keycode) {
 						//neo_win.external_key_release(0,(int)event_mods);

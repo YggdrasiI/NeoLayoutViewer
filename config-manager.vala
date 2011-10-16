@@ -2,10 +2,8 @@
 namespace NeoLayoutViewer{
 	class ConfigManager {
 
-		//public Gee.HashMap<string,string> config = new Gee.HashMax<string,string>();
-		//public Gee.HashMap<string,string> config { get; set; default = new Gee.HashMap<string, string>();};
-		public Gee.HashMap<string,string> config;// { get; set; };
-		private Gee.HashMap<string,string> description;// allows to comment config entrys. 
+		public Gee.HashMap<string,string> config;
+		private Gee.HashMap<string,string> description;// allow optional commenting config entrys. 
 
 		public ConfigManager(string conffile) {
 			this.config =  new Gee.HashMap<string, string>();
@@ -28,17 +26,17 @@ namespace NeoLayoutViewer{
 			return config;
 		}
 
-		/*
-			 Standardwerte der Einstellungen. Sie werden in eine Konfigurationsdatei geschrieben, falls
-			 diese Datei nicht vorhanden ist.
-		 */
-
 		private void addSetting(string name, string val, string? comment){
 			config.set(name, val);
 			if( comment != null )
 				description.set(name, comment);
 		}
 
+		/*
+			 Standardwerte der Einstellungen. Sie werden in eine Konfigurationsdatei geschrieben, falls
+			 diese Datei nicht vorhanden ist.
+			 Standard values. This vaules will be written in the config file if no config file found.
+		 */
 		public void add_defaults(){
 			//config.set("show_shortcut","<Mod4><Super_L>N", "Toggle the visibility of the window.");
 			addSetting("show_shortcut","<Ctrl><Alt>Q", "Toggle the visibility of the window.");
