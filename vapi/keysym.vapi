@@ -2,7 +2,20 @@
 
 [CCode (cprefix = "NeoLayoutViewer", lower_case_cprefix = "neo_layout_viewer_")]
 namespace NeoLayoutViewer {
-	[CCode (cheader_filename = "main.h")]
+	[CCode (ref_function = "neo_layout_viewer_app_status_icon_ref", unref_function = "neo_layout_viewer_app_status_icon_unref", cheader_filename = "src/main.h")]
+	public class AppStatusIcon {
+		public Gtk.StatusIcon trayicon;
+		public AppStatusIcon (NeoLayoutViewer.NeoWindow neo_win);
+		public void create_menuMain ();
+	}
+	[CCode (ref_function = "neo_layout_viewer_config_manager_ref", unref_function = "neo_layout_viewer_config_manager_unref", cheader_filename = "src/main.h")]
+	public class ConfigManager {
+		public Gee.HashMap<string,string> config;
+		public ConfigManager (string conffile);
+		public void add_defaults ();
+		public Gee.HashMap<string,string> getConfig ();
+	}
+	[CCode (cheader_filename = "src/main.h")]
 	public class KeyEventBox : Gtk.EventBox {
 		public KeyEventBox (NeoLayoutViewer.NeoWindow winMain, int width, int height, ref uint[] keysym);
 		public KeyEventBox.freeArea (NeoLayoutViewer.NeoWindow winMain, int width, int height);
@@ -10,7 +23,7 @@ namespace NeoLayoutViewer {
 		public KeyEventBox.modifier2 (NeoLayoutViewer.NeoWindow winMain, int width, int height, int modifier_index);
 		public override void size_request (out Gtk.Requisition requisition);
 	}
-	[CCode (cheader_filename = "main.h")]
+	[CCode (cheader_filename = "src/main.h")]
 	public class KeyOverlay : Gtk.VBox {
 		public Gee.HashMap<int,NeoLayoutViewer.KeyEventBox> keyBoxes;
 		public Gee.HashMap<int,NeoLayoutViewer.ArrayBox> keysyms;
@@ -18,18 +31,16 @@ namespace NeoLayoutViewer {
 		public void generateKeyevents ();
 		public Gee.HashMap<int,NeoLayoutViewer.ArrayBox> generateKeysyms ();
 	}
-	[CCode (cheader_filename = "main.h")]
+	[CCode (cheader_filename = "src/main.h")]
 	public class KeybindingManager : GLib.Object {
-		[CCode (cheader_filename = "main.h")]
+		[CCode (cheader_filename = "src/main.h")]
 		public delegate void KeybindingHandlerFunc (Gdk.Event event);
 		public KeybindingManager (NeoLayoutViewer.NeoWindow neo_win);
 		public void bind (string accelerator, NeoLayoutViewer.KeybindingManager.KeybindingHandlerFunc handler);
-		public void bind2 (int keycode, string accelerator, int ebene, NeoLayoutViewer.KeybindingManager.KeybindingHandlerFunc handler);
 		public Gdk.FilterReturn event_filter (Gdk.XEvent gdk_xevent, Gdk.Event gdk_event);
 		public void unbind (string accelerator);
-		public void unbind2 (int keycode);
 	}
-	[CCode (cheader_filename = "main.h")]
+	[CCode (cheader_filename = "src/main.h")]
 	public class NeoWindow : Gtk.Window {
 		public int[] MODIFIER_MASK;
 		public int[] NEO_MODIFIER_MASK;
@@ -55,6 +66,14 @@ namespace NeoLayoutViewer {
 		public override void show_all ();
 		public bool toggle ();
 	}
-	[CCode (cheader_filename = "main.h")]
+	[CCode (cheader_filename = "src/main.h")]
+	public static NeoLayoutViewer.ConfigManager configm;
+	[CCode (cheader_filename = "src/main.h")]
+	public static NeoLayoutViewer.KeybindingManager manager;
+	[CCode (cheader_filename = "src/main.h")]
+	public static NeoLayoutViewer.AppStatusIcon neo_tray;
+	[CCode (cheader_filename = "src/main.h")]
+	public static NeoLayoutViewer.NeoWindow neo_win;
+	[CCode (cheader_filename = "src/main.h")]
 	public static int main (string[] args);
 }

@@ -321,7 +321,7 @@ namespace NeoLayoutViewer{
 			int posX = 0;
 			int posY = 0;
 
-			GLib.stdout.printf(@"$winWidthUnscaled , $width , $scaleX\n");
+			//GLib.stdout.printf(@"$winWidthUnscaled , $width , $scaleX\n");
 
 			//++ Top row ++
 			scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 49, false, winMain, hboxes[0], 0);
@@ -584,7 +584,7 @@ namespace NeoLayoutViewer{
 			this.all(winMain, width, height);
 			this.keysym = keysym;
 
-			GLib.stdout.printf("Ww: %i, Wh: %i\n", width, height);
+			//GLib.stdout.printf("Ww: %i, Wh: %i\n", width, height);
 
 			this.button_press_event.connect ((event) => {
 					uint ks = this.keysym[this.layer_permutation[winMain.ebene]-1];
@@ -654,7 +654,7 @@ namespace NeoLayoutViewer{
 			requisition.width = width ;// / Pango.SCALE;
 			requisition.height = height; // /  Pango.SCALE;
 
-			GLib.stdout.printf("W: %i, H: %i, Sc: %f\n",width, height, Pango.SCALE);
+			//GLib.stdout.printf("W: %i, H: %i, Sc: %f\n",width, height, Pango.SCALE);
 		}
 
 

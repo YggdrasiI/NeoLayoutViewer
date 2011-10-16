@@ -2,7 +2,7 @@ using Gtk;
 
 namespace NeoLayoutViewer{
 
-	class AppStatusIcon {
+	public class AppStatusIcon {
 		public StatusIcon trayicon;
 		private Menu menuMain;
 		private NeoWindow neo_win;

@@ -1,6 +1,6 @@
 
 namespace NeoLayoutViewer{
-	class ConfigManager {
+	public class ConfigManager {
 
 		public Gee.HashMap<string,string> config;
 		private Gee.HashMap<string,string> description;// allow optional commenting config entrys. 
@@ -38,8 +38,8 @@ namespace NeoLayoutViewer{
 			 Standard values. This vaules will be written in the config file if no config file found.
 		 */
 		public void add_defaults(){
-			//config.set("show_shortcut","<Mod4><Super_L>N", "Toggle the visibility of the window.");
-			addSetting("show_shortcut","<Ctrl><Alt>Q", "Toggle the visibility of the window.");
+			//config.set("show_shortcut","<Mod4><Super_L>n", "Toggle the visibility of the window.");
+			addSetting("show_shortcut","<Ctrl><Alt>q", "Toggle the visibility of the window.");
 			addSetting("on_top","1", "Show window on top.");
 			addSetting("position","3", "Window position on startup (num pad orientation)");
 			addSetting("width","1000","With in Pixel. Min_width and max_width bound sensible values. ");//Skalierung, sofern wert zwischen width(resolution)*max_width und width(resolution)*min_width
