@@ -13,7 +13,8 @@ namespace NeoLayoutViewer{
 		public Gee.HashMap<string, string> config;
 
 		public int ebene;
-		public int[] active_modifier;
+		public int[] active_modifier_by_keyboard;
+		public int[] active_modifier_by_mouse;
 		public int numblock_width;
 		//private Button button;
 		private bool minimized;
@@ -55,6 +56,17 @@ namespace NeoLayoutViewer{
 			{0,1,0,3,1,3},
 			{0,1,2,0,4,2} };
 
+		/*
+			Modifier können per Tastatur und Maus aktiviert werden. Diese Abbildung entscheidet,
+		*/
+		private short[,,,] MODIFIER_KEYBOARD_MOUSE_MAP = {
+		//		 k		=				f(k,m,K,M,) and m = f(m,k,M,K)
+			{ { {0, 0} , {1, 0} } ,	// 0000, 0001; 0010, 0011;
+				{ {0, 0} , {1, 1} } },	// 0100, 0101; 0110, 0111(=swap);
+			{ { {0, 0} , {1, 0} } , //1000, 1001; 1010, 1011(=swap);
+				{ {0, 0} , {1, 1} } }//1100, 1101; 1110, 1111; //k=m=1 should be impossible
+		};
+		
 		public NeoWindow (string sebene, Gee.HashMap<string, string> config) {
 			this.config = config;
 			this.minimized = true;
@@ -80,7 +92,8 @@ namespace NeoLayoutViewer{
 				Gdk.ModifierType.CONTROL_MASK,
 				Gdk.ModifierType.MOD1_MASK // Alt-Mask do not work :-(
 			};
-			this.active_modifier = {0,0,0,0,0,0};
+			this.active_modifier_by_keyboard = {0,0,0,0,0,0};
+			this.active_modifier_by_mouse = {0,0,0,0,0,0};
 
 			this.position_num = int.max(int.min(int.parse(config.get("position")),9),1);
 			//Anlegen des Arrays, welches den Positionsdurchlauf beschreibt.
@@ -113,7 +126,11 @@ namespace NeoLayoutViewer{
 			fixed.put( new KeyOverlay(this) , 0, 0);
 
 			this.status = new Label("");
-			fixed.put( status, 2, 2 );
+			int width; 
+			int height;
+			this.get_size2(out width, out height);
+			//bad position, if numblock not shown...
+			fixed.put( status, (int) ( (0.65)*width), (int) (0.40*height) );
 
 			//Fenstereigenschaften setzen
 			this.key_press_event.connect (on_key_pressed);
@@ -147,6 +164,7 @@ namespace NeoLayoutViewer{
 
 			//Nicht selektierbar (für virtuelle Tastatur)
 			this.set_accept_focus( (config.get("window_selectable")!="0") );
+			
 		}
 
 		public override void show_all(){
@@ -327,6 +345,59 @@ namespace NeoLayoutViewer{
 			return false;
 		}
 
+		/*
+			Use the for values 
+				- “modifier was pressed”
+				- “modifier is pressed”
+				- “modifier was seleted by mouseclick” and
+				- “modifier is seleted by mouseclick”
+			as array indizes to eval an new state.
+		*/
+		public void change_active_modifier(int mod_index, bool keyboard, int new_mod_state){
+			int old_mod_state;
+			if( keyboard ){
+				//Keypress or Release of shift etc.
+				old_mod_state = this.active_modifier_by_keyboard[mod_index]; 
+				this.active_modifier_by_keyboard[mod_index] = MODIFIER_KEYBOARD_MOUSE_MAP[
+					old_mod_state,
+					this.active_modifier_by_mouse[mod_index],
+					new_mod_state,
+					this.active_modifier_by_mouse[mod_index]
+				];
+				this.active_modifier_by_mouse[mod_index] = MODIFIER_KEYBOARD_MOUSE_MAP[
+					this.active_modifier_by_mouse[mod_index],
+					old_mod_state,
+					this.active_modifier_by_mouse[mod_index],
+					new_mod_state
+				];
+			}else{
+				//Mouseclick on shift button etc.
+				old_mod_state = this.active_modifier_by_mouse[mod_index]; 
+				this.active_modifier_by_mouse[mod_index] = MODIFIER_KEYBOARD_MOUSE_MAP[
+					old_mod_state,
+					this.active_modifier_by_keyboard[mod_index],
+					new_mod_state,
+					this.active_modifier_by_keyboard[mod_index]
+				];
+				this.active_modifier_by_keyboard[mod_index] = MODIFIER_KEYBOARD_MOUSE_MAP[
+					this.active_modifier_by_keyboard[mod_index],
+					old_mod_state,
+					this.active_modifier_by_keyboard[mod_index],
+					new_mod_state
+				];
+			}
+
+		}
+
+		public int getActiveModifierMask(int[] modifier){
+			int modMask = 0;
+			foreach( int i in modifier ){
+				modMask += ( this.active_modifier_by_keyboard[i] | this.active_modifier_by_mouse[i] )
+					*	this.MODIFIER_MASK[i];
+			}
+			return modMask;
+		}
+
 		private void check_modifier(int iet1){
 
 			if(iet1 != this.ebene){
@@ -336,13 +407,15 @@ namespace NeoLayoutViewer{
 		}
 
 		public void redraw(){
+			var tebene = this.ebene;
 			this.ebene = this.MODIFIER_MAP2[
-				this.active_modifier[1], //shift
-				this.active_modifier[2], //neo-mod3
-				this.active_modifier[3] //neo-mod4
+				this.active_modifier_by_keyboard[1] | this.active_modifier_by_mouse[1], //shift
+				this.active_modifier_by_keyboard[2] | this.active_modifier_by_mouse[2], //neo-mod3
+				this.active_modifier_by_keyboard[3] | this.active_modifier_by_mouse[3] //neo-mod4
 					] + 1;
 
-			render_page();
+			if( tebene != this.ebene)
+				render_page();
 		}
 
 

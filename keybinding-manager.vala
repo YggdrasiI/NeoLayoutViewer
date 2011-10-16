@@ -1,3 +1,5 @@
+using X;
+
 namespace NeoLayoutViewer{
 	/**
 	 * Modification of http://www.linux-nantes.org/~fmonnier/ocaml/Xlib/doc/Xlib.html by
@@ -6,11 +8,15 @@ namespace NeoLayoutViewer{
 	public class KeybindingManager : GLib.Object
 	{
 		private NeoWindow neo_win;
+		private unowned Gdk.Window rootwin;
+		private unowned X.Display* display = null;
+		private unowned X.ID xid; 
 		/**
 		 * list of binded keybindings
 		 */
 		private Gee.List<Keybinding> bindings = new Gee.ArrayList<Keybinding>();
 		private Gee.List<ModifierKeybinding> modifier_bindings = new Gee.ArrayList<ModifierKeybinding>();
+		private Gee.List<ModifierKeybinding> modifier_timeout_store = new Gee.ArrayList<ModifierKeybinding>();
 		/**
 		 * locked modifiers used to grab all keys whatever lock key
 		 * is pressed.
@@ -26,6 +32,9 @@ namespace NeoLayoutViewer{
 			Gdk.ModifierType.MOD2_MASK|Gdk.ModifierType.LOCK_MASK|Gdk.ModifierType.MOD5_MASK
 		};
 
+		private int modifier_keycodes[10];
+		//private bool modifier_pressed[10];//bad, because sizeof(bool,vala)!=sizeof(bool,c (stdbool.h))
+		private int modifier_pressed[10];
 
 		/**
 		 * Helper class to store keybinding
@@ -81,21 +90,36 @@ namespace NeoLayoutViewer{
 		{
 			this.neo_win = neo_win;
 			// init filter to retrieve X.Events
-			Gdk.Window rootwin = Gdk.get_default_root_window();
+			rootwin = Gdk.get_default_root_window();
 			if(rootwin != null) {
 				rootwin.add_filter(event_filter);
+				display = Gdk.x11_drawable_get_xdisplay(rootwin);
+				xid = Gdk.x11_drawable_get_xid(rootwin);
+
+				modifier_keycodes[0] = display->keysym_to_keycode(XK_Shift_L);
+				modifier_keycodes[1] = display->keysym_to_keycode(XK_Shift_R);
+				//modifier_keycodes[2] = keysym_to_keycode(XK_ISO_Level3_Shift);/* not both keys detectable on this way */
+				modifier_keycodes[2] = 66; //Mod3L can differ?!
+				modifier_keycodes[3] = 51; //Mod3R
+				modifier_keycodes[4] = 94; //Mod4L
+				modifier_keycodes[5] = 108;//Mod4R
+				modifier_keycodes[6] = display->keysym_to_keycode(XK_Control_L);
+				modifier_keycodes[7] = display->keysym_to_keycode(XK_Control_R);
+				modifier_keycodes[8] = display->keysym_to_keycode(XK_Alt_L);
+				modifier_keycodes[9] = display->keysym_to_keycode(XK_Alt_R);
+
+				//some tests
+				/*
+					 X.Display display = Gdk.x11_drawable_get_xdisplay(rootwin);
+					 X.ModifierKeymap modmap = display->get_modifier_mapping ();
+					 debug("Max mod: %i\n".printf(modmap.max_keypermod));
+					 for(int i=0; i<modmap.max_keypermod;i++){
+					 debug(modmap.modifiermap[i].to_string()+"\n");
+					 }*/
+
+				Timeout.add (100, modifier_timer);
+
 			}
-
-
-			//some tests
-			/*
-				 X.Display display = Gdk.x11_drawable_get_xdisplay(rootwin);
-				 X.ModifierKeymap modmap = display.get_modifier_mapping ();
-				 debug("Max mod: %i\n".printf(modmap.max_keypermod));
-				 for(int i=0; i<modmap.max_keypermod;i++){
-				 debug(modmap.modifiermap[i].to_string()+"\n");
-				 }*/
-
 		}
 
 		/**
@@ -113,10 +137,10 @@ namespace NeoLayoutViewer{
 			Gdk.ModifierType modifiers;
 			Gtk.accelerator_parse(accelerator, out keysym, out modifiers);
 
-			Gdk.Window rootwin = Gdk.get_default_root_window();
-			unowned X.Display display = Gdk.x11_drawable_get_xdisplay(rootwin);
-			X.ID xid = Gdk.x11_drawable_get_xid(rootwin);
-			int keycode = display.keysym_to_keycode(keysym);
+			//Gdk.Window rootwin = Gdk.get_default_root_window();
+			//unowned X.Display display = Gdk.x11_drawable_get_xdisplay(rootwin);
+			//X.ID xid = Gdk.x11_drawable_get_xid(rootwin);
+			int keycode = display->keysym_to_keycode(keysym);
 
 			if(keycode != 0) {
 				// trap XErrors to avoid closing of application
@@ -126,7 +150,7 @@ namespace NeoLayoutViewer{
 				// grab key finally
 				// also grab all keys which are combined with a lock key such NumLock
 				foreach(uint lock_modifier in lock_modifiers) {
-					display.grab_key(keycode, modifiers|lock_modifier, xid, false, X.GrabMode.Async, X.GrabMode.Async);
+					display->grab_key(keycode, modifiers|lock_modifier, xid, true, X.GrabMode.Async, X.GrabMode.Async);
 				}
 
 				// wait until all X request have been processed
@@ -149,10 +173,10 @@ namespace NeoLayoutViewer{
 				Gdk.ModifierType modifiers;
 				Gtk.accelerator_parse(accelerator, out keysym, out modifiers);*/
 
-			Gdk.Window rootwin = Gdk.get_default_root_window();
-			unowned X.Display display = Gdk.x11_drawable_get_xdisplay(rootwin);
-			X.ID xid = Gdk.x11_drawable_get_xid(rootwin);
-			//int keycode = display.keysym_to_keycode(keysym);
+			//Gdk.Window rootwin = Gdk.get_default_root_window();
+			//unowned X.Display display = Gdk.x11_drawable_get_xdisplay(rootwin);
+			//X.ID xid = Gdk.x11_drawable_get_xid(rootwin);
+			//int keycode = display->keysym_to_keycode(keysym);
 
 			if(keycode != 0) {
 				// trap XErrors to avoid closing of application
@@ -160,7 +184,7 @@ namespace NeoLayoutViewer{
 				Gdk.error_trap_push();
 
 				// grab key finally
-				display.grab_key(keycode, 0, xid, false, X.GrabMode.Async, X.GrabMode.Async);
+				display->grab_key(keycode, 0, xid, true, X.GrabMode.Async, X.GrabMode.Async);
 
 				// wait until all X request have been processed
 				Gdk.flush();
@@ -184,16 +208,16 @@ namespace NeoLayoutViewer{
 		{
 			//debug("Unbinding key " + accelerator);
 
-			Gdk.Window rootwin = Gdk.get_default_root_window();
-			unowned X.Display display = Gdk.x11_drawable_get_xdisplay(rootwin);
-			X.ID xid = Gdk.x11_drawable_get_xid(rootwin);
+			//Gdk.Window rootwin = Gdk.get_default_root_window();
+			//unowned X.Display display = Gdk.x11_drawable_get_xdisplay(rootwin);
+			//X.ID xid = Gdk.x11_drawable_get_xid(rootwin);
 
 			// unbind all keys with given accelerator
 			Gee.List<Keybinding> remove_bindings = new Gee.ArrayList<Keybinding>();
 			foreach(Keybinding binding in bindings) {
 				if(str_equal(accelerator, binding.accelerator)) {
 					foreach(uint lock_modifier in lock_modifiers) {
-						display.ungrab_key(binding.keycode, binding.modifiers, xid);
+						display->ungrab_key(binding.keycode, binding.modifiers, xid);
 					}
 					remove_bindings.add(binding);
 				}
@@ -207,15 +231,15 @@ namespace NeoLayoutViewer{
 		{
 			//debug("Unbinding key\n ");
 
-			Gdk.Window rootwin = Gdk.get_default_root_window();
-			unowned X.Display display = Gdk.x11_drawable_get_xdisplay(rootwin);
-			X.ID xid = Gdk.x11_drawable_get_xid(rootwin);
+			//Gdk.Window rootwin = Gdk.get_default_root_window();
+			//unowned X.Display display = Gdk.x11_drawable_get_xdisplay(rootwin);
+			//X.ID xid = Gdk.x11_drawable_get_xid(rootwin);
 
 			// unbind all keys with given accelerator
 			Gee.List<ModifierKeybinding> remove_bindings = new Gee.ArrayList<ModifierKeybinding>();
 			foreach(ModifierKeybinding binding in modifier_bindings) {
 				if(keycode == binding.keycode) {
-					display.ungrab_key(binding.keycode, binding.modifiers, xid);
+					display->ungrab_key(binding.keycode, binding.modifiers, xid);
 					remove_bindings.add(binding);
 				}
 			}
@@ -252,11 +276,11 @@ namespace NeoLayoutViewer{
 				foreach(ModifierKeybinding binding in modifier_bindings) {
 					if(xevent->xkey.keycode == binding.keycode) {
 						//neo_win.external_key_press(binding.ebene,(int)event_mods);
-						neo_win.active_modifier[binding.ebene] = 1;
+						neo_win.active_modifier_by_keyboard[binding.ebene] = 1;
 						neo_win.redraw();
 						// call all handlers with pressed key and modifiers
 						binding.handler(gdk_event);
-						//send_event_again(Gdk.get_default_root_window(), binding, *xevent);
+						send_event_again(Gdk.get_default_root_window(), xevent, binding);
 					}
 				}
 			}
@@ -267,11 +291,11 @@ namespace NeoLayoutViewer{
 				foreach(ModifierKeybinding binding in modifier_bindings) {
 					if(xevent->xkey.keycode == binding.keycode) {
 						//neo_win.external_key_release(0,(int)event_mods);
-						neo_win.active_modifier[binding.ebene] = 0;
+						neo_win.active_modifier_by_keyboard[binding.ebene] = 0;
 						neo_win.redraw();
 						// call all handlers with pressed key and modifiers
 						binding.handler(gdk_event);
-						//send_event_again(Gdk.get_default_root_window(), binding, *xevent);
+						send_event_again(Gdk.get_default_root_window(), xevent, binding);
 					}
 				}
 			}
@@ -279,32 +303,74 @@ namespace NeoLayoutViewer{
 
 			debug("Filter %u\n".printf(xevent.xkey.keycode));
 
-			send_event_again(Gdk.get_default_root_window(), *xevent);
+			//send_event_again(Gdk.get_default_root_window(), *xevent, binding);
 
 			return filter_return;
 		}
 
 
-		private void send_event_again(Gdk.Window rootwin, X.Event xevent){
+		private void send_event_again(Gdk.Window rootwin, X.Event* xevent, ModifierKeybinding binding){
 
-			if(rootwin != null) {
-				unowned X.Display display = Gdk.x11_drawable_get_xdisplay(rootwin);
-				X.ID xid = Gdk.x11_drawable_get_xid(rootwin);
-				foreach(ModifierKeybinding binding in modifier_bindings){
-					display.ungrab_key(binding.keycode, binding.modifiers, xid);
-				}
+			//X.ID xid = Gdk.x11_drawable_get_xid(rootwin);
 
-				//rootwin.remove_filter(event_filter);
-				debug("Send Event again %u\n".printf(xevent.xkey.state));
-				display.send_event(xevent.xkey.window,true,xevent.xkey.state,ref xevent);
-				//rootwin.add_filter(event_filter);
+			display->ungrab_key(binding.keycode, binding.modifiers, xid);
+			//modifier_timeout_store.add(binding);
+			//putBack(display, xevent);
+			//display->grab_key(binding.keycode, 0, xid, false, X.GrabMode.Async, X.GrabMode.Async);
 
-				foreach(ModifierKeybinding binding in modifier_bindings){
-					//	display.grab_key(binding.keycode, 0, xid, false, X.GrabMode.Async, X.GrabMode.Async);
-				}
+			/*
+				 if(rootwin != null) {
+				 unowned X.Display display = Gdk.x11_drawable_get_xdisplay(rootwin);
+				 X.ID xid = Gdk.x11_drawable_get_xid(rootwin);
+				 foreach(ModifierKeybinding binding in modifier_bindings){
+				 display->ungrab_key(binding.keycode, binding.modifiers, xid);
+				 }
+
+			//rootwin.remove_filter(event_filter);
+			debug("Send Event again %u\n".printf(xevent.xkey.state));
+			display->send_event(xevent.xkey.window,true,xevent.xkey.state,ref xevent);
+			//rootwin.add_filter(event_filter);
+
+			foreach(ModifierKeybinding binding in modifier_bindings){
+			//	display->grab_key(binding.keycode, 0, xid, false, X.GrabMode.Async, X.GrabMode.Async);
 			}
-
+			}
+			 */
 		}
 
+		private bool modifier_timer(){
+			if(rootwin == null) {
+				debug("Root window changed.");
+				rootwin = Gdk.get_default_root_window();
+				//rootwin.add_filter(event_filter);
+				display = Gdk.x11_drawable_get_xdisplay(rootwin);
+				xid = Gdk.x11_drawable_get_xid(rootwin);
+			}
+
+			//debug("check Modifier");
+			checkModifier(display,&modifier_keycodes[0], modifier_keycodes.length, &modifier_pressed[0]);
+
+			// Convert modifier keys to modifier/layer
+			neo_win.change_active_modifier( 1, true, (int) ( ( modifier_pressed[0] | modifier_pressed[1] )
+					!= (checkCapsLock(display)?1:0) ) );
+			neo_win.change_active_modifier( 2, true, (int) ( modifier_pressed[2] | modifier_pressed[3] ) );
+			neo_win.change_active_modifier( 3, true, (int) ( modifier_pressed[4] | modifier_pressed[5] ) );
+			neo_win.change_active_modifier( 4, true, (int) ( modifier_pressed[6] | modifier_pressed[7] ) );
+			neo_win.change_active_modifier( 5, true, (int) ( modifier_pressed[8] | modifier_pressed[9] ) );
+
+//			stdout.printf(@"Mods: $(neo_win.active_modifier[1]), $(neo_win.active_modifier[2]), $(neo_win.active_modifier[3])\n"  );
+			neo_win.redraw();
+
+			if(true) return true;
+			/*
+				 foreach(ModifierKeybinding binding in modifier_timeout_store) {
+				 display->grab_key(binding.keycode, 0, xid, true, X.GrabMode.Async, X.GrabMode.Async);
+				 debug("Timer");
+				 }
+				 modifier_timeout_store.clear();
+
+				 return true;
+			 */
+		}
 	}
 }

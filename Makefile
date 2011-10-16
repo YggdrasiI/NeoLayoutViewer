@@ -8,7 +8,7 @@ BINDIR = bin
  
 # for most cases the following two are the only you'll need to change
 # add your source files here
-SRC = main.vala neo-window.vala key-overlay.vala tray.vala config-manager.vala keybinding-manager.vala keysend.c
+SRC = main.vala neo-window.vala key-overlay.vala tray.vala config-manager.vala keybinding-manager.vala keysend.c checkModifier.c
 
 # add your used packges here
 PKGS = --pkg x11 --pkg keysym --pkg gtk+-2.0 --pkg gee-1.0 --pkg gdk-x11-2.0 --pkg posix 
@@ -16,7 +16,7 @@ PKGS = --pkg x11 --pkg keysym --pkg gtk+-2.0 --pkg gee-1.0 --pkg gdk-x11-2.0 --p
 
 CC_INCLUDES = 
 # vala compiler
-VALAC = valac
+VALAC = valac --thread 
 #VAPIDIR = --vapidir=vapi/
 VAPIDIR = --vapi=vapi/keysym.vapi
  

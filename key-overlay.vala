@@ -42,63 +42,63 @@ namespace NeoLayoutViewer{
 
 			keysyms.set(8, new ArrayBox({}));
 			keysyms.set(9, new ArrayBox({ XK_Escape, 0, XK_Escape}));
-			keysyms.set(10, new ArrayBox({ XK_1, XK_degree, XK_1, XK_degree, XK_onesuperior, XK_onesubscript, XK_ordfeminine, 0, XK_notsign}));
-			keysyms.set(11, new ArrayBox({ XK_2, XK_section, XK_2, XK_section, XK_twosuperior, XK_twosubscript, XK_masculine, 0, XK_logicalor}));
-			keysyms.set(12, new ArrayBox({ XK_3, (uint)X.string_to_keysym("U2113"), XK_3, (uint)X.string_to_keysym("U2113"), XK_threesuperior, XK_threesubscript, XK_numerosign, 0, XK_logicaland}));
-			keysyms.set(13, new ArrayBox({ XK_4, XK_guillemotright, XK_4, XK_guillemotright, (uint)X.string_to_keysym("U203A"), XK_dagger, XK_Prior, XK_Prior, (uint)X.string_to_keysym("U22A5")}));
-			keysyms.set(14, new ArrayBox({ XK_5, XK_guillemotleft, XK_5, XK_guillemotleft, (uint)X.string_to_keysym("U2039"), XK_femalesymbol, XK_periodcentered, 0, (uint)X.string_to_keysym("U2221")}));
-			keysyms.set(15, new ArrayBox({ XK_6, XK_EuroSign, XK_6, XK_EuroSign, XK_cent, XK_malesymbol, XK_sterling, 0, (uint)X.string_to_keysym("U2225")}));
-			keysyms.set(16, new ArrayBox({ XK_7, XK_dollar, XK_7, XK_dollar, XK_yen, XK_Greek_kappa, XK_currency, 0, XK_rightarrow}));
-			keysyms.set(17, new ArrayBox({ XK_8, XK_doublelowquotemark, XK_8, XK_doublelowquotemark, XK_singlelowquotemark, XK_leftanglebracket, 0, 0, (uint)X.string_to_keysym("U221E")}));
-			keysyms.set(18, new ArrayBox({ XK_9, XK_leftdoublequotemark, XK_9, XK_leftdoublequotemark, XK_leftsinglequotemark, XK_rightanglebracket, XK_slash, 0, XK_containsas}));
-			keysyms.set(19, new ArrayBox({ XK_0, XK_rightdoublequotemark, XK_0, XK_rightdoublequotemark, XK_rightsinglequotemark, XK_zerosubscript, XK_asterisk, 0, XK_emptyset}));
-			keysyms.set(20, new ArrayBox({ XK_minus, XK_emdash, XK_minus, XK_emdash, 0, (uint)X.string_to_keysym("U2011"), XK_minus, 0, XK_hyphen}));
-			keysyms.set(21, new ArrayBox({ XK_dead_grave, 0, XK_dead_grave, 0, XK_dead_diaeresis, XK_dead_abovereversedcomma}));
-			keysyms.set(22, new ArrayBox({ XK_BackSpace, XK_BackSpace, XK_BackSpace, XK_BackSpace, XK_BackSpace, XK_BackSpace, XK_BackSpace, XK_BackSpace, XK_BackSpace}));
-			keysyms.set(23, new ArrayBox({ XK_Tab, XK_ISO_Left_Tab, XK_Tab, XK_ISO_Left_Tab, XK_Multi_key}));
-			keysyms.set(24, new ArrayBox({ XK_x, XK_X, XK_x, XK_X, XK_ellipsis, XK_Greek_xi, (uint)X.string_to_keysym("U22EE"), 0, XK_Greek_XI}));
-			keysyms.set(25, new ArrayBox({ XK_v, XK_V, XK_v, XK_V, XK_underscore, 0, XK_BackSpace, XK_BackSpace, (uint)X.string_to_keysym("U2259")}));
-			keysyms.set(26, new ArrayBox({ XK_l, XK_L, XK_l, XK_L, XK_bracketleft, XK_Greek_lamda, XK_Up, XK_Up, XK_Greek_LAMDA}));
-			keysyms.set(27, new ArrayBox({ XK_c, XK_C, XK_c, XK_C, XK_bracketright, XK_Greek_chi, XK_Delete, XK_Delete, (uint)X.string_to_keysym("U2102")}));
-			keysyms.set(28, new ArrayBox({ XK_w, XK_W, XK_w, XK_W, XK_asciicircum, XK_Greek_omega, XK_Insert, XK_Insert, XK_Greek_OMEGA}));
-			keysyms.set(29, new ArrayBox({ XK_k, XK_K, XK_k, XK_K, XK_exclam, (uint)X.string_to_keysym("U03F0"), XK_exclamdown, 0, XK_radical}));
-			keysyms.set(30, new ArrayBox({ XK_h, XK_H, XK_h, XK_H, XK_less, XK_Greek_psi, XK_7, 0, XK_Greek_PSI}));
-			keysyms.set(31, new ArrayBox({ XK_g, XK_G, XK_g, XK_G, XK_greater, XK_Greek_gamma, XK_8, 0, XK_Greek_GAMMA}));
-			keysyms.set(32, new ArrayBox({ XK_f, XK_F, XK_f, XK_F, XK_equal, XK_Greek_phi, XK_9, 0, XK_Greek_PHI}));
-			keysyms.set(33, new ArrayBox({ XK_q, XK_Q, XK_q, XK_Q, XK_ampersand, (uint)X.string_to_keysym("U03D5"), XK_plus, 0, (uint)X.string_to_keysym("U211A")}));
-			keysyms.set(34, new ArrayBox({ XK_ssharp, (uint)X.string_to_keysym("U1E9E"), XK_ssharp, (uint)X.string_to_keysym("U1E9E"), (uint)X.string_to_keysym("U017F"), XK_Greek_finalsmallsigma, 0, 0, XK_jot}));
-			keysyms.set(35, new ArrayBox({ XK_dead_acute, XK_dead_cedilla, XK_dead_acute, XK_dead_cedilla, XK_dead_stroke, XK_dead_abovecomma, XK_dead_doubleacute, 0, XK_dead_abovedot}));
+			keysyms.set(10, new ArrayBox({ XK_1, XK_degree, XK_onesuperior, XK_onesubscript, XK_ordfeminine, 0, XK_notsign}));
+			keysyms.set(11, new ArrayBox({ XK_2, XK_section, XK_twosuperior, XK_twosubscript, XK_masculine, 0, XK_logicalor}));
+			keysyms.set(12, new ArrayBox({ XK_3, (uint)X.string_to_keysym("U2113"), XK_threesuperior, XK_threesubscript, XK_numerosign, 0, XK_logicaland}));
+			keysyms.set(13, new ArrayBox({ XK_4, XK_guillemotright, (uint)X.string_to_keysym("U203A"), XK_dagger, XK_Prior, XK_Prior, (uint)X.string_to_keysym("U22A5")}));
+			keysyms.set(14, new ArrayBox({ XK_5, XK_guillemotleft, (uint)X.string_to_keysym("U2039"), XK_femalesymbol, XK_periodcentered, 0, (uint)X.string_to_keysym("U2221")}));
+			keysyms.set(15, new ArrayBox({ XK_6, XK_EuroSign, XK_cent, XK_malesymbol, XK_sterling, 0, (uint)X.string_to_keysym("U2225")}));
+			keysyms.set(16, new ArrayBox({ XK_7, XK_dollar, XK_yen, XK_Greek_kappa, XK_currency, 0, XK_rightarrow}));
+			keysyms.set(17, new ArrayBox({ XK_8, XK_doublelowquotemark, XK_singlelowquotemark, XK_leftanglebracket, 0, 0, (uint)X.string_to_keysym("U221E")}));
+			keysyms.set(18, new ArrayBox({ XK_9, XK_leftdoublequotemark, XK_leftsinglequotemark, XK_rightanglebracket, XK_slash, 0, XK_containsas}));
+			keysyms.set(19, new ArrayBox({ XK_0, XK_rightdoublequotemark, XK_rightsinglequotemark, XK_zerosubscript, XK_asterisk, 0, XK_emptyset}));
+			keysyms.set(20, new ArrayBox({ XK_minus, XK_emdash, 0, (uint)X.string_to_keysym("U2011"), XK_minus, 0, XK_hyphen}));
+			keysyms.set(21, new ArrayBox({ XK_dead_grave, 0, XK_dead_diaeresis, XK_dead_abovereversedcomma}));
+			keysyms.set(22, new ArrayBox({ XK_BackSpace, XK_BackSpace, XK_BackSpace, XK_BackSpace, XK_BackSpace, XK_BackSpace, XK_BackSpace}));
+			keysyms.set(23, new ArrayBox({ XK_Tab, XK_ISO_Left_Tab, XK_Multi_key}));
+			keysyms.set(24, new ArrayBox({ XK_x, XK_X, XK_ellipsis, XK_Greek_xi, (uint)X.string_to_keysym("U22EE"), 0, XK_Greek_XI}));
+			keysyms.set(25, new ArrayBox({ XK_v, XK_V, XK_underscore, 0, XK_BackSpace, XK_BackSpace, (uint)X.string_to_keysym("U2259")}));
+			keysyms.set(26, new ArrayBox({ XK_l, XK_L, XK_bracketleft, XK_Greek_lamda, XK_Up, XK_Up, XK_Greek_LAMDA}));
+			keysyms.set(27, new ArrayBox({ XK_c, XK_C, XK_bracketright, XK_Greek_chi, XK_Delete, XK_Delete, (uint)X.string_to_keysym("U2102")}));
+			keysyms.set(28, new ArrayBox({ XK_w, XK_W, XK_asciicircum, XK_Greek_omega, XK_Insert, XK_Insert, XK_Greek_OMEGA}));
+			keysyms.set(29, new ArrayBox({ XK_k, XK_K, XK_exclam, (uint)X.string_to_keysym("U03F0"), XK_exclamdown, 0, XK_radical}));
+			keysyms.set(30, new ArrayBox({ XK_h, XK_H, XK_less, XK_Greek_psi, XK_7, 0, XK_Greek_PSI}));
+			keysyms.set(31, new ArrayBox({ XK_g, XK_G, XK_greater, XK_Greek_gamma, XK_8, 0, XK_Greek_GAMMA}));
+			keysyms.set(32, new ArrayBox({ XK_f, XK_F, XK_equal, XK_Greek_phi, XK_9, 0, XK_Greek_PHI}));
+			keysyms.set(33, new ArrayBox({ XK_q, XK_Q, XK_ampersand, (uint)X.string_to_keysym("U03D5"), XK_plus, 0, (uint)X.string_to_keysym("U211A")}));
+			keysyms.set(34, new ArrayBox({ XK_ssharp, (uint)X.string_to_keysym("U1E9E"), (uint)X.string_to_keysym("U017F"), XK_Greek_finalsmallsigma, 0, 0, XK_jot}));
+			keysyms.set(35, new ArrayBox({ XK_dead_acute, XK_dead_cedilla, XK_dead_stroke, XK_dead_abovecomma, XK_dead_doubleacute, 0, XK_dead_abovedot}));
 			keysyms.set(36, new ArrayBox({ XK_Return, 0, XK_Return}));
 			keysyms.set(37, new ArrayBox({ XK_Control_L, 0, XK_Control_L}));
-			keysyms.set(38, new ArrayBox({ XK_u, XK_U, XK_u, XK_U, XK_backslash, 0, XK_Home, XK_Home, (uint)X.string_to_keysym("U222E")}));
-			keysyms.set(39, new ArrayBox({ XK_i, XK_I, XK_i, XK_I, XK_slash, XK_Greek_iota, XK_Left, XK_Left, XK_integral}));
-			keysyms.set(40, new ArrayBox({ XK_a, XK_A, XK_a, XK_A, XK_braceleft, XK_Greek_alpha, XK_Down, XK_Down, (uint)X.string_to_keysym("U2200")}));
-			keysyms.set(41, new ArrayBox({ XK_e, XK_E, XK_e, XK_E, XK_braceright, XK_Greek_epsilon, XK_Right, XK_Right, (uint)X.string_to_keysym("U2203")}));
-			keysyms.set(42, new ArrayBox({ XK_o, XK_O, XK_o, XK_O, XK_asterisk, XK_Greek_omicron, XK_End, XK_End, XK_elementof}));
-			keysyms.set(43, new ArrayBox({ XK_s, XK_S, XK_s, XK_S, XK_question, XK_Greek_sigma, XK_questiondown, 0, XK_Greek_SIGMA}));
-			keysyms.set(44, new ArrayBox({ XK_n, XK_N, XK_n, XK_N, XK_parenleft, XK_Greek_nu, XK_4, 0, (uint)X.string_to_keysym("U2115")}));
-			keysyms.set(45, new ArrayBox({ XK_r, XK_R, XK_r, XK_R, XK_parenright, (uint)X.string_to_keysym("U03F1"), XK_5, 0, (uint)X.string_to_keysym("U211D")}));
-			keysyms.set(46, new ArrayBox({ XK_t, XK_T, XK_t, XK_T, XK_minus, XK_Greek_tau, XK_6, 0, XK_partialderivative}));
-			keysyms.set(47, new ArrayBox({ XK_d, XK_D, XK_d, XK_D, XK_colon, XK_Greek_delta, XK_comma, 0, XK_Greek_DELTA}));
-			keysyms.set(48, new ArrayBox({ XK_y, XK_Y, XK_y, XK_Y, XK_at, XK_Greek_upsilon, XK_period, 0, XK_nabla}));
-			keysyms.set(49, new ArrayBox({ XK_dead_circumflex, XK_dead_tilde, XK_dead_circumflex, XK_dead_tilde, XK_dead_abovering, XK_dead_breve, XK_dead_caron, 0, XK_dead_macron}));
+			keysyms.set(38, new ArrayBox({ XK_u, XK_U, XK_backslash, 0, XK_Home, XK_Home, (uint)X.string_to_keysym("U222E")}));
+			keysyms.set(39, new ArrayBox({ XK_i, XK_I, XK_slash, XK_Greek_iota, XK_Left, XK_Left, XK_integral}));
+			keysyms.set(40, new ArrayBox({ XK_a, XK_A, XK_braceleft, XK_Greek_alpha, XK_Down, XK_Down, (uint)X.string_to_keysym("U2200")}));
+			keysyms.set(41, new ArrayBox({ XK_e, XK_E, XK_braceright, XK_Greek_epsilon, XK_Right, XK_Right, (uint)X.string_to_keysym("U2203")}));
+			keysyms.set(42, new ArrayBox({ XK_o, XK_O, XK_asterisk, XK_Greek_omicron, XK_End, XK_End, XK_elementof}));
+			keysyms.set(43, new ArrayBox({ XK_s, XK_S, XK_question, XK_Greek_sigma, XK_questiondown, 0, XK_Greek_SIGMA}));
+			keysyms.set(44, new ArrayBox({ XK_n, XK_N, XK_parenleft, XK_Greek_nu, XK_4, 0, (uint)X.string_to_keysym("U2115")}));
+			keysyms.set(45, new ArrayBox({ XK_r, XK_R, XK_parenright, (uint)X.string_to_keysym("U03F1"), XK_5, 0, (uint)X.string_to_keysym("U211D")}));
+			keysyms.set(46, new ArrayBox({ XK_t, XK_T, XK_minus, XK_Greek_tau, XK_6, 0, XK_partialderivative}));
+			keysyms.set(47, new ArrayBox({ XK_d, XK_D, XK_colon, XK_Greek_delta, XK_comma, 0, XK_Greek_DELTA}));
+			keysyms.set(48, new ArrayBox({ XK_y, XK_Y, XK_at, XK_Greek_upsilon, XK_period, 0, XK_nabla}));
+			keysyms.set(49, new ArrayBox({ XK_dead_circumflex, XK_dead_tilde, XK_dead_abovering, XK_dead_breve, XK_dead_caron, 0, XK_dead_macron}));
 			keysyms.set(50, new ArrayBox({ XK_Shift_L, 0, XK_Shift_L}));
-			keysyms.set(51, new ArrayBox({ XK_ISO_Level3_Shift, XK_ISO_Level3_Shift, XK_ISO_Level3_Shift, XK_ISO_Level3_Shift, XK_Caps_Lock, XK_Caps_Lock}));
-			keysyms.set(52, new ArrayBox({ XK_udiaeresis, XK_Udiaeresis, XK_udiaeresis, XK_Udiaeresis, XK_numbersign, 0, XK_Escape, XK_Escape, (uint)X.string_to_keysym("U211C")}));
-			keysyms.set(53, new ArrayBox({ XK_odiaeresis, XK_Odiaeresis, XK_odiaeresis, XK_Odiaeresis, XK_dollar, 0, XK_Tab, XK_Tab, (uint)X.string_to_keysym("U2111")}));
-			keysyms.set(54, new ArrayBox({ XK_adiaeresis, XK_Adiaeresis, XK_adiaeresis, XK_Adiaeresis, XK_bar, XK_Greek_eta, XK_Next, XK_Next, (uint)X.string_to_keysym("U2135")}));
-			keysyms.set(55, new ArrayBox({ XK_p, XK_P, XK_p, XK_P, XK_asciitilde, XK_Greek_pi, XK_Return, XK_Return, XK_Greek_PI}));
-			keysyms.set(56, new ArrayBox({ XK_z, XK_Z, XK_z, XK_Z, XK_grave, XK_Greek_zeta, 0, 0, (uint)X.string_to_keysym("U2124")}));
-			keysyms.set(57, new ArrayBox({ XK_b, XK_B, XK_b, XK_B, XK_plus, XK_Greek_beta, XK_colon, 0, (uint)X.string_to_keysym("U21D0")}));
-			keysyms.set(58, new ArrayBox({ XK_m, XK_M, XK_m, XK_M, XK_percent, XK_Greek_mu, XK_1, 0, XK_ifonlyif}));
-			keysyms.set(59, new ArrayBox({ XK_comma, XK_endash, XK_comma, XK_endash, XK_quotedbl, XK_Greek_rho, XK_2, 0, (uint)X.string_to_keysym("U21D2")}));
-			keysyms.set(60, new ArrayBox({ XK_period, XK_enfilledcircbullet, XK_period, XK_enfilledcircbullet, XK_apostrophe, (uint)X.string_to_keysym("U03D1"), XK_3, 0, XK_Greek_THETA}));
-			keysyms.set(61, new ArrayBox({ XK_j, XK_J, XK_j, XK_J, XK_semicolon, XK_Greek_theta, XK_semicolon, 0, XK_variation}));
+			keysyms.set(51, new ArrayBox({ XK_ISO_Level3_Shift, XK_ISO_Level3_Shift, XK_Caps_Lock, XK_Caps_Lock}));
+			keysyms.set(52, new ArrayBox({ XK_udiaeresis, XK_Udiaeresis, XK_numbersign, 0, XK_Escape, XK_Escape, (uint)X.string_to_keysym("U211C")}));
+			keysyms.set(53, new ArrayBox({ XK_odiaeresis, XK_Odiaeresis, XK_dollar, 0, XK_Tab, XK_Tab, (uint)X.string_to_keysym("U2111")}));
+			keysyms.set(54, new ArrayBox({ XK_adiaeresis, XK_Adiaeresis, XK_bar, XK_Greek_eta, XK_Next, XK_Next, (uint)X.string_to_keysym("U2135")}));
+			keysyms.set(55, new ArrayBox({ XK_p, XK_P, XK_asciitilde, XK_Greek_pi, XK_Return, XK_Return, XK_Greek_PI}));
+			keysyms.set(56, new ArrayBox({ XK_z, XK_Z, XK_grave, XK_Greek_zeta, 0, 0, (uint)X.string_to_keysym("U2124")}));
+			keysyms.set(57, new ArrayBox({ XK_b, XK_B, XK_plus, XK_Greek_beta, XK_colon, 0, (uint)X.string_to_keysym("U21D0")}));
+			keysyms.set(58, new ArrayBox({ XK_m, XK_M, XK_percent, XK_Greek_mu, XK_1, 0, XK_ifonlyif}));
+			keysyms.set(59, new ArrayBox({ XK_comma, XK_endash, XK_quotedbl, XK_Greek_rho, XK_2, 0, (uint)X.string_to_keysym("U21D2")}));
+			keysyms.set(60, new ArrayBox({ XK_period, XK_enfilledcircbullet, XK_apostrophe, (uint)X.string_to_keysym("U03D1"), XK_3, 0, XK_Greek_THETA}));
+			keysyms.set(61, new ArrayBox({ XK_j, XK_J, XK_semicolon, XK_Greek_theta, XK_semicolon, 0, XK_variation}));
 			keysyms.set(62, new ArrayBox({ XK_Shift_R, 0, XK_Shift_R}));
-			keysyms.set(63, new ArrayBox({ XK_KP_Multiply, XK_KP_Multiply, XK_KP_Multiply, XK_KP_Multiply, (uint)X.string_to_keysym("U22C5"), XK_multiply, (uint)X.string_to_keysym("U2299"), 0, (uint)X.string_to_keysym("U2297")}));
+			keysyms.set(63, new ArrayBox({ XK_KP_Multiply, XK_KP_Multiply, (uint)X.string_to_keysym("U22C5"), XK_multiply, (uint)X.string_to_keysym("U2299"), 0, (uint)X.string_to_keysym("U2297")}));
 			keysyms.set(64, new ArrayBox({ XK_Alt_L, XK_Meta_L, XK_Alt_L, XK_Meta_L}));
-			keysyms.set(65, new ArrayBox({ XK_space, XK_space, XK_space, XK_space, XK_space, XK_nobreakspace, XK_0, 0, (uint)X.string_to_keysym("U202F")}));
-			keysyms.set(66, new ArrayBox({ XK_ISO_Level3_Shift, XK_ISO_Level3_Shift, XK_ISO_Level3_Shift, XK_ISO_Level3_Shift, XK_Caps_Lock, XK_Caps_Lock}));
+			keysyms.set(65, new ArrayBox({ XK_space, XK_space, XK_space, XK_nobreakspace, XK_0, 0, (uint)X.string_to_keysym("U202F")}));
+			keysyms.set(66, new ArrayBox({ XK_ISO_Level3_Shift, XK_ISO_Level3_Shift, XK_Caps_Lock, XK_Caps_Lock}));
 			keysyms.set(67, new ArrayBox({ XK_F1, 0/* XK_XF86_Switch_VT_1 */, XK_F1, 0/* XK_XF86_Switch_VT_1 */}));
 			keysyms.set(68, new ArrayBox({ XK_F2, 0/* XK_XF86_Switch_VT_2 */, XK_F2, 0/* XK_XF86_Switch_VT_2 */}));
 			keysyms.set(69, new ArrayBox({ XK_F3, 0/* XK_XF86_Switch_VT_3 */, XK_F3, 0/* XK_XF86_Switch_VT_3 */}));
@@ -109,21 +109,21 @@ namespace NeoLayoutViewer{
 			keysyms.set(74, new ArrayBox({ XK_F8, 0/* XK_XF86_Switch_VT_8 */, XK_F8, 0/* XK_XF86_Switch_VT_8 */}));
 			keysyms.set(75, new ArrayBox({ XK_F9, 0/* XK_XF86_Switch_VT_9 */, XK_F9, 0/* XK_XF86_Switch_VT_9 */}));
 			keysyms.set(76, new ArrayBox({ XK_F10, 0/* XK_XF86_Switch_VT_10 */, XK_F10, 0/* XK_XF86_Switch_VT_10 */}));
-			keysyms.set(77, new ArrayBox({ XK_Tab, XK_ISO_Left_Tab, XK_Tab, XK_ISO_Left_Tab, XK_equal, XK_approxeq, XK_notequal, 0, XK_identical}));
+			keysyms.set(77, new ArrayBox({ XK_Tab, XK_ISO_Left_Tab, XK_equal, XK_approxeq, XK_notequal, 0, XK_identical}));
 			keysyms.set(78, new ArrayBox({ XK_Scroll_Lock, 0, XK_Scroll_Lock}));
-			keysyms.set(79, new ArrayBox({ XK_KP_7, (uint)X.string_to_keysym("U2714"), XK_KP_7, (uint)X.string_to_keysym("U2714"), (uint)X.string_to_keysym("U2195"), (uint)X.string_to_keysym("U226A"), XK_KP_Home, XK_KP_Home, XK_upstile}));
-			keysyms.set(80, new ArrayBox({ XK_KP_8, (uint)X.string_to_keysym("U2718"), XK_KP_8, (uint)X.string_to_keysym("U2718"), XK_uparrow, XK_intersection, XK_KP_Up, XK_KP_Up, (uint)X.string_to_keysym("U22C2")}));
-			keysyms.set(81, new ArrayBox({ XK_KP_9, XK_KP_9, XK_KP_9, XK_KP_9, (uint)X.string_to_keysym("U20D7"), (uint)X.string_to_keysym("U226B"), XK_KP_Prior, XK_KP_Prior, (uint)X.string_to_keysym("U2309")}));
-			keysyms.set(82, new ArrayBox({ XK_KP_Subtract, XK_KP_Subtract, XK_KP_Subtract, XK_KP_Subtract, (uint)X.string_to_keysym("U2212"), (uint)X.string_to_keysym("U2216"), (uint)X.string_to_keysym("U2296"), 0, (uint)X.string_to_keysym("U2238")}));
-			keysyms.set(83, new ArrayBox({ XK_KP_4, XK_club, XK_KP_4, XK_club, XK_leftarrow, XK_includedin, XK_KP_Left, XK_KP_Left, (uint)X.string_to_keysym("U2286")}));
-			keysyms.set(84, new ArrayBox({ XK_KP_5, XK_EuroSign, XK_KP_5, XK_EuroSign, XK_brokenbar, (uint)X.string_to_keysym("U22B6"), XK_KP_Begin, XK_KP_Begin, (uint)X.string_to_keysym("U22B7")}));
-			keysyms.set(85, new ArrayBox({ XK_KP_6, XK_KP_6, XK_KP_6, XK_KP_6, XK_rightarrow, XK_includes, XK_KP_Right, XK_KP_Right, (uint)X.string_to_keysym("U2287")}));
-			keysyms.set(86, new ArrayBox({ XK_KP_Add, XK_KP_Add, XK_KP_Add, XK_KP_Add, XK_plusminus, (uint)X.string_to_keysym("U2213"), (uint)X.string_to_keysym("U2295"), 0, (uint)X.string_to_keysym("U2214")}));
-			keysyms.set(87, new ArrayBox({ XK_KP_1, XK_diamond, XK_KP_1, XK_diamond, (uint)X.string_to_keysym("U2194"), XK_lessthanequal, XK_KP_End, XK_KP_End, XK_downstile}));
-			keysyms.set(88, new ArrayBox({ XK_KP_2, XK_heart, XK_KP_2, XK_heart, XK_downarrow, XK_union, XK_KP_Down, XK_KP_Down, (uint)X.string_to_keysym("U22C3")}));
-			keysyms.set(89, new ArrayBox({ XK_KP_3, (uint)X.string_to_keysym("U2660"), XK_KP_3, (uint)X.string_to_keysym("U2660"), (uint)X.string_to_keysym("U21CC"), XK_greaterthanequal, XK_KP_Next, XK_KP_Next, (uint)X.string_to_keysym("U230B")}));
-			keysyms.set(90, new ArrayBox({ XK_KP_0, (uint)X.string_to_keysym("U2423"), XK_KP_0, (uint)X.string_to_keysym("U2423"), XK_percent, (uint)X.string_to_keysym("U2030"), XK_KP_Insert, XK_KP_Insert, (uint)X.string_to_keysym("U25A1")}));
-			keysyms.set(91, new ArrayBox({ XK_KP_Decimal, XK_comma, XK_KP_Decimal, XK_comma, XK_period, XK_apostrophe, XK_KP_Delete, XK_KP_Delete, XK_quotedbl}));
+			keysyms.set(79, new ArrayBox({ XK_KP_7, (uint)X.string_to_keysym("U2714"), (uint)X.string_to_keysym("U2195"), (uint)X.string_to_keysym("U226A"), XK_KP_Home, XK_KP_Home, XK_upstile}));
+			keysyms.set(80, new ArrayBox({ XK_KP_8, (uint)X.string_to_keysym("U2718"), XK_uparrow, XK_intersection, XK_KP_Up, XK_KP_Up, (uint)X.string_to_keysym("U22C2")}));
+			keysyms.set(81, new ArrayBox({ XK_KP_9, XK_KP_9, (uint)X.string_to_keysym("U20D7"), (uint)X.string_to_keysym("U226B"), XK_KP_Prior, XK_KP_Prior, (uint)X.string_to_keysym("U2309")}));
+			keysyms.set(82, new ArrayBox({ XK_KP_Subtract, XK_KP_Subtract, (uint)X.string_to_keysym("U2212"), (uint)X.string_to_keysym("U2216"), (uint)X.string_to_keysym("U2296"), 0, (uint)X.string_to_keysym("U2238")}));
+			keysyms.set(83, new ArrayBox({ XK_KP_4, XK_club, XK_leftarrow, XK_includedin, XK_KP_Left, XK_KP_Left, (uint)X.string_to_keysym("U2286")}));
+			keysyms.set(84, new ArrayBox({ XK_KP_5, XK_EuroSign, XK_brokenbar, (uint)X.string_to_keysym("U22B6"), XK_KP_Begin, XK_KP_Begin, (uint)X.string_to_keysym("U22B7")}));
+			keysyms.set(85, new ArrayBox({ XK_KP_6, XK_KP_6, XK_rightarrow, XK_includes, XK_KP_Right, XK_KP_Right, (uint)X.string_to_keysym("U2287")}));
+			keysyms.set(86, new ArrayBox({ XK_KP_Add, XK_KP_Add, XK_plusminus, (uint)X.string_to_keysym("U2213"), (uint)X.string_to_keysym("U2295"), 0, (uint)X.string_to_keysym("U2214")}));
+			keysyms.set(87, new ArrayBox({ XK_KP_1, XK_diamond, (uint)X.string_to_keysym("U2194"), XK_lessthanequal, XK_KP_End, XK_KP_End, XK_downstile}));
+			keysyms.set(88, new ArrayBox({ XK_KP_2, XK_heart, XK_downarrow, XK_union, XK_KP_Down, XK_KP_Down, (uint)X.string_to_keysym("U22C3")}));
+			keysyms.set(89, new ArrayBox({ XK_KP_3, (uint)X.string_to_keysym("U2660"), (uint)X.string_to_keysym("U21CC"), XK_greaterthanequal, XK_KP_Next, XK_KP_Next, (uint)X.string_to_keysym("U230B")}));
+			keysyms.set(90, new ArrayBox({ XK_KP_0, (uint)X.string_to_keysym("U2423"), XK_percent, (uint)X.string_to_keysym("U2030"), XK_KP_Insert, XK_KP_Insert, (uint)X.string_to_keysym("U25A1")}));
+			keysyms.set(91, new ArrayBox({ XK_KP_Decimal, XK_comma, XK_period, XK_KP_Delete, XK_apostrophe, XK_quotedbl}));
 			keysyms.set(92, new ArrayBox({ XK_ISO_Level3_Shift, 0, XK_ISO_Level3_Shift}));
 			keysyms.set(93, new ArrayBox({ XK_Zenkaku_Hankaku, 0, XK_Zenkaku_Hankaku}));
 			keysyms.set(94, new ArrayBox({ XK_ISO_Level5_Shift, 0, XK_ISO_Level5_Shift}));
@@ -136,9 +136,9 @@ namespace NeoLayoutViewer{
 			keysyms.set(101, new ArrayBox({ XK_Hiragana_Katakana, 0, XK_Hiragana_Katakana}));
 			keysyms.set(102, new ArrayBox({ XK_Muhenkan, 0, XK_Muhenkan}));
 			keysyms.set(103, new ArrayBox({}));
-			keysyms.set(104, new ArrayBox({ XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter}));
+			keysyms.set(104, new ArrayBox({ XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter}));
 			keysyms.set(105, new ArrayBox({ XK_Control_R, 0, XK_Control_R}));
-			keysyms.set(106, new ArrayBox({ XK_KP_Divide, XK_KP_Divide, XK_KP_Divide, XK_KP_Divide, XK_division, (uint)X.string_to_keysym("U2223"), (uint)X.string_to_keysym("U2300"), 0, (uint)X.string_to_keysym("U2044")}));
+			keysyms.set(106, new ArrayBox({ XK_KP_Divide, XK_KP_Divide, XK_division, (uint)X.string_to_keysym("U2223"), (uint)X.string_to_keysym("U2300"), 0, (uint)X.string_to_keysym("U2044")}));
 			keysyms.set(107, new ArrayBox({ XK_Print, XK_Sys_Req, XK_Print, XK_Sys_Req}));
 			keysyms.set(108, new ArrayBox({ XK_ISO_Level5_Shift, 0, XK_ISO_Level5_Shift}));
 			keysyms.set(109, new ArrayBox({ XK_Linefeed, 0, XK_Linefeed}));
@@ -555,7 +555,6 @@ namespace NeoLayoutViewer{
 		private NeoWindow winMain;
 		private int width;
 		private int height;
-		private string cmd;
 
 		/*
 			 Die Reihenfolge der Zeichen in keysyms passt nicht
@@ -589,9 +588,10 @@ namespace NeoLayoutViewer{
 
 			this.button_press_event.connect ((event) => {
 					uint ks = this.keysym[this.layer_permutation[winMain.ebene]-1];
-					int modi = winMain.active_modifier[4]*winMain.MODIFIER_MASK[4]
-					+ winMain.active_modifier[5]*winMain.MODIFIER_MASK[5];
+					int modi = winMain.getActiveModifierMask({4,5});
 					if( ks < 1 ) return false;
+
+					//GLib.stdout.printf(@"Capslock active: $( checkCapsLock() )\n");
 
 					keysend(ks,modi);
 					return false;
@@ -603,12 +603,12 @@ namespace NeoLayoutViewer{
 			this.modifier_index = modifier_index;
 
 			this.button_press_event.connect ((event) => {
-					if( winMain.active_modifier[this.modifier_index] == 0){
-					winMain.active_modifier[this.modifier_index] = 1;
-					winMain.status.set_label(@"Activate Modifier $(this.modifier_index)");
+					if( winMain.active_modifier_by_mouse[this.modifier_index] == 0){
+					winMain.change_active_modifier( this.modifier_index, false, 1 );
+					winMain.status.set_label(@"Activate\nModifier $(this.modifier_index)");
 					}else{
-					winMain.active_modifier[this.modifier_index] = 0;
-					winMain.status.set_label(@"Deactivate Modifier $(this.modifier_index)");
+					winMain.change_active_modifier( this.modifier_index, false, 0 );
+					winMain.status.set_label(@"Deactivate\nModifier $(this.modifier_index)");
 					}
 					winMain.redraw();
 
@@ -621,17 +621,17 @@ namespace NeoLayoutViewer{
 			this.modifier_index = modifier_index;
 
 			this.button_press_event.connect ((event) => {
-					if( winMain.active_modifier[this.modifier_index] == 0){
-					winMain.active_modifier[this.modifier_index] = 1;
+					if( winMain.active_modifier_by_mouse[this.modifier_index] == 0){
 					//deactivate modifier, which select other charakters
 					//winMain.active_modifier[0] = 0;//egal
-					winMain.active_modifier[1] = 0;
-					winMain.active_modifier[2] = 0;
-					winMain.active_modifier[3] = 0;
-					winMain.status.set_label(@"Activate Modifier $(this.modifier_index)");
+					winMain.change_active_modifier( 1, false, 0 );
+					winMain.change_active_modifier( 2, false, 0 );
+					winMain.change_active_modifier( 3, false, 0 );
+					winMain.change_active_modifier( this.modifier_index, false, 1 );
+					winMain.status.set_label(@"Activate\n Modifier $(this.modifier_index)");
 					}else{
-					winMain.active_modifier[this.modifier_index] = 0;
-					winMain.status.set_label(@"Deactivate Modifier $(this.modifier_index)");
+					winMain.change_active_modifier( this.modifier_index, false, 0 );
+					winMain.status.set_label(@"Deactivate\n Modifier $(this.modifier_index)");
 					}
 					winMain.redraw();
 					return false;
