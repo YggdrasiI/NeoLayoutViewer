@@ -57,16 +57,16 @@ namespace NeoLayoutViewer{
 			{0,1,2,0,4,2} };
 
 		/*
-			Modifier können per Tastatur und Maus aktiviert werden. Diese Abbildung entscheidet,
-		*/
+			 Modifier können per Tastatur und Maus aktiviert werden. Diese Abbildung entscheidet,
+		 */
 		private short[,,,] MODIFIER_KEYBOARD_MOUSE_MAP = {
-		//		 k		=				f(k,m,K,M,) and m = f(m,k,M,K)
+			//		 k		=				f(k,m,K,M,) and m = f(m,k,M,K)
 			{ { {0, 0} , {1, 0} } ,	// 0000, 0001; 0010, 0011;
 				{ {0, 0} , {1, 1} } },	// 0100, 0101; 0110, 0111(=swap);
 			{ { {0, 0} , {1, 0} } , //1000, 1001; 1010, 1011(=swap);
 				{ {0, 0} , {1, 1} } }//1100, 1101; 1110, 1111; //k=m=1 should be impossible
 		};
-		
+
 		public NeoWindow (string sebene, Gee.HashMap<string, string> config) {
 			this.config = config;
 			this.minimized = true;
@@ -138,13 +138,6 @@ namespace NeoLayoutViewer{
 
 			this.set_gravity(Gdk.Gravity.SOUTH);
 			//this.move(-100,-100);
-			/*GdkGeometry size_hints = {
-				100, 50, 0, 0, 100, 50, 10, 10, 0.0, 0.0, GDK_GRAVITY_NORTH_WEST
-				};
-
-				gtk_window_set_geometry_hints (GTK_WINDOW (this), this, &size_hints,
-				GDK_HINT_MIN_SIZE |  GDK_HINT_BASE_SIZE |  GDK_HINT_RESIZE_INC);
-			 */
 			//this.window_position = WindowPosition.CENTER;
 
 			//this.default_height = int.parse( config.get("height") );
@@ -164,7 +157,7 @@ namespace NeoLayoutViewer{
 
 			//Nicht selektierbar (für virtuelle Tastatur)
 			this.set_accept_focus( (config.get("window_selectable")!="0") );
-			
+
 		}
 
 		public override void show_all(){
@@ -346,13 +339,13 @@ namespace NeoLayoutViewer{
 		}
 
 		/*
-			Use the for values 
-				- “modifier was pressed”
-				- “modifier is pressed”
-				- “modifier was seleted by mouseclick” and
-				- “modifier is seleted by mouseclick”
-			as array indizes to eval an new state.
-		*/
+			 Use the for values 
+			 - “modifier was pressed”
+			 - “modifier is pressed”
+			 - “modifier was seleted by mouseclick” and
+			 - “modifier is seleted by mouseclick”
+			 as array indizes to eval an new state.
+		 */
 		public void change_active_modifier(int mod_index, bool keyboard, int new_mod_state){
 			int old_mod_state;
 			if( keyboard ){
@@ -363,13 +356,13 @@ namespace NeoLayoutViewer{
 					this.active_modifier_by_mouse[mod_index],
 					new_mod_state,
 					this.active_modifier_by_mouse[mod_index]
-				];
+						];
 				this.active_modifier_by_mouse[mod_index] = MODIFIER_KEYBOARD_MOUSE_MAP[
 					this.active_modifier_by_mouse[mod_index],
 					old_mod_state,
 					this.active_modifier_by_mouse[mod_index],
 					new_mod_state
-				];
+						];
 			}else{
 				//Mouseclick on shift button etc.
 				old_mod_state = this.active_modifier_by_mouse[mod_index]; 
@@ -378,13 +371,13 @@ namespace NeoLayoutViewer{
 					this.active_modifier_by_keyboard[mod_index],
 					new_mod_state,
 					this.active_modifier_by_keyboard[mod_index]
-				];
+						];
 				this.active_modifier_by_keyboard[mod_index] = MODIFIER_KEYBOARD_MOUSE_MAP[
 					this.active_modifier_by_keyboard[mod_index],
 					old_mod_state,
 					this.active_modifier_by_keyboard[mod_index],
 					new_mod_state
-				];
+						];
 			}
 
 		}

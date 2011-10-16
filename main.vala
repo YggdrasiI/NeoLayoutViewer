@@ -18,14 +18,6 @@ namespace NeoLayoutViewer{
 		var neo_tray = new AppStatusIcon(neo_win);
 		var manager = new KeybindingManager(neo_win);
 
-/*
-		manager.bind2(50, "ShiftL",1, ()=>{});
-		manager.bind2(62, "ShiftR",1, ()=>{});
-		manager.bind2(66, "Mod3L",2, ()=>{});
-		manager.bind2(51, "Mod3R",2, ()=>{});
-		manager.bind2(94, "Mod4",3, ()=>{});
-		manager.bind2(108, "Mod4",3, ()=>{});
-*/
 		manager.bind(configm.getConfig().get("show_shortcut"), ()=>{neo_win.toggle();});
 		manager.bind(configm.getConfig().get("move_shortcut"), ()=>{neo_win.numkeypad_move(0);});
 
@@ -35,14 +27,6 @@ namespace NeoLayoutViewer{
 		//move window (Fehlerquelle: config von configm, nicht neo_win. Derzeit gleiches Objekt.)
 
 		Gtk.main ();
-/*
-		manager.unbind2(50);
-		manager.unbind2(62);
-		manager.unbind2(66);
-		manager.unbind2(51);
-		manager.unbind2(94);
-		manager.unbind2(108);
-*/
 
 		return 0;
 	}
