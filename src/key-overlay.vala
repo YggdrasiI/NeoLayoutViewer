@@ -68,7 +68,7 @@ namespace NeoLayoutViewer{
 			keysyms.set(33, new ArrayBox({ XK_q, XK_Q, XK_ampersand, (uint)X.string_to_keysym("U03D5"), XK_plus, 0, (uint)X.string_to_keysym("U211A")}));
 			keysyms.set(34, new ArrayBox({ XK_ssharp, (uint)X.string_to_keysym("U1E9E"), (uint)X.string_to_keysym("U017F"), XK_Greek_finalsmallsigma, 0, 0, XK_jot}));
 			keysyms.set(35, new ArrayBox({ XK_dead_acute, XK_dead_cedilla, XK_dead_stroke, XK_dead_abovecomma, XK_dead_doubleacute, 0, XK_dead_abovedot}));
-			keysyms.set(36, new ArrayBox({ XK_Return, 0, XK_Return}));
+			keysyms.set(36, new ArrayBox({ XK_Return, XK_Return, XK_Return, XK_Return, XK_Return, XK_Return}));
 			keysyms.set(37, new ArrayBox({ XK_Control_L, 0, XK_Control_L}));
 			keysyms.set(38, new ArrayBox({ XK_u, XK_U, XK_backslash, 0, XK_Home, XK_Home, (uint)X.string_to_keysym("U222E")}));
 			keysyms.set(39, new ArrayBox({ XK_i, XK_I, XK_slash, XK_Greek_iota, XK_Left, XK_Left, XK_integral}));
@@ -113,17 +113,17 @@ namespace NeoLayoutViewer{
 			keysyms.set(78, new ArrayBox({ XK_Scroll_Lock, 0, XK_Scroll_Lock}));
 			keysyms.set(79, new ArrayBox({ XK_KP_7, (uint)X.string_to_keysym("U2714"), (uint)X.string_to_keysym("U2195"), (uint)X.string_to_keysym("U226A"), XK_KP_Home, XK_KP_Home, XK_upstile}));
 			keysyms.set(80, new ArrayBox({ XK_KP_8, (uint)X.string_to_keysym("U2718"), XK_uparrow, XK_intersection, XK_KP_Up, XK_KP_Up, (uint)X.string_to_keysym("U22C2")}));
-			keysyms.set(81, new ArrayBox({ XK_KP_9, XK_KP_9, (uint)X.string_to_keysym("U20D7"), (uint)X.string_to_keysym("U226B"), XK_KP_Prior, XK_KP_Prior, (uint)X.string_to_keysym("U2309")}));
+			keysyms.set(81, new ArrayBox({ XK_KP_9, (uint)X.string_to_keysym("U2020"), (uint)X.string_to_keysym("U20D7"), (uint)X.string_to_keysym("U226B"), XK_KP_Prior, XK_KP_Prior, (uint)X.string_to_keysym("U2309")}));
 			keysyms.set(82, new ArrayBox({ XK_KP_Subtract, XK_KP_Subtract, (uint)X.string_to_keysym("U2212"), (uint)X.string_to_keysym("U2216"), (uint)X.string_to_keysym("U2296"), 0, (uint)X.string_to_keysym("U2238")}));
 			keysyms.set(83, new ArrayBox({ XK_KP_4, XK_club, XK_leftarrow, XK_includedin, XK_KP_Left, XK_KP_Left, (uint)X.string_to_keysym("U2286")}));
 			keysyms.set(84, new ArrayBox({ XK_KP_5, XK_EuroSign, XK_brokenbar, (uint)X.string_to_keysym("U22B6"), XK_KP_Begin, XK_KP_Begin, (uint)X.string_to_keysym("U22B7")}));
-			keysyms.set(85, new ArrayBox({ XK_KP_6, XK_KP_6, XK_rightarrow, XK_includes, XK_KP_Right, XK_KP_Right, (uint)X.string_to_keysym("U2287")}));
+			keysyms.set(85, new ArrayBox({ XK_KP_6, (uint)X.string_to_keysym("U2023"), XK_rightarrow, XK_includes, XK_KP_Right, XK_KP_Right, (uint)X.string_to_keysym("U2287")}));
 			keysyms.set(86, new ArrayBox({ XK_KP_Add, XK_KP_Add, XK_plusminus, (uint)X.string_to_keysym("U2213"), (uint)X.string_to_keysym("U2295"), 0, (uint)X.string_to_keysym("U2214")}));
 			keysyms.set(87, new ArrayBox({ XK_KP_1, XK_diamond, (uint)X.string_to_keysym("U2194"), XK_lessthanequal, XK_KP_End, XK_KP_End, XK_downstile}));
 			keysyms.set(88, new ArrayBox({ XK_KP_2, XK_heart, XK_downarrow, XK_union, XK_KP_Down, XK_KP_Down, (uint)X.string_to_keysym("U22C3")}));
 			keysyms.set(89, new ArrayBox({ XK_KP_3, (uint)X.string_to_keysym("U2660"), (uint)X.string_to_keysym("U21CC"), XK_greaterthanequal, XK_KP_Next, XK_KP_Next, (uint)X.string_to_keysym("U230B")}));
 			keysyms.set(90, new ArrayBox({ XK_KP_0, (uint)X.string_to_keysym("U2423"), XK_percent, (uint)X.string_to_keysym("U2030"), XK_KP_Insert, XK_KP_Insert, (uint)X.string_to_keysym("U25A1")}));
-			keysyms.set(91, new ArrayBox({ XK_KP_Decimal, XK_comma, XK_period, XK_KP_Delete, XK_apostrophe, XK_quotedbl}));
+			keysyms.set(91, new ArrayBox({ XK_KP_Decimal, XK_comma, /*XK_period*/XK_comma, XK_KP_Delete, XK_apostrophe, XK_quotedbl}));
 			keysyms.set(92, new ArrayBox({ XK_ISO_Level3_Shift, 0, XK_ISO_Level3_Shift}));
 			keysyms.set(93, new ArrayBox({ XK_Zenkaku_Hankaku, 0, XK_Zenkaku_Hankaku}));
 			keysyms.set(94, new ArrayBox({ XK_ISO_Level5_Shift, 0, XK_ISO_Level5_Shift}));
@@ -138,7 +138,7 @@ namespace NeoLayoutViewer{
 			keysyms.set(103, new ArrayBox({}));
 			keysyms.set(104, new ArrayBox({ XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter}));
 			keysyms.set(105, new ArrayBox({ XK_Control_R, 0, XK_Control_R}));
-			keysyms.set(106, new ArrayBox({ XK_KP_Divide, XK_KP_Divide, XK_division, (uint)X.string_to_keysym("U2223"), (uint)X.string_to_keysym("U2300"), 0, (uint)X.string_to_keysym("U2044")}));
+			keysyms.set(106, new ArrayBox({ XK_KP_Divide, XK_KP_Divide, XK_division,(uint) X.string_to_keysym("U2044"), (uint)X.string_to_keysym("U2223"), (uint)X.string_to_keysym("U2300"), (uint)X.string_to_keysym("U2044")}));
 			keysyms.set(107, new ArrayBox({ XK_Print, XK_Sys_Req, XK_Print, XK_Sys_Req}));
 			keysyms.set(108, new ArrayBox({ XK_ISO_Level5_Shift, 0, XK_ISO_Level5_Shift}));
 			keysyms.set(109, new ArrayBox({ XK_Linefeed, 0, XK_Linefeed}));
