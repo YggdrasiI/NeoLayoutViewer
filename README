@@ -1,4 +1,8 @@
-
+Dependencies:
+libgee-dev
+libgtk2.0-dev
+libx11-dev
+...
 
 
 Errors:
@@ -10,3 +14,4 @@ Errors:
 
 
 - Alt-Key did not work.
+- Some Symbols are wrong.
