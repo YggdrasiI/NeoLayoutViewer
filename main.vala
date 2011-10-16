@@ -12,7 +12,7 @@ namespace NeoLayoutViewer{
 
 		Gtk.init (ref args);
 
-		var configm = new ConfigManager("neolayoutviewer.conf");
+		var configm = new ConfigManager("neo_layout_viewer.conf");
 
 		var neo_win = new NeoWindow (sebene, configm.getConfig());
 		var neo_tray = new AppStatusIcon(neo_win);
