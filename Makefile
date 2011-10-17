@@ -17,7 +17,7 @@ PKGS = --pkg x11 --pkg keysym --pkg gtk+-2.0 --pkg gee-1.0 --pkg gdk-x11-2.0 --p
 CC_INCLUDES = 
 # vala compiler
 VALAC = valac --thread 
-VAPIDIR = --vapidir=vapi/ --vapi=vapi/keysym.vapi
+VAPIDIR = --vapidir=vapi/ 
  
 # compiler options for a debug build
 #VALACOPTS = -g --save-temps
