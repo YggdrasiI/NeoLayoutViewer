@@ -49,7 +49,8 @@ namespace NeoLayoutViewer{
 			addSetting("move_shortcut","<Ctrl><Alt>N", "Circle the window posisition");
 			//addSetting("position_cycle","3 3 9 1 3 9 1 7 7", "List of positions (num pad orientation)");
 			addSetting("position_cycle","2 3 6 1 3 9 4 7 8", "List of positions (num pad orientation)");
-			addSetting("display_numblock","1", null);
+			addSetting("display_numpad","1", null);
+			addSetting("display_function_keys","1", null);
 			addSetting("window_selectable","1","To use the keyboard window as virtual keyboard, disable this entry.");
 		}
 
@@ -57,7 +58,7 @@ namespace NeoLayoutViewer{
 			 Einstellungen, die der Übersicht halber nicht in der Konfigurationsdatei stehen.
 		 */
 		private void add_intern_values(){
-			config.set("numblock_width","350");
+			config.set("numpad_width","350");
 
 		}
 

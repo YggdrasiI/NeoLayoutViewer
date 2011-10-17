@@ -15,7 +15,7 @@ namespace NeoLayoutViewer{
 		public int ebene;
 		public int[] active_modifier_by_keyboard;
 		public int[] active_modifier_by_mouse;
-		public int numblock_width;
+		public int numpad_width;
 		//private Button button;
 		private bool minimized;
 		private int position_num;
@@ -129,8 +129,8 @@ namespace NeoLayoutViewer{
 			int width; 
 			int height;
 			this.get_size2(out width, out height);
-			//bad position, if numblock not shown...
-			fixed.put( status, (int) ( (0.65)*width), (int) (0.40*height) );
+			//bad position, if numpad not shown...
+			fixed.put( status, (int) ( (0.66)*width), (int) (0.40*height) );
 
 			//Fenstereigenschaften setzen
 			this.key_press_event.connect (on_key_pressed);
@@ -274,9 +274,9 @@ namespace NeoLayoutViewer{
 				this.image_buffer[i] = open_image(i);
 
 				//Numpad-Teil abschneiden, falls gefordert
-				this.numblock_width = int.parse(config.get("numblock_width"));
-				if( config.get("display_numblock")=="0" ){
-					var tmp =  new Gdk.Pixbuf(image_buffer[i].colorspace,image_buffer[i].has_alpha,image_buffer[i].bits_per_sample, image_buffer[i].width-numblock_width ,image_buffer[i].height);
+				this.numpad_width = int.parse(config.get("numpad_width"));
+				if( config.get("display_numpad")=="0" ){
+					var tmp =  new Gdk.Pixbuf(image_buffer[i].colorspace,image_buffer[i].has_alpha,image_buffer[i].bits_per_sample, image_buffer[i].width-numpad_width ,image_buffer[i].height);
 					this.image_buffer[i].copy_area(0,0,tmp.width,tmp.height,tmp,0,0);
 					this.image_buffer[i] = tmp;
 				}

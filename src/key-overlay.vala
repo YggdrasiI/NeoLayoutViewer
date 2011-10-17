@@ -308,8 +308,8 @@ namespace NeoLayoutViewer{
 
 			double winWidthUnscaled = 1000.0;
 			double winHeightUnscaled = 220.0;
-			if( winMain.config.get("display_numblock")=="0" )
-				winWidthUnscaled	-=	winMain.numblock_width;
+			if( winMain.config.get("display_numpad")=="0" )
+				winWidthUnscaled	-=	winMain.numpad_width;
 			int width, height;
 			winMain.get_size2(out width, out height);
 
@@ -338,7 +338,7 @@ namespace NeoLayoutViewer{
 			scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 20, false, winMain, hboxes[0], 0);
 			scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 21 , false, winMain, hboxes[0], 0);
 
-			if( winMain.config.get("display_numblock")!="0" ){
+			if( winMain.config.get("display_numpad")!="0" ){
 				scaledBox(78.0-1.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 22 , false, winMain, hboxes[0], 0);
 				//free space
 				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[0], 3);
@@ -375,7 +375,7 @@ namespace NeoLayoutViewer{
 			scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 34 , false, winMain, hboxes[1], 0);
 			scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 35 , false, winMain, hboxes[1], 0);
 
-			if( winMain.config.get("display_numblock")!="0" ){
+			if( winMain.config.get("display_numpad")!="0" ){
 				//Halve of Return/Enter
 				scaledBox(62.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 36 , false, winMain, hboxes[1], 0);
 				//free space
@@ -418,7 +418,7 @@ namespace NeoLayoutViewer{
 			//right mod3
 			scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 2/*51*/ , false, winMain, hboxes[2], 1);
 
-			if( winMain.config.get("display_numblock")!="0" ){
+			if( winMain.config.get("display_numpad")!="0" ){
 				//Second halve of Enter/Return
 				scaledBox(49.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 36 , false, winMain, hboxes[2], 0);
 				//free space
@@ -452,7 +452,7 @@ namespace NeoLayoutViewer{
 			scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 59 , false, winMain, hboxes[3], 0);
 			scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 60 , false, winMain, hboxes[3], 0);
 			scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 61 , false, winMain, hboxes[3], 0);
-			if( winMain.config.get("display_numblock")!="0" ){
+			if( winMain.config.get("display_numpad")!="0" ){
 				//right shift
 				scaledBox(114.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 1 /*62*/ , false, winMain, hboxes[3], 1);
 				//free space
@@ -488,7 +488,7 @@ namespace NeoLayoutViewer{
 			//free space
 			scaledBox(40.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[4], 3);
 
-			if( winMain.config.get("display_numblock")!="0" ){
+			if( winMain.config.get("display_numpad")!="0" ){
 				// right ctrl
 				scaledBox(61.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 4/*105*/ , false, winMain, hboxes[4], 2);
 				//free space
