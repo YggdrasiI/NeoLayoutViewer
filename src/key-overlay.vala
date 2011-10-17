@@ -143,12 +143,12 @@ namespace NeoLayoutViewer{
 			keysyms.set(108, new ArrayBox({ XK_ISO_Level5_Shift, 0, XK_ISO_Level5_Shift}));
 			keysyms.set(109, new ArrayBox({ XK_Linefeed, 0, XK_Linefeed}));
 			keysyms.set(110, new ArrayBox({ XK_Home, 0, XK_Home}));
-			keysyms.set(111, new ArrayBox({ XK_Up, 0, XK_Up}));
+			keysyms.set(111, new ArrayBox({ XK_Up, XK_Up, XK_Up, XK_Up, XK_Up, XK_Up}));
 			keysyms.set(112, new ArrayBox({ XK_Prior, 0, XK_Prior}));
-			keysyms.set(113, new ArrayBox({ XK_Left, 0, XK_Left}));
-			keysyms.set(114, new ArrayBox({ XK_Right, 0, XK_Right}));
+			keysyms.set(113, new ArrayBox({ XK_Left, XK_Left, XK_Left, XK_Left, XK_Left, XK_Left}));
+			keysyms.set(114, new ArrayBox({ XK_Right, XK_Right, XK_Right, XK_Right, XK_Right, XK_Right}));
 			keysyms.set(115, new ArrayBox({ XK_End, 0, XK_End}));
-			keysyms.set(116, new ArrayBox({ XK_Down, 0, XK_Down}));
+			keysyms.set(116, new ArrayBox({ XK_Down, XK_Down, XK_Down, XK_Down, XK_Down, XK_Down}));
 			keysyms.set(117, new ArrayBox({ XK_Next, 0, XK_Next}));
 			keysyms.set(118, new ArrayBox({ XK_Insert, 0, XK_Insert}));
 			keysyms.set(119, new ArrayBox({ XK_Delete, 0, XK_Delete}));
