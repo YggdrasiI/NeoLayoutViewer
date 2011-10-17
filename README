@@ -10,8 +10,11 @@ Errors:
 - Not all keysyms found. make returns i.e.
 	[..]/key-overlay.c:1744: error: ‘XK_logicalor’ undeclared (first use in this function)
 
-	Solution: define all groups in /etc/include/X11/keysym.def. I.e. add “#define XK_TECHNICAL“.
-
+	Solution: define all groups in /etc/include/X11/keysym.h I.e. add
+	#define XK_TECHNICAL
+	#define XK_PUBLISHING
+	#define XK_APL
+	to the header file.
 
 - Alt-Key did not work.
 - Some Symbols are wrong.
