@@ -341,7 +341,13 @@ namespace NeoLayoutViewer{
 			if( winMain.config.get("display_numblock")!="0" ){
 				scaledBox(78.0-1.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 22 , false, winMain, hboxes[0], 0);
 				//free space
-				scaledBox(174.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[0], 3);
+				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[0], 3);
+				//ins home page_up
+				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 118 , false, winMain, hboxes[0], 0);
+				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 110 , false, winMain, hboxes[0], 0);
+				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 112 , false, winMain, hboxes[0], 0);
+				//free space
+				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[0], 3);
 				//num key, divide, times, and minus
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 77 , false, winMain, hboxes[0], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 106 , false, winMain, hboxes[0], 0);
@@ -373,7 +379,13 @@ namespace NeoLayoutViewer{
 				//Halve of Return/Enter
 				scaledBox(62.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 36 , false, winMain, hboxes[1], 0);
 				//free space
-				scaledBox(174.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[1], 3);
+				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[1], 3);
+				//entf end page_down
+				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 119 , false, winMain, hboxes[1], 0);
+				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 115 , false, winMain, hboxes[1], 0);
+				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 117 , false, winMain, hboxes[1], 0);
+				//free space
+				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[1], 3);
 				//7, 8, 9, and halve of plus
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 79 , false, winMain, hboxes[1], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 80 , false, winMain, hboxes[1], 0);
@@ -444,7 +456,11 @@ namespace NeoLayoutViewer{
 				//right shift
 				scaledBox(114.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 1 /*62*/ , false, winMain, hboxes[3], 1);
 				//free space
-				scaledBox(174.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[3], 3);
+				scaledBox(66.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[3], 3);
+				// up
+				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 111 , false, winMain, hboxes[3], 0);
+				//free space
+				scaledBox(66.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[3], 3);
 				//1, 2, 3, and halve of enter 
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 87 , false, winMain, hboxes[3], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 88 , false, winMain, hboxes[3], 0);
@@ -476,7 +492,13 @@ namespace NeoLayoutViewer{
 				// right ctrl
 				scaledBox(61.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 4/*105*/ , false, winMain, hboxes[4], 2);
 				//free space
-				scaledBox(174.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[4], 3);
+				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[4], 3);
+				//left, down, right
+				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 113 , false, winMain, hboxes[4], 0);
+				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 116 , false, winMain, hboxes[4], 0);
+				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 114 , false, winMain, hboxes[4], 0);
+				//free space
+				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[4], 3);
 				//0, comma, and halve of enter 
 				scaledBox(88.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 90 , false, winMain, hboxes[4], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 91 , false, winMain, hboxes[4], 0);
