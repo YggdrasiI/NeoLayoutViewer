@@ -35,6 +35,8 @@ namespace NeoLayoutViewer{
 
 			this.keyBoxes =  new Gee.HashMap<int, KeyEventBox>();
 			generateKeyevents();
+
+			this.show();
 		}
 
 		public Gee.HashMap<int, ArrayBox> generateKeysyms(){
@@ -312,6 +314,10 @@ namespace NeoLayoutViewer{
 			this.pack_start( hboxes[3], false, true, 0 );
 			this.pack_start( hboxes[4], false, true, 0 );
 
+			foreach( var hbox in hboxes ){
+				hbox.show();
+			}
+
 			double winWidthUnscaled = 1000.0;
 			double winHeightUnscaled = 250.0;
 			if( winMain.config.get("display_function_keys")=="0" ){
@@ -338,21 +344,21 @@ namespace NeoLayoutViewer{
 				//esc
 				scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 9, false, winMain, hboxes[5], 0);
 				//free space
-				scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[5], 3);
+				scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[5], -1);
 				// F1-F4
 				scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 67, false, winMain, hboxes[5], 0);
 				scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 68, false, winMain, hboxes[5], 0);
 				scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 69, false, winMain, hboxes[5], 0);
 				scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 70, false, winMain, hboxes[5], 0);
 				//free space
-				scaledBox(22.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[5], 3);
+				scaledBox(22.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[5], -1);
 				// F5-F8
 				scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 71, false, winMain, hboxes[5], 0);
 				scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 72, false, winMain, hboxes[5], 0);
 				scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 73, false, winMain, hboxes[5], 0);
 				scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 74, false, winMain, hboxes[5], 0);
 				//free space
-				scaledBox(22.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[5], 3);
+				scaledBox(22.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[5], -1);
 				// F9-F11
 				scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 75, false, winMain, hboxes[5], 0);
 				scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 76, false, winMain, hboxes[5], 0);
@@ -361,7 +367,7 @@ namespace NeoLayoutViewer{
 					//F12
 					scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 96, false, winMain, hboxes[5], 0);
 					//free space
-					scaledBox(22.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[5], 3);
+					scaledBox(22.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[5], -1);
 					// print,scroll,break
 					scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 107, true, winMain, hboxes[5], 0);
 					scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 78, true, winMain, hboxes[5], 0);
@@ -394,13 +400,13 @@ namespace NeoLayoutViewer{
 			if( winMain.config.get("display_numpad")!="0" ){
 				scaledBox(78.0-1.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 22 , false, winMain, hboxes[0], 0);
 				//free space
-				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[0], 3);
+				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[0], -1);
 				//ins home page_up
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 118 , false, winMain, hboxes[0], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 110 , false, winMain, hboxes[0], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 112 , false, winMain, hboxes[0], 0);
 				//free space
-				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[0], 3);
+				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[0], -1);
 				//num key, divide, times, and minus
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 77 , false, winMain, hboxes[0], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 106 , false, winMain, hboxes[0], 0);
@@ -432,13 +438,13 @@ namespace NeoLayoutViewer{
 				//Halve of Return/Enter
 				scaledBox(62.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 36 , false, winMain, hboxes[1], 0);
 				//free space
-				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[1], 3);
+				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[1], -1);
 				//entf end page_down
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 119 , false, winMain, hboxes[1], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 115 , false, winMain, hboxes[1], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 117 , false, winMain, hboxes[1], 0);
 				//free space
-				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[1], 3);
+				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[1], -1);
 				//7, 8, 9, and halve of plus
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 79 , false, winMain, hboxes[1], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 80 , false, winMain, hboxes[1], 0);
@@ -475,7 +481,7 @@ namespace NeoLayoutViewer{
 				//Second halve of Enter/Return
 				scaledBox(49.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 36 , false, winMain, hboxes[2], 0);
 				//free space
-				scaledBox(174.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[2], 3);
+				scaledBox(174.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[2], -1);
 				//4, 5, 6, and halve of plus
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 83 , false, winMain, hboxes[2], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 84 , false, winMain, hboxes[2], 0);
@@ -509,11 +515,11 @@ namespace NeoLayoutViewer{
 				//right shift
 				scaledBox(114.0-1,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 1 /*62*/ , false, winMain, hboxes[3], 1);
 				//free space
-				scaledBox(66.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[3], 3);
+				scaledBox(66.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[3], -1);
 				// up
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 111 , false, winMain, hboxes[3], 0);
 				//free space
-				scaledBox(66.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[3], 3);
+				scaledBox(66.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[3], -1);
 				//1, 2, 3, and halve of enter 
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 87 , false, winMain, hboxes[3], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 88 , false, winMain, hboxes[3], 0);
@@ -531,34 +537,34 @@ namespace NeoLayoutViewer{
 			//left ctrl, 37
 			scaledBox(61.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 4/*37*/ , false, winMain, hboxes[4], 2);
 			//free space
-			scaledBox(48.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[4], 3);
+			scaledBox(48.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[4], -1);
 			//alt
-			scaledBox(61.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 5/*64*/ , false, winMain, hboxes[4], 2);
+			scaledBox(61.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 5/*64*/ , false, winMain, hboxes[4], 4);
 			//space
 			scaledBox(316.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 65 , false, winMain, hboxes[4], 0);
 			//mod4
 			scaledBox(61.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 3/*94*/ , false, winMain, hboxes[4], 1);
 			//free space
-			scaledBox(40.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[4], 3);
+			scaledBox(40.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[4], -1);
 
 			if( winMain.config.get("display_numpad")!="0" ){
 				// right ctrl
-				scaledBox(61.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 4/*105*/ , false, winMain, hboxes[4], 2);
+				scaledBox(61.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 4/*105*/ , false, winMain, hboxes[4], 3);
 				//free space
-				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[4], 3);
+				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[4], -1);
 				//left, down, right
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 113 , false, winMain, hboxes[4], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 116 , false, winMain, hboxes[4], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 114 , false, winMain, hboxes[4], 0);
 				//free space
-				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[4], 3);
+				scaledBox(22.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , -1 , false, winMain, hboxes[4], -1);
 				//0, comma, and halve of enter 
 				scaledBox(88.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 90 , false, winMain, hboxes[4], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 91 , false, winMain, hboxes[4], 0);
 				scaledBox(44.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 104 , false, winMain, hboxes[4], 0);
 			}else{
 				// right ctrl
-				scaledBox(61.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 4/*105*/ , false, winMain, hboxes[4], 2);
+				scaledBox(61.0,44.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 4/*105*/ , false, winMain, hboxes[4], 3);
 			}
 
 			//++ End last/space row ++
@@ -587,27 +593,42 @@ namespace NeoLayoutViewer{
 			}
 
 			KeyEventBox keybox;
-			if( boxtype == 0 ){
+			switch (boxtype){
+			case 0:
 				// Normale Taste
 				ArrayBox ks = this.keysyms.get(keycode);
 				keybox = new KeyEventBox(winMain, width, height, ref ks.val );
 				this.keyBoxes.set(keycode, keybox);
 				box.pack_start(keybox, false, true, 0 );
-			}else if( boxtype == 1){
+				break;
+			case 1:
 				// Modifier, die andere Buchstabenebenen aktivieren. Zusätzlich Ebenen-Bild einblenden.
 				keybox = new KeyEventBox.modifier(winMain, width, height, keycode /*=modifier array index*/ );
 				this.keyBoxes.set(keycode, keybox);
 				box.pack_start(keybox, false, true, 0 );
-			}else if( boxtype == 2){
+				break;
 				//Andere Modifier (CTRL, Alt,... )
-				keybox = new KeyEventBox.modifier2(winMain, width, height, keycode /*modifier array index */ );
+			case 2: //left ctrl
+				keybox = new KeyEventBox.modifier2(winMain, width, height, keycode /*modifier array index */, "tastatur_ctrl_left_2.png" );
 				this.keyBoxes.set(keycode, keybox);
 				box.pack_start(keybox, false, true, 0 );
-			}else{
+				break;
+			case 3: //right ctrl
+				keybox = new KeyEventBox.modifier2(winMain, width, height, keycode /*modifier array index */, "tastatur_ctrl_right_2.png" );
+				this.keyBoxes.set(keycode, keybox);
+				box.pack_start(keybox, false, true, 0 );
+				break;
+			case 4: //left alt
+				keybox = new KeyEventBox.modifier2(winMain, width, height, keycode /*modifier array index */, "tastatur_alt_left_2.png" );
+				this.keyBoxes.set(keycode, keybox);
+				box.pack_start(keybox, false, true, 0 );
+				break;
+			default:
 				// Fläche ohne Funktion
 				keybox = new KeyEventBox.freeArea(winMain, width, height );
 				this.keyBoxes.set(keycode, keybox);
 				box.pack_start(keybox, false, true, 0 );
+				break;
 			}
 
 
@@ -652,7 +673,8 @@ namespace NeoLayoutViewer{
 				 flip = true;
 				 }
 			 */
-			//this.set_visible_window(false);
+			this.set_visible_window(false);
+			this.show();
 		}
 
 		public KeyEventBox(NeoWindow winMain, int width, int height , ref uint[] keysym){
@@ -663,8 +685,9 @@ namespace NeoLayoutViewer{
 			//GLib.stdout.printf("Ww: %i, Wh: %i\n", width, height);
 
 			this.button_press_event.connect ((event) => {
-					uint ks = this.keysym[this.layer_permutation[winMain.ebene]-1];
+					uint ks = this.keysym[this.layer_permutation[winMain.layer]-1];
 					int modi = winMain.getActiveModifierMask({4,5}); //ctrl+alt mask
+					//debug(@"Modi: $modi");
 					if( ks < 1 ) return false;
 
 					keysend(ks,modi);
@@ -679,10 +702,10 @@ namespace NeoLayoutViewer{
 			this.button_press_event.connect ((event) => {
 					if( winMain.active_modifier_by_mouse[this.modifier_index] == 0){
 					winMain.change_active_modifier( this.modifier_index, false, 1 );
-					winMain.status.set_label(@"Activate\nModifier $(this.modifier_index)");
+					//winMain.status.set_label(@"Activate\nModifier $(this.modifier_index)");
 					}else{
 					winMain.change_active_modifier( this.modifier_index, false, 0 );
-					winMain.status.set_label(@"Deactivate\nModifier $(this.modifier_index)");
+					//winMain.status.set_label(@"Deactivate\nModifier $(this.modifier_index)");
 					}
 					winMain.redraw();
 
@@ -690,7 +713,7 @@ namespace NeoLayoutViewer{
 					});
 		}
 
-		public KeyEventBox.modifier2(NeoWindow winMain, int width, int height , int modifier_index ){
+		public KeyEventBox.modifier2(NeoWindow winMain, int width, int height , int modifier_index, string pressed_key_image ){
 			this.all(winMain, width, height);
 			this.modifier_index = modifier_index;
 
@@ -702,24 +725,31 @@ namespace NeoLayoutViewer{
 					winMain.change_active_modifier( 2, false, 0 );
 					winMain.change_active_modifier( 3, false, 0 );
 					winMain.change_active_modifier( this.modifier_index, false, 1 );
-					winMain.status.set_label(@"Activate\n Modifier $(this.modifier_index)");
+					this.image.show();
+					//winMain.status.set_label(@"Activate\n Modifier $(this.modifier_index)");
 					}else{
 					winMain.change_active_modifier( this.modifier_index, false, 0 );
-					winMain.status.set_label(@"Deactivate\n Modifier $(this.modifier_index)");
+					this.image.hide();
+					//winMain.status.set_label(@"Deactivate\n Modifier $(this.modifier_index)");
 					}
 					winMain.redraw();
 					return false;
 					});
 
 			// Image of pressed Button
-			Gdk.Pixbuf image_buffer = winMain.open_image_str("assets/neo2.0/tastatur_ctrl_left_2.png");
+			Gdk.Pixbuf image_buffer = winMain.open_image_str(@"assets/neo2.0/$(pressed_key_image)");
 			var w = image_buffer.width;
 			var h = image_buffer.height;
 			image_buffer = image_buffer.scale_simple(width, h*width/w,Gdk.InterpType.BILINEAR);
 
 			this.image = new Gtk.Image();
 			this.image.set_from_pixbuf(image_buffer);
+			this.image.hide();
+
 			add(this.image);
+
+			winMain.modifier_key_images.add(  new Modkey(ref this.image, this.modifier_index) ); 
+
 		}
 
 		public KeyEventBox.freeArea(NeoWindow winMain, int width, int height ){

@@ -16,3 +16,4 @@ Errors:
 - Alt-Key did not work.
 - Some Symbols are wrong.
 - Selection with Shift+Arrow keys not implemented.
+- Global Shortcuts, like Ctrl+F1 are not captured by Metacity.

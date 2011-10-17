@@ -5,23 +5,48 @@ using Posix;//system-calls
 
 namespace NeoLayoutViewer{
 
+
+	public class Modkey{
+		public Gtk.Image modKeyImage;
+		public int modifier_index;
+		public int active;
+
+		public Modkey(ref Gtk.Image i, int m){
+			this.modKeyImage = i;
+			this.modifier_index = m;
+			this.active = 0;
+		}
+
+		public void change( int new_state ){
+			if( new_state == this.active ) return;
+			this.active = new_state;
+			if( this.active == 0){
+				modKeyImage.hide();
+			}else{
+				modKeyImage.show();
+			}
+		}
+	}
+
 	public class NeoWindow : Gtk.Window {
 
 		private Gtk.Image image;
 		public Gtk.Label status;
 		private Gdk.Pixbuf[] image_buffer;
+		public Gee.List<Modkey> modifier_key_images; // for modifier which didn't toggle a layout layer. I.e. ctrl, alt.
 		public Gee.HashMap<string, string> config;
 
-		public int ebene;
+		public int layer;
 		public int[] active_modifier_by_keyboard;
 		public int[] active_modifier_by_mouse;
 		public int numpad_width;
+		public int function_keys_height;
 		//private Button button;
 		private bool minimized;
 		private int position_num;
 		private int[] position_cycle;
 
-		/* Die Neo-Modifier unterscheiden sich zum Teil von den Normalen, für die Konstanten definiert sind. Bei der Initialisierung werden aus den Standardkonstanen die Konstenen für die Ebenen 1-6 berechnet.*/
+		/* Die Neo-Modifier unterscheiden sich zum Teil von den Normalen, für die Konstanten definiert sind. Bei der Initialisierung werden aus den Standardkonstanen die Konstanten für die Ebenen 1-6 berechnet.*/
 		public int[] NEO_MODIFIER_MASK;
 		public int[] MODIFIER_MASK;
 
@@ -47,7 +72,7 @@ namespace NeoLayoutViewer{
 		};
 
 		/* Analog zu oben für den Fall, dass eine Taste losgelassen wird. Funktioniert nicht immer.
-			 Ist beispielsweise ShiftL und ShiftR gedrückt und eine wird losgelassen, so wechelt die Anzeige zur ersten Ebene.
+			 Ist beispielsweise ShiftL und ShiftR gedrückt und eine wird losgelassen, so wechselt die Anzeige zur ersten Ebene.
 			 Die Fehler sind imo zu vernachlässigen.
 		 */
 		private short[,] MODIFIER_MAP_RELEASE = {
@@ -58,6 +83,16 @@ namespace NeoLayoutViewer{
 
 		/*
 			 Modifier können per Tastatur und Maus aktiviert werden. Diese Abbildung entscheidet,
+			 wie bei einer Zustandsänderung verfahren werden soll. 
+			 k,m,K,M ∈ {0,1}.
+			 k - Taste wurde gedrückt gehalten
+			 m - Taste wurde per Mausklick selektiert.
+			 K - Taste wird gedrückt
+			 M - Taste wird per Mausklick selektiert.
+
+			 k' = f(k,m,K,M). Und wegen der Symmetrie(!)
+			 m' = f(m,k,M,K)
+			 Siehe auch change_active_modifier(...). 
 		 */
 		private short[,,,] MODIFIER_KEYBOARD_MOUSE_MAP = {
 			//		 k		=				f(k,m,K,M,) and m = f(m,k,M,K)
@@ -67,7 +102,7 @@ namespace NeoLayoutViewer{
 				{ {0, 0} , {1, 1} } }//1100, 1101; 1110, 1111; //k=m=1 should be impossible
 		};
 
-		public NeoWindow (string sebene, Gee.HashMap<string, string> config) {
+		public NeoWindow (string slayer, Gee.HashMap<string, string> config) {
 			this.config = config;
 			this.minimized = true;
 
@@ -95,6 +130,8 @@ namespace NeoLayoutViewer{
 			this.active_modifier_by_keyboard = {0,0,0,0,0,0};
 			this.active_modifier_by_mouse = {0,0,0,0,0,0};
 
+			this.modifier_key_images = new Gee.ArrayList<Modkey>(); 
+
 			this.position_num = int.max(int.min(int.parse(config.get("position")),9),1);
 			//Anlegen des Arrays, welches den Positionsdurchlauf beschreibt.
 			try{
@@ -109,28 +146,33 @@ namespace NeoLayoutViewer{
 			}
 
 
-			this.ebene = int.parse(sebene);
-			if(this.ebene<1 || this.ebene>6) {this.ebene = 1; }
+			this.layer = int.parse(slayer);
+			if(this.layer<1 || this.layer>6) {this.layer = 1; }
 
 			//Lade die Pngs der sechs Ebenen
 			this.load_image_buffer();
-			this.image = new Gtk.Image();//.from_pixbuf(this.image_buffer[ebene]);
+			this.image = new Gtk.Image();//.from_pixbuf(this.image_buffer[layer]);
 			// Create an image and render first page to image
 			//var pixbuf = new Gdk.Pixbuf (Gdk.Colorspace.RGB, false, 8, 800, 600);
+
+			image.show();
 			render_page ();
 
 			var fixed = new Fixed();
-			add(fixed);
 
 			fixed.put(this.image, 0, 0);
 			fixed.put( new KeyOverlay(this) , 0, 0);
 
 			this.status = new Label("");
+			status.show();
 			int width; 
 			int height;
 			this.get_size2(out width, out height);
 			//bad position, if numpad not shown...
 			fixed.put( status, (int) ( (0.66)*width), (int) (0.40*height) );
+
+			add(fixed);
+			fixed.show();
 
 			//Fenstereigenschaften setzen
 			this.key_press_event.connect (on_key_pressed);
@@ -147,9 +189,9 @@ namespace NeoLayoutViewer{
 			//this.allow_shrink = false;
 			this.skip_taskbar_hint = true;
 
-			this.show_all();
+			//this.show();
 
-			//Move ist erst nach show_all() erfolgreich
+			//Move ist erst nach show() erfolgreich
 			this.numkeypad_move(int.parse(config.get("position")));
 
 			//Icon des Fensters
@@ -158,11 +200,15 @@ namespace NeoLayoutViewer{
 			//Nicht selektierbar (für virtuelle Tastatur)
 			this.set_accept_focus( (config.get("window_selectable")!="0") );
 
+			this.show();
 		}
 
-		public override void show_all(){
+		public override void show(){
 			this.minimized = false;
-			base.show_all();
+			//base.show();
+			base.show();/*
+				switched to show. show_all should not be used. Some children has to stay invisible.
+			*/
 			//this.present();
 			//set_visible(true);
 			this.numkeypad_move(this.position_num);
@@ -173,15 +219,15 @@ namespace NeoLayoutViewer{
 				this.present();
 		}
 
-		public override void hide_all(){
+		public override void hide(){
 			this.minimized = true;
-			base.hide_all();
+			base.hide();
 			//set_visible(false);
 		}
 
 		public bool toggle(){
-			if(this.minimized) show_all();
-			else hide_all();
+			if(this.minimized) show();
+			else hide();
 			return this.minimized;
 		}
 
@@ -245,8 +291,8 @@ namespace NeoLayoutViewer{
 			this.move(x,y);
 		}
 
-		public Gdk.Pixbuf open_image (int ebene) {
-			var bildpfad = "assets/neo2.0/tastatur_neo_Ebene%i.png".printf(ebene);
+		public Gdk.Pixbuf open_image (int layer) {
+			var bildpfad = "assets/neo2.0/tastatur_neo_Ebene%i.png".printf(layer);
 			return open_image_str(bildpfad);
 			//return new Image_from_pixpuf(open_image_str(bildpfad));
 		}
@@ -270,11 +316,20 @@ namespace NeoLayoutViewer{
 			int width = int.min(int.max(int.parse( config.get("width") ),min_width),max_width);
 			int w,h;
 
+			this.numpad_width = int.parse(config.get("numpad_width"));
+			this.function_keys_height = int.parse(config.get("function_keys_height"));
+
 			for (int i=1; i<7; i++){
 				this.image_buffer[i] = open_image(i);
 
-				//Numpad-Teil abschneiden, falls gefordert
-				this.numpad_width = int.parse(config.get("numpad_width"));
+				//Funktionstasten ausblennden, falls gefordert.
+				if( config.get("display_function_keys")=="0" ){
+					var tmp =  new Gdk.Pixbuf(image_buffer[i].colorspace,image_buffer[i].has_alpha,image_buffer[i].bits_per_sample, image_buffer[i].width ,image_buffer[i].height-function_keys_height);
+					this.image_buffer[i].copy_area(0,function_keys_height,tmp.width,tmp.height,tmp,0,0);
+					this.image_buffer[i] = tmp;
+				}
+
+				//Numpad-Teil abschneiden, falls gefordert.
 				if( config.get("display_numpad")=="0" ){
 					var tmp =  new Gdk.Pixbuf(image_buffer[i].colorspace,image_buffer[i].has_alpha,image_buffer[i].bits_per_sample, image_buffer[i].width-numpad_width ,image_buffer[i].height);
 					this.image_buffer[i].copy_area(0,0,tmp.width,tmp.height,tmp,0,0);
@@ -286,6 +341,7 @@ namespace NeoLayoutViewer{
 				h = this.image_buffer[i].height;
 				this.image_buffer[i] = this.image_buffer[i].scale_simple(width, h*width/w,Gdk.InterpType.BILINEAR);
 			}
+			
 		}
 
 		private bool on_key_pressed (Widget source, Gdk.EventKey key) {
@@ -295,14 +351,14 @@ namespace NeoLayoutViewer{
 			}
 
 			if (key.str == "h") {
-				this.hide_all();
+				this.hide();
 			}
 
 			/* Erste Auswahlvariante: Zahlen 1-6 */
-			var ebene_tmp = int.parse(key.str);
-			if(ebene_tmp>0 && ebene_tmp<7) {
-				if(this.ebene != ebene_tmp){
-					this.ebene = ebene_tmp;
+			var layer_tmp = int.parse(key.str);
+			if(layer_tmp>0 && layer_tmp<7) {
+				if(this.layer != layer_tmp){
+					this.layer = layer_tmp;
 					render_page ();
 				}
 			}
@@ -344,7 +400,7 @@ namespace NeoLayoutViewer{
 			 - “modifier is pressed”
 			 - “modifier was seleted by mouseclick” and
 			 - “modifier is seleted by mouseclick”
-			 as array indizes to eval an new state.
+			 as array indizes to eval an new state. See comment of MODIFIER_KEYBOARD_MOUSE_MAP, too.
 		 */
 		public void change_active_modifier(int mod_index, bool keyboard, int new_mod_state){
 			int old_mod_state;
@@ -393,27 +449,38 @@ namespace NeoLayoutViewer{
 
 		private void check_modifier(int iet1){
 
-			if(iet1 != this.ebene){
-				this.ebene = iet1;
+			if(iet1 != this.layer){
+				this.layer = iet1;
 				render_page ();
 			}
 		}
 
 		public void redraw(){
-			var tebene = this.ebene;
-			this.ebene = this.MODIFIER_MAP2[
+			var tlayer = this.layer;
+			this.layer = this.MODIFIER_MAP2[
 				this.active_modifier_by_keyboard[1] | this.active_modifier_by_mouse[1], //shift
 				this.active_modifier_by_keyboard[2] | this.active_modifier_by_mouse[2], //neo-mod3
 				this.active_modifier_by_keyboard[3] | this.active_modifier_by_mouse[3] //neo-mod4
 					] + 1;
 
-			if( tebene != this.ebene)
+			// check, which extra modifier is pressed and update.
+			foreach( var modkey in modifier_key_images ){
+				modkey.change(
+						this.active_modifier_by_keyboard[modkey.modifier_index] |
+						this.active_modifier_by_mouse[modkey.modifier_index]
+						);
+			}
+
+			if( tlayer != this.layer)
 				render_page();
+
+			//toggle visiblity of pressed ctrl or alt key.
+
 		}
 
 
 		private void render_page () {
-			this.image.set_from_pixbuf(this.image_buffer[this.ebene]);
+			this.image.set_from_pixbuf(this.image_buffer[this.layer]);
 		}
 
 		public Gdk.Pixbuf getIcon(){
@@ -448,8 +515,8 @@ namespace NeoLayoutViewer{
 		}
 
 		/*public void updateLayer(int iet){
-			if( 0<iet && iet<7 && this.ebene==iet){
-			this.ebene = iet;
+			if( 0<iet && iet<7 && this.layer==iet){
+			this.layer = iet;
 			render_page();
 			}
 			}*/

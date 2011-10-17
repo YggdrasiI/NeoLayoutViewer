@@ -59,7 +59,7 @@ namespace NeoLayoutViewer{
 		 */
 		private void add_intern_values(){
 			config.set("numpad_width","350");
-
+			config.set("function_keys_height","30");
 		}
 
 		private bool search_config_file(string conffile){

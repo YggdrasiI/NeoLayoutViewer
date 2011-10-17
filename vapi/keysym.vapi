@@ -20,7 +20,7 @@ namespace NeoLayoutViewer {
 		public KeyEventBox (NeoLayoutViewer.NeoWindow winMain, int width, int height, ref uint[] keysym);
 		public KeyEventBox.freeArea (NeoLayoutViewer.NeoWindow winMain, int width, int height);
 		public KeyEventBox.modifier (NeoLayoutViewer.NeoWindow winMain, int width, int height, int modifier_index);
-		public KeyEventBox.modifier2 (NeoLayoutViewer.NeoWindow winMain, int width, int height, int modifier_index);
+		public KeyEventBox.modifier2 (NeoLayoutViewer.NeoWindow winMain, int width, int height, int modifier_index, string pressed_key_image);
 		public override void size_request (out Gtk.Requisition requisition);
 	}
 	[CCode (cheader_filename = "src/main.h")]
@@ -40,6 +40,14 @@ namespace NeoLayoutViewer {
 		public Gdk.FilterReturn event_filter (Gdk.XEvent gdk_xevent, Gdk.Event gdk_event);
 		public void unbind (string accelerator);
 	}
+	[CCode (ref_function = "neo_layout_viewer_modkey_ref", unref_function = "neo_layout_viewer_modkey_unref", cheader_filename = "src/main.h")]
+	public class Modkey {
+		public int active;
+		public Gtk.Image modKeyImage;
+		public int modifier_index;
+		public Modkey (ref Gtk.Image i, int m);
+		public void change (int new_state);
+	}
 	[CCode (cheader_filename = "src/main.h")]
 	public class NeoWindow : Gtk.Window {
 		public int[] MODIFIER_MASK;
@@ -47,23 +55,25 @@ namespace NeoLayoutViewer {
 		public int[] active_modifier_by_keyboard;
 		public int[] active_modifier_by_mouse;
 		public Gee.HashMap<string,string> config;
-		public int ebene;
-		public int numblock_width;
+		public int function_keys_height;
+		public int layer;
+		public Gee.List<NeoLayoutViewer.Modkey> modifier_key_images;
+		public int numpad_width;
 		public Gtk.Label status;
-		public NeoWindow (string sebene, Gee.HashMap<string,string> config);
+		public NeoWindow (string slayer, Gee.HashMap<string,string> config);
 		public void change_active_modifier (int mod_index, bool keyboard, int new_mod_state);
 		public void external_key_press (int iet1, int modifier_mask);
 		public void external_key_release (int iet1, int modifier_mask);
 		public int getActiveModifierMask (int[] modifier);
 		public Gdk.Pixbuf getIcon ();
 		public void get_size2 (out int width, out int height);
-		public override void hide_all ();
+		public override void hide ();
 		public void load_image_buffer ();
 		public void numkeypad_move (int pos);
-		public Gdk.Pixbuf open_image (int ebene);
+		public Gdk.Pixbuf open_image (int layer);
 		public Gdk.Pixbuf open_image_str (string bildpfad);
 		public void redraw ();
-		public override void show_all ();
+		public override void show ();
 		public bool toggle ();
 	}
 	[CCode (cheader_filename = "src/main.h")]
