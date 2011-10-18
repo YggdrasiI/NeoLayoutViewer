@@ -44,7 +44,7 @@ namespace NeoLayoutViewer{
 			addSetting("position","3", "Window position on startup (num pad orientation)");
 			addSetting("width","1000","With in Pixel. Min_width and max_width bound sensible values. ");//Skalierung, sofern wert zwischen width(resolution)*max_width und width(resolution)*min_width
 			addSetting("min_width","0.25", "Minimal width. 1=full screen width");//Relativ zur Auflösung
-			addSetting("max_width","0.5", "Minimal height. 1=full screen height");//Relativ zur Auflösung
+			addSetting("max_width","0.5", "Maximal width. 1=full screen width");//Relativ zur Auflösung
 			//addSetting("move_shortcut","<Mod4><Super_L>R", "Circle the window posisition");
 			addSetting("move_shortcut","<Ctrl><Alt>N", "Circle the window posisition");
 			//addSetting("position_cycle","3 3 9 1 3 9 1 7 7", "List of positions (num pad orientation)");
