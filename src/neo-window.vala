@@ -45,6 +45,8 @@ namespace NeoLayoutViewer{
 		private bool minimized;
 		private int position_num;
 		private int[] position_cycle;
+		private int position_on_hide_x;
+		private int position_on_hide_y;
 
 		/* Die Neo-Modifier unterscheiden sich zum Teil von den Normalen, für die Konstanten definiert sind. Bei der Initialisierung werden aus den Standardkonstanen die Konstanten für die Ebenen 1-6 berechnet.*/
 		public int[] NEO_MODIFIER_MASK;
@@ -189,11 +191,6 @@ namespace NeoLayoutViewer{
 			//this.allow_shrink = false;
 			this.skip_taskbar_hint = true;
 
-			//this.show();
-
-			//Move ist erst nach show() erfolgreich
-			this.numkeypad_move(int.parse(config.get("position")));
-
 			//Icon des Fensters
 			this.icon = this.image_buffer[0];
 
@@ -201,6 +198,9 @@ namespace NeoLayoutViewer{
 			this.set_accept_focus( (config.get("window_selectable")!="0") );
 
 			this.show();
+
+			//Move ist erst nach show() erfolgreich
+			this.numkeypad_move(int.parse(config.get("position")));
 		}
 
 		public override void show(){
@@ -211,7 +211,8 @@ namespace NeoLayoutViewer{
 			*/
 			//this.present();
 			//set_visible(true);
-			this.numkeypad_move(this.position_num);
+			//this.numkeypad_move(this.position_num);
+			this.move(this.position_on_hide_x,this.position_on_hide_y);
 
 			if( config.get("on_top")=="1")
 				this.set_keep_above(true);
@@ -220,6 +221,13 @@ namespace NeoLayoutViewer{
 		}
 
 		public override void hide(){
+			//store current coordinates
+			int tmpx;
+			int tmpy;
+			this.get_position(out tmpx, out tmpy);
+			this.position_on_hide_x = tmpx;
+			this.position_on_hide_y = tmpy;
+
 			this.minimized = true;
 			base.hide();
 			//set_visible(false);
