@@ -186,7 +186,7 @@ namespace NeoLayoutViewer{
 
 			//this.default_height = int.parse( config.get("height") );
 			//this.default_width = int.parse( config.get("width") );
-			this.decorated = false;
+			this.decorated = (config.get("window_decoration") != "0" );
 			//this.allow_grow = false;
 			//this.allow_shrink = false;
 			this.skip_taskbar_hint = true;

@@ -52,6 +52,7 @@ namespace NeoLayoutViewer{
 			addSetting("display_numpad","1", null);
 			addSetting("display_function_keys","0", null);
 			addSetting("window_selectable","0","To use the keyboard window as virtual keyboard, disable this entry.");
+			addSetting("window_decoration","0","Show window decoration/border. Not recommended.");
 		}
 
 		/*
