@@ -34,7 +34,7 @@ namespace NeoLayoutViewer{
 		public Gtk.Label status;
 		private Gdk.Pixbuf[] image_buffer;
 		public Gee.List<Modkey> modifier_key_images; // for modifier which didn't toggle a layout layer. I.e. ctrl, alt.
-		public Gee.HashMap<string, string> config;
+		public Gee.Map<string, string> config;
 
 		public int layer;
 		public int[] active_modifier_by_keyboard;
@@ -106,7 +106,7 @@ namespace NeoLayoutViewer{
 				{ {0, 0} , {1, 1} } }//1100, 1101; 1110, 1111; //k=m=1 should be impossible
 		};
 
-		public NeoWindow (string slayer, Gee.HashMap<string, string> config) {
+		public NeoWindow (string slayer, Gee.Map<string, string> config) {
 			this.config = config;
 			this.minimized = true;
 

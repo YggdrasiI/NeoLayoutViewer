@@ -2,12 +2,12 @@
 namespace NeoLayoutViewer{
 	public class ConfigManager {
 
-		public Gee.HashMap<string,string> config;
-		private Gee.HashMap<string,string> description;// allow optional commenting config entrys. 
+		public Gee.Map<string,string> config;
+		private Gee.Map<string,string> description;// allow optional commenting config entrys. 
 
 		public ConfigManager(string conffile) {
-			this.config =  new Gee.HashMap<string, string>();
-			this.description =  new Gee.HashMap<string, string>();
+			this.config =  new Gee.TreeMap<string, string>();
+			this.description =  new Gee.TreeMap<string, string>();
 
 			//add defaults values, if key not set in the config file
 			add_defaults();
@@ -22,7 +22,7 @@ namespace NeoLayoutViewer{
 			add_intern_values();
 		}
 
-		public Gee.HashMap<string, string> getConfig(){
+		public Gee.Map<string, string> getConfig(){
 			return config;
 		}
 
