@@ -16,7 +16,6 @@ Errors:
 	#define XK_APL
 	to the header file.
 
-- Alt-Key did not work.
-- Some Symbols are wrong.
+- Alt key did not work.
 - Selection with Shift+Arrow keys not implemented.
-- Global Shortcuts, like Ctrl+F1 are not captured by Metacity.
+- Global shortcuts, like Ctrl+F1 are not captured by metacity.
