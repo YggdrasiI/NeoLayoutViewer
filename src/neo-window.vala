@@ -47,6 +47,8 @@ namespace NeoLayoutViewer{
 		private int[] position_cycle;
 		private int position_on_hide_x;
 		private int position_on_hide_y;
+		private int screen_dim[2];
+		private bool screen_dim_auto[2]; //if true, x/y screen dimension will detect on every show event.
 
 		/* Die Neo-Modifier unterscheiden sich zum Teil von den Normalen, für die Konstanten definiert sind. Bei der Initialisierung werden aus den Standardkonstanen die Konstanten für die Ebenen 1-6 berechnet.*/
 		public int[] NEO_MODIFIER_MASK;
@@ -197,6 +199,22 @@ namespace NeoLayoutViewer{
 			//Nicht selektierbar (für virtuelle Tastatur)
 			this.set_accept_focus( (config.get("window_selectable")!="0") );
 
+			screen_dim_auto[0] = (config.get("screen_width")  == "auto");
+			screen_dim_auto[1] = (config.get("screen_height") == "auto");
+
+			//Dimension des Bildschirms festlegen
+			if( screen_dim_auto[0]){
+				screen_dim[0] = this.screen.width();
+			}else{
+				screen_dim[0] = int.max(1,int.parse( config.get("screen_width") ));
+			}
+			if( screen_dim_auto[1]){
+				screen_dim[1] = this.screen.height();
+			}else{
+				screen_dim[1] = int.max(1,int.parse( config.get("screen_height") ));
+			}
+
+
 			this.show();
 
 			//Move ist erst nach show() erfolgreich
@@ -246,8 +264,9 @@ namespace NeoLayoutViewer{
 		}
 
 		public void numkeypad_move(int pos){
-			int screen_width = this.screen.width();
-			int screen_height = this.screen.height();
+			int screen_width = (screen_dim_auto[0]?this.screen.width():screen_dim[0]);
+			int screen_height = (screen_dim_auto[1]?this.screen.height():screen_dim[1]);
+
 			int x,y,w,h;
 			this.get_size(out w,out h);
 
