@@ -1,21 +1,64 @@
-Dependencies:
-libgee-dev
-libgtk2.0-dev
-libx11-dev
-...
+========================================================================
+Eine virtuelle Tastatur für Anwender des NEO2 Tastaturlayouts¹ 
+========================================================================
+
+ Dieses Programm richtet sich an alle Benutzer des NEO-Tastaturlayouts,
+ die nach einer Möglichkeit suchen, das Layout auf dem Monitor ein- und
+ auszublenden.
+ Um eine Ebene anzuzeigen, müssen nur die entsprechenden Mod-Tasten
+ gedrückt gehalten werden. (Auch wenn ein anderes Fenster ausgewählt ist.)
+ 
+ Außerdem kann das Programm als virtuelle Tastatur benutzt werden.
+ (Wenn in der Konfigurationsdatei „window_selectable = 0“
+ eingetragen ist.) Diese Option kann aber nur in vollem Umfang benutzt
+ werden, wenn das NEO-Layout mit einem aktuellen xkb-Treiber installiert 
+ wurde. Falls QWERTZ aktiv ist, beschränken sich die eingebaren Symbole
+ auf dieses Layout.
+______________________________________________________________________
+¹NEO eine Tastaturbelegung, die für die deutsche Sprache optimiert ist. 
+Siehe:
+http://neo-layout.org/
+http://wiki.neo-layout.org/wiki/Einführungskapitel
 
 
-Errors:
+========================================================================
+KOMPILIEREN / INSTALLATION
+========================================================================
 
-- Not all keysyms found. make returns i.e.
-	[..]/key-overlay.c:1744: error: ‘XK_logicalor’ undeclared (first use in this function)
+ Das Programm kann nur kompiliert wenden, wenn Vala installiert ist
+ und ein paar Header installiert sind.
+ Unter Ubuntu:
+	sudo apt-get install valac libgee-dev libgtk2.0-dev libx11-dev
 
-	Solution: define all groups in /etc/include/X11/keysym.h I.e. add
+ Damit für (fast) alle Symbole des Layouts Konstanten definiert werden,
+ müssen die folgenden Zeilen in der Datei /usr/include/X11/keysym.h
+ ergänzt werden.
 	#define XK_TECHNICAL
 	#define XK_PUBLISHING
 	#define XK_APL
-	to the header file.
+ Danach zum Kompilieren in einem Terminal 
+	make
+ eingeben.
 
-- Alt key did not work.
-- Selection with Shift+Arrow keys not implemented.
-- Global shortcuts, like Ctrl+F1 are not captured by metacity.
+ Nach erfolgreicher Kompilierung liegen Programmdaten
+ im Verzeichnis bin/.
+
+
+========================================================================
+HINWEISE
+========================================================================
+•Der Fehler
+	[…]/key-overlay.c:1744: error: ‘XK_logicalor’ undeclared (first use in this function)
+ weist darauf hin, dass in der keysym.h nicht alle „Gruppen“ aktiviert sind.
+ Es müssen in /usr/include/X11/keysym.h die Zeilen 
+	#define XK_TECHNICAL
+	#define XK_PUBLISHING
+	#define XK_APL
+ ergänzt werden.
+
+• Die Alt-Taste wird noch nicht korrekt erkannt.
+• Markieren von Text mit Shift+Pfeiltasten ist mit der virtuellen Tastatur
+  nicht möglich.
+• Einige Tastenkombinationen (Strg+F1) werden nicht an den Fenstermanager
+  weiter gereicht.
+

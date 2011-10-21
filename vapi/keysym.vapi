@@ -142,6 +142,10 @@ namespace X
 		public const uint XK_MATHEMATICAL;
 		public const uint XK_BRAILLE;
 
+		public const uint XK_TECHNICAL;
+		public const uint XK_PUBLISHING;
+		public const uint XK_APL;
+
 	}
 
 [CCode (lower_case_cprefix ="", cheader_filename="X11/keysymdef.h")]

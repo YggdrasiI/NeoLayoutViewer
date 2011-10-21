@@ -14,13 +14,13 @@ SRC = src/main.vala src/neo-window.vala src/key-overlay.vala src/tray.vala src/c
 PKGS = --pkg x11 --pkg keysym --pkg gtk+-2.0 --pkg gee-1.0 --pkg gdk-x11-2.0 --pkg posix 
 #PKGS = --pkg keysym --pkg x11 --pkg gtk+-2.0 --pkg gee-1.0 --pkg gdk-x11-2.0 --pkg posix 
 
-CC_INCLUDES = 
+#CC_INCLUDES = 
 # vala compiler
 VALAC = valac --thread 
 VAPIDIR = --vapidir=vapi/ 
  
 # compiler options for a debug build
-#VALACOPTS = -g --save-temps
+#VALAC_DEBUG_OPTS = -g --save-temps
 VALAC_DEBUG_OPTS = 
 # compiler options for a debug build
 VALAC_RELEASE_OPTS = -X -O2 --disable-assert 
