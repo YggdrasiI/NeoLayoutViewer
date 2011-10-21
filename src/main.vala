@@ -17,7 +17,18 @@ namespace NeoLayoutViewer{
 
 		Gtk.init (ref args);
 
-		configm = new ConfigManager("neo_layout_viewer.conf");
+		//Get program path (no binding for getcwd found…)
+		string path = "";
+		try {
+			var regex = new Regex("[^/]*$");
+			path = regex.replace(args[0],-1,0,"");
+		} catch (RegexError e) {
+			path = "";
+		}
+		debug(@"Path: $path");
+
+		configm = new ConfigManager(path,"neo_layout_viewer.conf");
+
 		neo_win = new NeoWindow (slayer, configm.getConfig());
 		neo_tray = new AppStatusIcon(neo_win);
 		manager = new KeybindingManager(neo_win);

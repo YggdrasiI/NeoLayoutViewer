@@ -14,6 +14,9 @@ Eine virtuelle Tastatur für Anwender des NEO2 Tastaturlayouts¹
  werden, wenn das NEO-Layout mit einem aktuellen xkb-Treiber installiert 
  wurde. Falls QWERTZ aktiv ist, beschränken sich die eingebaren Symbole
  auf dieses Layout.
+
+ Autor: Olaf Schulz 2011,
+ Lizenz: GPLv3
 ______________________________________________________________________
 ¹NEO eine Tastaturbelegung, die für die deutsche Sprache optimiert ist. 
 Siehe:
@@ -47,14 +50,21 @@ KOMPILIEREN / INSTALLATION
 ========================================================================
 HINWEISE
 ========================================================================
-•Der Fehler
+• Beim ersten Start wird die Datei neo_layout_viewer.conf erstellt. (Im
+  Verzeichnis, in dem der Befehl ausgeführt wird.) In ihr
+  können einige Einstellungen definiert werden. Unter Anderem
+  • Tastenkürzel für Anzeige und Bewegung des Fensters,
+  • Breite des Fensters und
+  • Anzeige des Numblocks/der Funktionstasten.	
+
+• Der Fehler
 	[…]/key-overlay.c:1744: error: ‘XK_logicalor’ undeclared (first use in this function)
- weist darauf hin, dass in der keysym.h nicht alle „Gruppen“ aktiviert sind.
- Es müssen in /usr/include/X11/keysym.h die Zeilen 
+  weist darauf hin, dass in der keysym.h nicht alle „Gruppen“ aktiviert
+	sind. Es müssen in /usr/include/X11/keysym.h die Zeilen 
 	#define XK_TECHNICAL
 	#define XK_PUBLISHING
 	#define XK_APL
- ergänzt werden.
+  ergänzt werden.
 
 • Die Alt-Taste wird noch nicht korrekt erkannt.
 • Markieren von Text mit Shift+Pfeiltasten ist mit der virtuellen Tastatur

@@ -334,7 +334,7 @@ namespace NeoLayoutViewer{
 
 		public void load_image_buffer () {
 			this.image_buffer = new Gdk.Pixbuf[7];
-			this.image_buffer[0] = open_image_str("assets/icons/Neo-Icon.png");
+			this.image_buffer[0] = open_image_str(@"$(this.config.get("path"))assets/icons/Neo-Icon.png");
 
 			int screen_width = this.screen.width();
 			//int screen_height = this.screen.height();

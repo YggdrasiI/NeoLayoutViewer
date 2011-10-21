@@ -49,4 +49,4 @@ bulid_release:
  
 # clean all built files
 clean:
-	@rm -v -fr *~ *.c $(PROGRAM)
+	@rm -v -fr *~ *.c src/*.c src/*~ $(PROGRAM)

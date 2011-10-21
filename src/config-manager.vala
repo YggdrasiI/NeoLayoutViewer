@@ -5,12 +5,16 @@ namespace NeoLayoutViewer{
 		public Gee.Map<string,string> config;
 		private Gee.Map<string,string> description;// allow optional commenting config entrys. 
 
-		public ConfigManager(string conffile) {
+		public ConfigManager(string path, string conffile) {
 			this.config =  new Gee.TreeMap<string, string>();
 			this.description =  new Gee.TreeMap<string, string>();
 
+
 			//add defaults values, if key not set in the config file
 			add_defaults();
+
+			//no, it's better to create the conffile in the current dir.
+			//var conffile2 = @"$(path)$(conffile)";
 
 			if(!search_config_file(conffile))
 				create_conf_file(conffile);
@@ -18,6 +22,8 @@ namespace NeoLayoutViewer{
 			if(search_config_file(conffile))
 				load_config_file(conffile);
 
+			//add path
+			config.set("path",path);
 
 			add_intern_values();
 		}
