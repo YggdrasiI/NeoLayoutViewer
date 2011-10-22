@@ -227,17 +227,31 @@ KeyMod keymod;
 
 	keymod = getKeyModCodes(rootwin, keysym, modifiers);
 
-// Send a fake key press event to the window.
-   XKeyEvent event = createKeyEvent(display, winFocus, winRoot, True, keymod.keyval, keymod.modifiers);
-   XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent *)&event);
+	XKeyEvent event;
 
-// Send a fake key release event to the window.
-   event = createKeyEvent(display, winFocus, winRoot, False, keymod.keyval, keymod.modifiers);
-   XSendEvent(event.display, event.window, True, KeyReleaseMask, (XEvent *)&event);
+	// Send a fake key press event to the focused window.
+	event = createKeyEvent(display, winFocus, winRoot, True, keymod.keyval, keymod.modifiers);
+	XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent *)&event);
 
-// Done.
-   XCloseDisplay(display);
-   return 0;
+	// Send a fake key release event to the focused window.
+	event = createKeyEvent(display, winFocus, winRoot, False, keymod.keyval, keymod.modifiers);
+	XSendEvent(event.display, event.window, True, KeyReleaseMask, (XEvent *)&event);
+
+	// Send a fake key press event to root  window.
+	event = createKeyEvent(display, winRoot, winRoot, True, keymod.keyval, keymod.modifiers);
+	XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent *)&event);
+
+	// Send a fake key release event to root window.
+	event = createKeyEvent(display, winRoot, winRoot, False, keymod.keyval, keymod.modifiers);
+	XSendEvent(event.display, event.window, True, KeyReleaseMask, (XEvent *)&event);
+
+	// Present active window. Usefull, if alt+F1 oder alt+d clicked.
+	//XRaiseWindow(display, winFocus);
+	//XLowerWindow(display, winFocus);
+
+	// Done.
+	XCloseDisplay(display);
+	return 0;
 }
 
 int keysend2(uint keysym, uint modsym1, uint modsym2) {

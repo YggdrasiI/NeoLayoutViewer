@@ -693,7 +693,13 @@ namespace NeoLayoutViewer{
 					//debug(@"Modi: $modi");
 					if( ks < 1 ) return false;
 
-					keysend(ks,modi);
+					if( modi == 0 || true){
+						// Alt-Mask do not work :-(
+						keysend(ks,modi);
+					}else{
+					debug("Zweiter Modi");
+						keysend2(ks,modi & Gdk.ModifierType.CONTROL_MASK, modi & Gdk.ModifierType.MOD1_MASK );
+					}
 					return false;
 					});
 		}
