@@ -381,14 +381,16 @@ namespace NeoLayoutViewer{
 				this.hide();
 			}
 
-			/* Erste Auswahlvariante: Zahlen 1-6 */
+			/* Erste Auswahlvariante: Zahlen 1-6
+				Entfernt, da nicht mehr notwendig.*/
+			/*
 			var layer_tmp = int.parse(key.str);
 			if(layer_tmp>0 && layer_tmp<7) {
 				if(this.layer != layer_tmp){
 					this.layer = layer_tmp;
 					render_page ();
 				}
-			}
+			}*/
 			/*else{
 			//Finde die aktuelle Taste und die derzeit gedrückten Modifier
 			int iet1 = 0;

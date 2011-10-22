@@ -98,7 +98,7 @@ namespace NeoLayoutViewer{
 			keysyms.set( 61, new ArrayBox({ XK_j, XK_J, XK_semicolon, XK_Greek_theta, XK_semicolon, XK_Greek_THETA, 0 /*NoSymbol*/ }));
 			keysyms.set( 62, new ArrayBox({ XK_Shift_R, XK_Caps_Lock }));
 			keysyms.set( 63, new ArrayBox({ XK_KP_Multiply, XK_KP_Multiply, (uint)X.string_to_keysym("U2219"), (uint)X.string_to_keysym("U2299"), XK_multiply, (uint)X.string_to_keysym("U2297"), 0 /*NoSymbol*/ }));
-			keysyms.set( 64, new ArrayBox({ XK_Alt_L, XK_Meta_L, XK_Alt_L, XK_Meta_L, XK_Alt_L, XK_Alt_L }));
+			keysyms.set( 64, new ArrayBox({ XK_Alt_L, XK_Alt_L, XK_Alt_L, XK_Alt_L, XK_Alt_L, XK_Alt_L }));
 			keysyms.set( 65, new ArrayBox({ XK_space, XK_space, XK_space, XK_nobreakspace, XK_KP_0, (uint)X.string_to_keysym("U202F"), 0 /*NoSymbol*/ }));
 			keysyms.set( 66, new ArrayBox({ XK_ISO_Level3_Shift }));
 			keysyms.set( 67, new ArrayBox({ XK_F1, 0 /*XK_XF86_Switch_VT_1*/ }));
@@ -240,7 +240,7 @@ namespace NeoLayoutViewer{
 			keysyms.set(202, new ArrayBox({ }));
 			keysyms.set(203, new ArrayBox({ XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift }));
 			keysyms.set(204, new ArrayBox({ XK_Alt_L }));
-			keysyms.set(205, new ArrayBox({ XK_Meta_L }));
+			keysyms.set(205, new ArrayBox({ XK_Alt_L }));
 			keysyms.set(206, new ArrayBox({ XK_Super_L }));
 			keysyms.set(207, new ArrayBox({ }));
 			keysyms.set(208, new ArrayBox({ 0 /*XK_XF86AudioPlay*/ }));
