@@ -180,6 +180,7 @@ namespace NeoLayoutViewer{
 
 			//Fenstereigenschaften setzen
 			this.key_press_event.connect (on_key_pressed);
+			this.button_press_event.connect (on_button_pressed);
 			this.destroy.connect (Gtk.main_quit);
 
 			this.set_gravity(Gdk.Gravity.SOUTH);
@@ -420,6 +421,14 @@ namespace NeoLayoutViewer{
 				 key.state, Gdk.ModifierType.SHIFT_MASK, Gdk.ModifierType.LOCK_MASK, Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.SUPER_MASK, Gdk.ModifierType.HYPER_MASK, Gdk.ModifierType.META_MASK, Gdk.ModifierType.RELEASE_MASK, Gdk.ModifierType.MODIFIER_MASK, Gdk.ModifierType.MOD1_MASK, Gdk.ModifierType.MOD2_MASK, Gdk.ModifierType.MOD3_MASK, Gdk.ModifierType.MOD4_MASK, Gdk.ModifierType.MOD5_MASK);*/
 
 
+			return false;
+		}
+
+		private bool on_button_pressed (Widget source, Gdk.EventButton event) {
+			//debug(@"Hide event. Button: $(event.button)");
+			if( event.button == 3){
+				this.hide();
+			}
 			return false;
 		}
 

@@ -42,6 +42,7 @@ namespace NeoLayoutViewer{
 		public Gee.HashMap<int, ArrayBox> generateKeysyms(){
 			keysyms =  new Gee.HashMap<int, ArrayBox>();
 
+/* Define keyboard layout. this object maps the keycodes to the list of keycodes of each keyboard layer. */
 			keysyms.set(8, new ArrayBox({}));
 			keysyms.set( 9, new ArrayBox({ XK_Escape, XK_Escape, XK_Escape, XK_Escape, XK_Escape }));
 			keysyms.set( 10, new ArrayBox({ XK_1, XK_degree, XK_onesuperior, XK_onesubscript, XK_ordfeminine, XK_notsign, 0 /*NoSymbol*/ }));
@@ -659,7 +660,8 @@ namespace NeoLayoutViewer{
 			 Die Reihenfolge der Zeichen in keysyms passt nicht
 			 zur Nummerierung der Ebenen in winMain. Mit diesem Array
 			 wird der Wert permutiert.
-			 Achtung, mittlerweile ist es die Identitätsabbildung.
+			 Achtung, mittlerweile ist es die Identitätsabbildung, da die zwei
+			 redundanten Layer, die durch Caps-Lock entstehen, entfernt wurden.
 		 */
 		private static const short[] layer_permutation = {0,1,2,3,5,4,6};
 
@@ -688,6 +690,10 @@ namespace NeoLayoutViewer{
 			//GLib.stdout.printf("Ww: %i, Wh: %i\n", width, height);
 
 			this.button_press_event.connect ((event) => {
+					if( event.button != 1){
+						return false;
+					}
+
 					uint ks = this.keysym[this.layer_permutation[winMain.layer]-1];
 					int modi = winMain.getActiveModifierMask({4,5}); //ctrl+alt mask
 					//debug(@"Modi: $modi");

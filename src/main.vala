@@ -8,6 +8,7 @@ namespace NeoLayoutViewer{
 	public ConfigManager configm;
 
 	public static int main (string[] args) {
+
 		string slayer;
 		if( args.length<2) {
 			slayer="1";
@@ -16,6 +17,7 @@ namespace NeoLayoutViewer{
 		}
 
 		Gtk.init (ref args);
+
 
 		//Get program path (no binding for getcwd found…)
 		string path = "";
@@ -30,6 +32,12 @@ namespace NeoLayoutViewer{
 		configm = new ConfigManager(path,"neo_layout_viewer.conf");
 
 		neo_win = new NeoWindow (slayer, configm.getConfig());
+
+		var app = showPreviousInstance("org.gnome.neo_layout_viewer", neo_win);
+		if( app == null){
+				return 0;
+		}
+
 		neo_tray = new AppStatusIcon(neo_win);
 		manager = new KeybindingManager(neo_win);
 
@@ -45,6 +53,7 @@ namespace NeoLayoutViewer{
 
 		return 0;
 	}
+
 
 
 }

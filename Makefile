@@ -8,10 +8,10 @@ BINDIR = bin
  
 # for most cases the following two are the only you'll need to change
 # add your source files here
-SRC = src/main.vala src/neo-window.vala src/key-overlay.vala src/tray.vala src/config-manager.vala src/keybinding-manager.vala csrc/keysend.c csrc/checkModifier.c
+SRC = src/main.vala src/unique.vala src/neo-window.vala src/key-overlay.vala src/tray.vala src/config-manager.vala src/keybinding-manager.vala csrc/keysend.c csrc/checkModifier.c
 
 # add your used packges here
-PKGS = --pkg x11 --pkg keysym --pkg gtk+-2.0 --pkg gee-1.0 --pkg gdk-x11-2.0 --pkg posix 
+PKGS = --pkg x11 --pkg keysym --pkg gtk+-2.0 --pkg gee-1.0 --pkg gdk-x11-2.0 --pkg posix  --pkg unique-1.0
 #PKGS = --pkg keysym --pkg x11 --pkg gtk+-2.0 --pkg gee-1.0 --pkg gdk-x11-2.0 --pkg posix 
 
 #CC_INCLUDES = 
