@@ -43,8 +43,8 @@ KOMPILIEREN / INSTALLATION
 	make
  eingeben.
 
- Nach erfolgreicher Kompilierung liegen Programmdaten
- im Verzeichnis bin/.
+ Nach erfolgreicher Kompilierung liegen die Programmdaten
+ im Unterverzeichnis bin/.
 
 
 ========================================================================
