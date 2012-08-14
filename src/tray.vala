@@ -4,7 +4,7 @@ namespace NeoLayoutViewer{
 
 	public class AppStatusIcon {
 		public StatusIcon trayicon;
-		private Menu menuMain;
+		private Gtk.Menu menuMain;
 		private NeoWindow neo_win;
 
 		public AppStatusIcon(NeoWindow neo_win) {
@@ -27,7 +27,7 @@ namespace NeoLayoutViewer{
 
 		/* Create popup menu */
 		public void create_menuMain() {
-			menuMain = new Menu();
+			menuMain = new Gtk.Menu();
 
 			var menuAbout = new ImageMenuItem.from_stock(Stock.ABOUT, null);
 			menuAbout.activate.connect(about_clicked);

@@ -13,7 +13,7 @@ using Posix;//system-call
 
 namespace NeoLayoutViewer{
 
-	private class ArrayBox {
+	public class ArrayBox {
 		public uint[] val;
 		public ArrayBox(uint[] val){
 			this.val = val;
