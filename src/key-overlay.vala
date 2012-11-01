@@ -304,12 +304,13 @@ namespace NeoLayoutViewer{
 		}
 
 		public void generateKeyevents() {
+		if(true) return;
 			Box[] hboxes = {
 				genHBox(), // top row (1,2,3,…)
 				genHBox(), // upper row (x,v,l,…)
 				genHBox(), // home row (u,i,a,…)
 				genHBox(), // lower row (ü,ö,ä,…)
-				genHBox(), // space row
+				genHBox() // space row
 				 //function key row
 			};
 

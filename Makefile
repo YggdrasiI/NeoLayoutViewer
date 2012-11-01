@@ -13,12 +13,12 @@ PKGS = --pkg x11 --pkg keysym --pkg gtk+-3.0 --pkg gee-1.0 --pkg gdk-x11-3.0 --p
 
 #CC_INCLUDES = 
 # vala compiler
-VALAC = valac --thread --Xcc="-lm"
+VALAC = valac-0.16 --thread --Xcc="-lm"
 VAPIDIR = --vapidir=vapi/ 
  
 # compiler options for a debug build
 #VALAC_DEBUG_OPTS = -g --save-temps
-VALAC_DEBUG_OPTS = 
+VALAC_DEBUG_OPTS =  -g --save-temps
 # compiler options for a debug build
 VALAC_RELEASE_OPTS = -X -O2 --disable-assert 
  
