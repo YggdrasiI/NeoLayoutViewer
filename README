@@ -29,10 +29,17 @@ http://wiki.neo-layout.org/wiki/Einführungskapitel
 KOMPILIEREN / INSTALLATION
 ========================================================================
 
- Das Programm kann nur kompiliert wenden, wenn Vala installiert ist
- und ein paar Header installiert sind.
- Unter Ubuntu:
+ Das Programm kann nur kompiliert wenden, wenn Vala (mind Version 0.16)
+ installiert ist und ein paar Header installiert sind.
+ Installation der Abhängigkeiten unter Ubuntu:
 	sudo apt-get install valac libgee-dev libgtk3.0-dev libx11-dev libunique-3.0-dev
+
+ Derzeit (Nov. 2012) verlinkt das Metapaket valac unter Ubuntu 12.04 noch  
+ auf eine ältere Vala-Version. Hier muss ggf. explizit eine höhere Version
+ angegeben werden. Beispielsweise mittels
+  sudo apt-get install valac-0.16.
+ Außerdem sollte geprüft werden, ob valac dann auch mit der aktuelleren Version
+ verknüpft wird.
 
  Damit für (fast) alle Symbole des Layouts Konstanten definiert werden,
  müssen die folgenden Zeilen in der Datei /usr/include/X11/keysym.h

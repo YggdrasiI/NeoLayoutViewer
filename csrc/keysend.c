@@ -228,14 +228,11 @@ KeyMod keymod;
 	keymod = getKeyModCodes(rootwin, keysym, modifiers);
 
 	XKeyEvent event;
+	//printf("Send key %u %i\n", keysym, modifiers);
 
 	// Send a fake key press event to the focused window.
 	event = createKeyEvent(display, winFocus, winRoot, True, keymod.keyval, keymod.modifiers);
 	XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent *)&event);
-
-	// Send a fake key release event to the focused window.
-	event = createKeyEvent(display, winFocus, winRoot, False, keymod.keyval, keymod.modifiers);
-	XSendEvent(event.display, event.window, True, KeyReleaseMask, (XEvent *)&event);
 
 	// Send a fake key press event to root  window.
 	event = createKeyEvent(display, winRoot, winRoot, True, keymod.keyval, keymod.modifiers);
@@ -243,6 +240,10 @@ KeyMod keymod;
 
 	// Send a fake key release event to root window.
 	event = createKeyEvent(display, winRoot, winRoot, False, keymod.keyval, keymod.modifiers);
+	XSendEvent(event.display, event.window, True, KeyReleaseMask, (XEvent *)&event);
+
+	// Send a fake key release event to the focused window.
+	event = createKeyEvent(display, winFocus, winRoot, False, keymod.keyval, keymod.modifiers);
 	XSendEvent(event.display, event.window, True, KeyReleaseMask, (XEvent *)&event);
 
 	// Present active window. Usefull, if alt+F1 oder alt+d clicked.

@@ -304,14 +304,13 @@ namespace NeoLayoutViewer{
 		}
 
 		public void generateKeyevents() {
-		if(true) return;
 			Box[] hboxes = {
 				genHBox(), // top row (1,2,3,…)
 				genHBox(), // upper row (x,v,l,…)
 				genHBox(), // home row (u,i,a,…)
 				genHBox(), // lower row (ü,ö,ä,…)
-				genHBox() // space row
-				 //function key row
+				genHBox(), // space row
+				genHBox() //function key row
 			};
 
 			if( winMain.config.get("display_function_keys")!="0" ){
@@ -677,24 +676,13 @@ namespace NeoLayoutViewer{
 			this.width = width;
 			this.height = height;
 
-			/*
-				 if( flip ){
-				 flip = false;
-				 this.set_visible_window(false);
-				 }else{
-				 flip = true;
-				 }
-			 */
 			this.set_visible_window(false);
 			this.show();
 		}
 
 		public KeyEventBox(NeoWindow winMain, int width, int height , ref uint[] keysym){
-			//base();
 			this.all(winMain, width, height);
 			this.keysym = keysym;
-
-			//GLib.stdout.printf("Ww: %i, Wh: %i\n", width, height);
 
 			this.button_press_event.connect ((event) => {
 					if( event.button != 1){
@@ -810,6 +798,8 @@ namespace NeoLayoutViewer{
 			requisition.height = height; // /  Pango.SCALE;
 		}
 		*/
+
+
 
 	}
 }

@@ -48,7 +48,7 @@ namespace NeoLayoutViewer{
 			addSetting("show_shortcut","<Ctrl><Alt>q", "Toggle the visibility of the window.");
 			addSetting("on_top","1", "Show window on top.");
 			addSetting("position","3", "Window position on startup (num pad orientation)");
-			addSetting("width","1000","With in Pixel. Min_width and max_width bound sensible values. ");//Skalierung, sofern wert zwischen width(resolution)*max_width und width(resolution)*min_width
+			addSetting("width","1000","Width in Pixel. Min_width and max_width bound sensible values. ");//Skalierung, sofern wert zwischen width(resolution)*max_width und width(resolution)*min_width
 			addSetting("min_width","0.25", "Minimal width. 1=full screen width");//Relativ zur Auflösung
 			addSetting("max_width","0.5", "Maximal width. 1=full screen width");//Relativ zur Auflösung
 			//addSetting("move_shortcut","<Mod4><Super_L>R", "Circle the window posisition");
