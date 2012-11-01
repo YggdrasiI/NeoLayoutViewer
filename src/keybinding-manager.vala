@@ -65,11 +65,14 @@ namespace NeoLayoutViewer{
 		{
 			this.neo_win = neo_win;
 			// init filter to retrieve X.Events
-			rootwin = Gdk.get_default_root_window();
+			//rootwin = Gdk.get_default_root_window();
+			rootwin = Gdk.get_default_root_window ();
 			if(rootwin != null) {
+			stdout.printf(@"Rootwin != null\n"  );
 				rootwin.add_filter(event_filter);
-				display = Gdk.x11_drawable_get_xdisplay(rootwin);
-				xid = Gdk.x11_drawable_get_xid(rootwin);
+				//display = Gdk.x11_get_default_xdisplay ();
+				display = Gdk.X11Display.get_xdisplay(rootwin.get_display());
+				xid = Gdk.X11Window.get_xid(rootwin);
 
 				modifier_keycodes[0] = display->keysym_to_keycode(XK_Shift_L);
 				modifier_keycodes[1] = display->keysym_to_keycode(XK_Shift_R);
@@ -189,9 +192,8 @@ namespace NeoLayoutViewer{
 			if(rootwin == null) {
 				debug("Root window changed.");
 				rootwin = Gdk.get_default_root_window();
-				//rootwin.add_filter(event_filter);
-				display = Gdk.x11_drawable_get_xdisplay(rootwin);
-				xid = Gdk.x11_drawable_get_xid(rootwin);
+				display = Gdk.X11Display.get_xdisplay(rootwin.get_display());
+				xid = Gdk.X11Window.get_xid(rootwin);
 			}
 
 			checkModifier(display,&modifier_keycodes[0], modifier_keycodes.length, &modifier_pressed[0]);

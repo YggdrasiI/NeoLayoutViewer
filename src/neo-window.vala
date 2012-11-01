@@ -205,12 +205,12 @@ namespace NeoLayoutViewer{
 
 			//Dimension des Bildschirms festlegen
 			if( screen_dim_auto[0]){
-				screen_dim[0] = this.screen.width();
+				screen_dim[0] = Gdk.Screen.width();
 			}else{
 				screen_dim[0] = int.max(1,int.parse( config.get("screen_width") ));
 			}
 			if( screen_dim_auto[1]){
-				screen_dim[1] = this.screen.height();
+				screen_dim[1] = Gdk.Screen.height();
 			}else{
 				screen_dim[1] = int.max(1,int.parse( config.get("screen_height") ));
 			}
@@ -265,8 +265,8 @@ namespace NeoLayoutViewer{
 		}
 
 		public void numkeypad_move(int pos){
-			int screen_width = (screen_dim_auto[0]?this.screen.width():screen_dim[0]);
-			int screen_height = (screen_dim_auto[1]?this.screen.height():screen_dim[1]);
+			int screen_width = (screen_dim_auto[0]?Gdk.Screen.width():screen_dim[0]);
+			int screen_height = (screen_dim_auto[1]?Gdk.Screen.height():screen_dim[1]);
 
 			int x,y,w,h;
 			this.get_size(out w,out h);
@@ -337,8 +337,8 @@ namespace NeoLayoutViewer{
 			this.image_buffer = new Gdk.Pixbuf[7];
 			this.image_buffer[0] = open_image_str(@"$(this.config.get("path"))assets/icons/Neo-Icon.png");
 
-			int screen_width = this.screen.width();
-			//int screen_height = this.screen.height();
+			int screen_width = Gdk.Screen.width();
+			//int screen_height = Gdk.Screen.height();
 			int max_width = (int) ( double.parse( this.config.get("max_width") )*screen_width );
 			int min_width = (int) ( double.parse( this.config.get("min_width") )*screen_width );
 			int width = int.min(int.max(int.parse( config.get("width") ),min_width),max_width);

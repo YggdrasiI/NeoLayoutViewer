@@ -6,13 +6,14 @@ Eine virtuelle Tastatur für Anwender des NEO2 Tastaturlayouts¹
  die nach einer Möglichkeit suchen, das Layout auf dem Monitor ein- und
  auszublenden.
  Um eine Ebene anzuzeigen, müssen nur die entsprechenden Mod-Tasten
- gedrückt gehalten werden. (Auch wenn ein anderes Fenster ausgewählt ist.)
+ gedrückt gehalten werden. Dabei kann auch wenn ein anderes Fenster
+ ausgewählt sein.)
  
- Außerdem kann das Programm als virtuelle Tastatur benutzt werden.
- (Wenn in der Konfigurationsdatei „window_selectable = 0“
- eingetragen ist.) Diese Option kann aber nur in vollem Umfang benutzt
+ Außerdem kann das Programm als virtuelle Tastatur benutzt werden (sofern
+ in der Konfigurationsdatei „window_selectable = 0“ eingetragen ist ).
+ Diese Option kann aber nur in vollem Umfang benutzt
  werden, wenn das NEO-Layout mit einem aktuellen xkb-Treiber installiert 
- wurde. Falls QWERTZ aktiv ist, beschränken sich die eingebaren Symbole
+ wurde. Falls QWERTZ aktiv ist, beschränken sich die eingebbaren Symbole
  auf dieses Layout.
 
  Autor: Olaf Schulz 2011,

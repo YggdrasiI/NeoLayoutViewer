@@ -2,17 +2,14 @@
 # vala project
 #
  
-# name of your project/program
 PROGRAM = neo_layout_viewer
 BINDIR = bin
  
-# for most cases the following two are the only you'll need to change
-# add your source files here
+# source files 
 SRC = src/main.vala src/unique.vala src/neo-window.vala src/key-overlay.vala src/tray.vala src/config-manager.vala src/keybinding-manager.vala csrc/keysend.c csrc/checkModifier.c
 
-# add your used packges here
-PKGS = --pkg x11 --pkg keysym --pkg gtk+-2.0 --pkg gee-1.0 --pkg gdk-x11-2.0 --pkg posix  --pkg unique-1.0
-#PKGS = --pkg keysym --pkg x11 --pkg gtk+-2.0 --pkg gee-1.0 --pkg gdk-x11-2.0 --pkg posix 
+# packges 
+PKGS = --pkg x11 --pkg keysym --pkg gtk+-3.0 --pkg gee-1.0 --pkg gdk-x11-3.0 --pkg posix  --pkg unique-3.0
 
 #CC_INCLUDES = 
 # vala compiler
@@ -25,10 +22,6 @@ VALAC_DEBUG_OPTS =
 # compiler options for a debug build
 VALAC_RELEASE_OPTS = -X -O2 --disable-assert 
  
-# set this as root makefile for Valencia
-BUILD_ROOT = 1
-
-
 # the 'all' target build a debug build
 all: $(BINDIR) bulid_debug
 

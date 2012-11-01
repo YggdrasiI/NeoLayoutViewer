@@ -297,14 +297,20 @@ namespace NeoLayoutViewer{
 			return keysyms;
 		}
 
+		private Box genHBox(){
+			Box b = new Box(Gtk.Orientation.HORIZONTAL, 0);
+			b.set_homogeneous(false);
+			return b;
+		}
+
 		public void generateKeyevents() {
-			HBox[] hboxes = {
-				new HBox(false, 0), // top row (1,2,3,…)
-				new HBox(false, 0), // upper row (x,v,l,…)
-				new HBox(false, 0), // home row (u,i,a,…)
-				new HBox(false, 0), // lower row (ü,ö,ä,…)
-				new HBox(false, 0), // space row
-				new HBox(false, 0) //function key row
+			Box[] hboxes = {
+				genHBox(), // top row (1,2,3,…)
+				genHBox(), // upper row (x,v,l,…)
+				genHBox(), // home row (u,i,a,…)
+				genHBox(), // lower row (ü,ö,ä,…)
+				genHBox(), // space row
+				 //function key row
 			};
 
 			if( winMain.config.get("display_function_keys")!="0" ){
@@ -694,7 +700,7 @@ namespace NeoLayoutViewer{
 						return false;
 					}
 
-					uint ks = this.keysym[this.layer_permutation[winMain.layer]-1];
+					uint ks = this.keysym[NeoLayoutViewer.KeyEventBox.layer_permutation[winMain.layer]-1];
 					int modi = winMain.getActiveModifierMask({4,5}); //ctrl+alt mask
 					//debug(@"Modi: $modi");
 					if( ks < 1 ) return false;
@@ -770,23 +776,39 @@ namespace NeoLayoutViewer{
 		public KeyEventBox.freeArea(NeoWindow winMain, int width, int height ){
 			this.all(winMain, width, height);
 		}
+
 		/*
 		 * This method Gtk+ is calling on a widget to ask
 		 * the widget how large it wishes to be. It's not guaranteed
 		 * that Gtk+ will actually give this size to the widget.
 		 */
-		public override void size_request (out Gtk.Requisition requisition) {
-			//int width, height;
-			// In this case, we say that we want to be as big as the
-			// text is, plus a little border around it.
-			//this.layout.get_size (out width, out height);
-			requisition.width = width ;// / Pango.SCALE;
-			requisition.height = height; // /  Pango.SCALE;
+		 /*
+		public override void get_preferred_size(
+				out Gtk.Requisition minimal_size,
+				out Gtk.Requisition natural_size ) {
 
-			//GLib.stdout.printf("W: %i, H: %i, Sc: %f\n",width, height, Pango.SCALE);
+			minimal_size.width = width ;
+			minimal_size.height = height;
+
+			natural_size.width = width ;
+			natural_size.height = height;
+		}
+		*/
+		public override void get_preferred_width (out int minimum_width, out int natural_width){
+			minimum_width = width;
+			natural_width = width;
+		}
+		public override void get_preferred_height (out int minimum_height, out int natural_height){
+			minimum_height = height;
+			natural_height = height;
 		}
 
-
+		/* gtk2.0 variant for size requests
+		public override void size_request (out Gtk.Requisition requisition) {
+			requisition.width = width ;// / Pango.SCALE;
+			requisition.height = height; // /  Pango.SCALE;
+		}
+		*/
 
 	}
 }
