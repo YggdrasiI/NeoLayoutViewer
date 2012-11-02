@@ -13,7 +13,7 @@ BUILDTYPE = debug
 PROGRAM = neo_layout_viewer
 BINDIR = bin
 
-VALAC = valac-0.16 --thread --Xcc="-lm" -D $(ICON)
+VALAC = valac --thread --Xcc="-lm" -D $(ICON)
 VAPIDIR = --vapidir=vapi/ 
 
 # source files 
