@@ -30,7 +30,7 @@ namespace NeoLayoutViewer{
 			menuMain = new Gtk.Menu();
 
 			var menuAbout = new ImageMenuItem.from_stock(Stock.ABOUT, null);
-			menuAbout.activate.connect(about_clicked);
+			menuAbout.activate.connect(NeoLayoutViewer.about_dialog);
 			menuMain.append(menuAbout);
 
 			var menuQuit = new ImageMenuItem.from_stock(Stock.QUIT, null);
@@ -44,17 +44,6 @@ namespace NeoLayoutViewer{
 			menuMain.popup(null, null, null, button, time);
 		}
 
-		private void about_clicked() {
-			var about = new AboutDialog();
-			about.set_version("0.25");
-			about.set_program_name("Neo2.0 Ebenenanzeige");
-			about.set_comments(@"Erleichtert das Nachschlagen von Tastenkombinationen im Neo 2.0-Layout.\n\n Olaf Schulz\n yggtrash-AT-googlemail.com\n\n\nTastenkombinationen:\n Beenden - q\n Ein-/Ausblenden - $(neo_win.config.get("show_shortcut"))\n Bewegen - $(neo_win.config.get("move_shortcut"))\n");
-			about.set_copyright("GPLv3");
-			about.run();
-			about.hide();
-		}
 	}
-
-
 
 }

@@ -3,9 +3,15 @@ using X;
 namespace NeoLayoutViewer{
 
 	public NeoWindow neo_win;
-	public AppStatusIcon neo_tray;
 	public KeybindingManager manager;
 	public ConfigManager configm;
+
+#if tray
+	public AppStatusIcon neo_tray; //for gnome2.x, kde(?)
+#endif
+#if indicator
+	public NeoIndicator neo_indicator; //for gnome3.x
+#endif
 
 	public static int main (string[] args) {
 
@@ -38,8 +44,15 @@ namespace NeoLayoutViewer{
 				return 0;
 		}
 
-		neo_tray = new AppStatusIcon(neo_win);
 		manager = new KeybindingManager(neo_win);
+
+#if tray
+		neo_tray = new AppStatusIcon(neo_win);
+#endif
+
+#if indicator
+		neo_indicator = new NeoIndicator(neo_win);
+#endif
 
 		manager.bind(configm.getConfig().get("show_shortcut"), ()=>{neo_win.toggle();});
 		manager.bind(configm.getConfig().get("move_shortcut"), ()=>{neo_win.numkeypad_move(0);});
@@ -55,6 +68,17 @@ namespace NeoLayoutViewer{
 	}
 
 
+/* This function create the about dialog in
+	tray menu or indicator menu */
+	private static void about_dialog() {
+			var about = new Gtk.AboutDialog();
+			about.set_version("0.8");
+			about.set_program_name("Neo2.0 Ebenenanzeige");
+			about.set_comments(@"Erleichtert das Nachschlagen von Tastenkombinationen im Neo 2.0-Layout.\n\n Olaf Schulz\n funwithkinect-AT-googlemail.com\n\n\nTastenkombinationen:\n Ein-/Ausblenden - $(neo_win.config.get("show_shortcut"))\n Bewegen - $(neo_win.config.get("move_shortcut"))\n Beenden (sofern Fenster selektiert) - q\n");
+			about.set_copyright("GPLv3");
+			about.run();
+			about.hide();
+		}
 
 }
 
