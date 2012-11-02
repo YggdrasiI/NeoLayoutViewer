@@ -29,7 +29,7 @@ http://wiki.neo-layout.org/wiki/Einführungskapitel
 KOMPILIEREN / INSTALLATION
 ========================================================================
 
- Das Programm kann nur kompiliert wenden, wenn Vala (mind Version 0.16)
+ Das Programm kann nur kompiliert werden, wenn Vala (mind. Version 0.16)
  installiert ist und ein paar Header installiert sind.
  Installation der Abhängigkeiten unter Ubuntu:
 	sudo apt-get install valac libgee-dev libgtk3.0-dev libx11-dev libunique-3.0-dev
@@ -65,6 +65,9 @@ HINWEISE
   • Breite des Fensters und
   • Anzeige des Numblocks/der Funktionstasten.	
 
+• Das Programm kann auch ein Trayicon anzeigen. Dazu muss im Makefile
+  die Option "ICON" geändert werden.
+
 • Der Fehler
 	[…]/key-overlay.c:1744: error: ‘XK_logicalor’ undeclared (first use in this function)
   weist darauf hin, dass in der keysym.h nicht alle „Gruppen“ aktiviert
@@ -74,9 +77,6 @@ HINWEISE
 	#define XK_APL
   ergänzt werden.
 
-• Die Alt-Taste wird noch nicht korrekt erkannt.
-• Markieren von Text mit Shift+Pfeiltasten ist mit der virtuellen Tastatur
-  nicht möglich.
-• Einige Tastenkombinationen (Strg+F1) werden nicht an den Fenstermanager
-  weiter gereicht.
+• Die neueste, auf Gtk 3.0 basierende, Version unterstützt die virtuelle 
+  Tastatur nicht mehr.
 
