@@ -20,11 +20,11 @@ VAPIDIR = --vapidir=vapi/
 SRC = src/main.vala src/unique.vala src/neo-window.vala src/key-overlay.vala src/config-manager.vala src/keybinding-manager.vala csrc/keysend.c csrc/checkModifier.c
 
 #test for valac version, workaround for Arch Linux bug
-if [ -d /usr/include/gee-0.8 ]
-then 
-    GEEVERSION=0.8
-else
-    GEEVERSION=1.0
+if [ -d /usr/include/gee-0.8 ] ; \
+then \
+    GEEVERSION=0.8 \
+else \
+    GEEVERSION=1.0 \
 fi
 
 # packges 
