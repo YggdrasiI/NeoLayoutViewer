@@ -13,7 +13,7 @@ BUILDTYPE = debug
 PROGRAM = neo_layout_viewer
 BINDIR = bin
 
-VALAC = valac --thread --Xcc="-lm" -D $(ICON) --use-header src/config.h
+VALAC = valac --thread --Xcc="-lm -D XK_TECHNICAL XK_PUBLISHING XK_APL" -D $(ICON) 
 VAPIDIR = --vapidir=vapi/ 
 
 # source files 
