@@ -5,7 +5,6 @@
 # Tray icon flag. Possible values:
 # none, tray (for gnome 2.x) , indicator (for gnome 3.x)
 ICON = indicator
-XK_SYMBOLS = XK_TECHNICAL XK_PUBLISHING XK_APL
 
 # Build type. Possible values:
 # debug, release
@@ -14,7 +13,7 @@ BUILDTYPE = debug
 PROGRAM = neo_layout_viewer
 BINDIR = bin
 
-VALAC = valac --thread --Xcc="-lm" -D $(ICON) $(XK_SYMBOLS)
+VALAC = valac --thread --Xcc="-lm" -D $(ICON) --use-header src/config.h
 VAPIDIR = --vapidir=vapi/ 
 
 # source files 
