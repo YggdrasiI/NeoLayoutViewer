@@ -41,12 +41,6 @@ KOMPILIEREN / INSTALLATION
  Außerdem sollte geprüft werden, ob valac dann auch mit der aktuelleren Version
  verknüpft wird.
 
- Damit für (fast) alle Symbole des Layouts Konstanten definiert werden,
- müssen die folgenden Zeilen in der Datei /usr/include/X11/keysym.h
- ergänzt werden.
-	#define XK_TECHNICAL
-	#define XK_PUBLISHING
-	#define XK_APL
  Danach zum Kompilieren in einem Terminal 
 	make
  eingeben.
