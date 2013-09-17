@@ -9,6 +9,7 @@ gedrückt wird. Dabei kann auch wenn ein anderes Fenster
 selektiert sein.
 
 Autoren: Olaf Schulz 2011, rixx 2013
+
 Lizenz: GPLv3
 
 
@@ -44,5 +45,5 @@ Hinweise
 
 ______________________________________________________________________
 ¹NEO ist eine Tastaturbelegung, welche für die deutsche Sprache optimiert ist. 
+
  Die offizielle Seite des Projektes: http://neo-layout.org/
- Mailingliste: http://wiki.neo-layout.org/wiki/Mailingliste
