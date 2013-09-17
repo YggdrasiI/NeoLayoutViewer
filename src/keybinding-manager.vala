@@ -28,7 +28,6 @@ namespace NeoLayoutViewer{
 		};
 
 		private int modifier_keycodes[10];
-		//private bool modifier_pressed[10];//bad, because sizeof(bool,vala)!=sizeof(bool,c (stdbool.h))
 		private int modifier_pressed[10];
 
 		/**
@@ -71,7 +70,6 @@ namespace NeoLayoutViewer{
 
 				modifier_keycodes[0] = display.keysym_to_keycode(XK_Shift_L);
 				modifier_keycodes[1] = display.keysym_to_keycode(XK_Shift_R);
-				//modifier_keycodes[2] = keysym_to_keycode(XK_ISO_Level3_Shift);/* not both keys detectable on this way */
 				modifier_keycodes[2] = 66; //Mod3L can differ?!
 				modifier_keycodes[3] = 51; //Mod3R
 				modifier_keycodes[4] = 94; //Mod4L

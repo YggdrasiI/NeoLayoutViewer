@@ -347,8 +347,6 @@ namespace NeoLayoutViewer{
 			int posX = 0;
 			int posY = 0;
 
-			//GLib.stdout.printf(@"$winWidthUnscaled , $width , $scaleX\n");
-
 			if( winMain.config.get("display_function_keys")!="0" ){
 				//esc
 				scaledBox(44.0,30.0,ref posXUnscaled, ref posYUnscaled, ref posX, ref posY, scaleX, scaleY , 9, false, winMain, hboxes[5], 0);
@@ -650,9 +648,6 @@ namespace NeoLayoutViewer{
 
 
 	public class KeyEventBox : EventBox{
-		//private double widthPercent;
-		//private double heightPercent;
-		//static bool flip = true;
 
 		private uint[] keysym;// or
 		private int modifier_index;
@@ -691,7 +686,6 @@ namespace NeoLayoutViewer{
 
 					uint ks = this.keysym[NeoLayoutViewer.KeyEventBox.layer_permutation[winMain.layer]-1];
 					int modi = winMain.getActiveModifierMask({4,5}); //ctrl+alt mask
-					//debug(@"Modi: $modi");
 					if( ks < 1 ) return false;
 
 					if( modi == 0 || true){
@@ -729,18 +723,14 @@ namespace NeoLayoutViewer{
 
 			this.button_press_event.connect ((event) => {
 					if( winMain.active_modifier_by_mouse[this.modifier_index] == 0){
-					//deactivate modifier, which select other charakters
-					//winMain.active_modifier[0] = 0;//egal
 					winMain.change_active_modifier( 1, false, 0 );
 					winMain.change_active_modifier( 2, false, 0 );
 					winMain.change_active_modifier( 3, false, 0 );
 					winMain.change_active_modifier( this.modifier_index, false, 1 );
 					this.image.show();
-					//winMain.status.set_label(@"Activate\n Modifier $(this.modifier_index)");
 					}else{
 					winMain.change_active_modifier( this.modifier_index, false, 0 );
 					this.image.hide();
-					//winMain.status.set_label(@"Deactivate\n Modifier $(this.modifier_index)");
 					}
 					winMain.redraw();
 					return false;
@@ -791,15 +781,6 @@ namespace NeoLayoutViewer{
 			minimum_height = height;
 			natural_height = height;
 		}
-
-		/* gtk2.0 variant for size requests
-		public override void size_request (out Gtk.Requisition requisition) {
-			requisition.width = width ;// / Pango.SCALE;
-			requisition.height = height; // /  Pango.SCALE;
-		}
-		*/
-
-
 
 	}
 }

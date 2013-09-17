@@ -6,7 +6,6 @@ namespace NeoLayoutViewer{
 public const int SHOW=1000;
 
 public static Unique.App? showPreviousInstance(string name, Gtk.Window win){
-		//unique_app_send_message ()
 		var app = new Unique.App(name, null);
 		app.add_command ("Show application", SHOW); 
 		if( app.is_running ){

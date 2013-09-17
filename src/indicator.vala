@@ -17,10 +17,6 @@ namespace NeoLayoutViewer{
 			create_menuMain();
 			indicator.set_menu(this.menuMain);
 
-			/* Connect main window with left click/acitvation */
-			//trayicon.activate.connect(this.neo_win.show_all);
-			//trayicon.activate.connect(()=>{this.neo_win.toggle();});
-
 			indicator.set_status(AppIndicator.IndicatorStatus.ACTIVE);
 
 		}
