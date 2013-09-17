@@ -1,8 +1,4 @@
 /* Use all keysym groups for NEO */
-#define XK_TECHNICAL
-#define XK_PUBLISHING
-#define XK_APL
-
 #ifndef __KEY_SEND_H__
 #define __KEY_SEND_H__
 
