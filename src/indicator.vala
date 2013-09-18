@@ -1,13 +1,14 @@
 using Gtk;
 
-namespace NeoLayoutViewer{
+namespace NeoLayoutViewer {
 
-	public class NeoIndicator{
+	public class NeoIndicator {
+
 		private NeoWindow neo_win;
 		private AppIndicator.Indicator indicator;
 		private Gtk.Menu menuMain;
 
-		public NeoIndicator(NeoWindow neo_win ){
+		public NeoIndicator(NeoWindow neo_win) {
 			this.neo_win = neo_win;
 
 			indicator = new AppIndicator.Indicator.with_path("Neo Layout Viewer", "Neo-Icon",
@@ -21,9 +22,9 @@ namespace NeoLayoutViewer{
 
 		}
 
-		public void deactivate()
-		{
-			if(indicator != null) {
+		public void deactivate() {
+
+			if (indicator != null) {
 				indicator.set_status(AppIndicator.IndicatorStatus.PASSIVE);
 			}
 		}
@@ -33,7 +34,7 @@ namespace NeoLayoutViewer{
 			menuMain = new Gtk.Menu();
 
 			var menuAnzeigen = new Gtk.MenuItem.with_label("Anzeigen");
-			menuAnzeigen.activate.connect( ()=>{this.neo_win.toggle();} );
+			menuAnzeigen.activate.connect(() => { this.neo_win.toggle(); });
 			menuMain.append(menuAnzeigen);
 
 			var menuAbout = new ImageMenuItem.from_stock(Stock.ABOUT, null);
@@ -47,6 +48,5 @@ namespace NeoLayoutViewer{
 		}
 
 	}
-
 
 }

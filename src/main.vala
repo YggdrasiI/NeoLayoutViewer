@@ -13,16 +13,17 @@ namespace NeoLayoutViewer{
 	public NeoIndicator neo_indicator; //for gnome3.x
 #endif
 
-	public static int main (string[] args) {
+	public static int main(string[] args) {
 
 		string slayer;
-		if( args.length<2) {
-			slayer="1";
-		}else{
-			slayer=args[1];
+
+		if (args.length < 2) {
+			slayer = "1";
+		} else {
+			slayer = args[1];
 		}
 
-		Gtk.init (ref args);
+		Gtk.init(ref args);
 
 
 		//Get program path (no binding for getcwd found…)
@@ -36,12 +37,12 @@ namespace NeoLayoutViewer{
 		debug(@"Path: $path");
 
 		configm = new ConfigManager(path,"neo_layout_viewer.conf");
-
 		neo_win = new NeoWindow (slayer, configm.getConfig());
 
 		var app = showPreviousInstance("org.gnome.neo_layout_viewer", neo_win);
-		if( app == null){
-				return 0;
+
+		if (app == null) {
+			return 0;
 		}
 
 		manager = new KeybindingManager(neo_win);
@@ -57,12 +58,9 @@ namespace NeoLayoutViewer{
 		manager.bind(configm.getConfig().get("show_shortcut"), ()=>{neo_win.toggle();});
 		manager.bind(configm.getConfig().get("move_shortcut"), ()=>{neo_win.numkeypad_move(0);});
 
-		//neo_win.show_all ();
-		//neo_win.hide_all();
-
 		//move window (Fehlerquelle: config von configm ist im allgemeinen nicht gleich neo_win.config?! Derzeit gleiches Objekt.)
 
-		Gtk.main ();
+		Gtk.main();
 
 		return 0;
 	}

@@ -1,17 +1,20 @@
 using X;
 
-namespace NeoLayoutViewer{
+namespace NeoLayoutViewer {
+
 	/**
 	 * Modification of http://www.linux-nantes.org/~fmonnier/ocaml/Xlib/doc/Xlib.html by
 	 * Oliver Sauder <os@esite.ch>
 	 */
-	public class KeybindingManager : GLib.Object
-	{
+	public class KeybindingManager : GLib.Object {
+
 		private NeoWindow neo_win;
+
 		/**
 		 * list of binded keybindings
 		 */
 		private Gee.List<Keybinding> bindings = new Gee.ArrayList<Keybinding>();
+
 		/**
 		 * locked modifiers used to grab all keys whatever lock key
 		 * is pressed.
@@ -33,11 +36,9 @@ namespace NeoLayoutViewer{
 		/**
 		 * Helper class to store keybinding
 		 */
-		private class Keybinding
-		{
-			public Keybinding(string accelerator, int keycode,
-					Gdk.ModifierType modifiers, KeybindingHandlerFunc handler)
-			{
+		private class Keybinding {
+
+			public Keybinding(string accelerator, int keycode, Gdk.ModifierType modifiers, KeybindingHandlerFunc handler) {
 				this.accelerator = accelerator;
 				this.keycode = keycode;
 				this.modifiers = modifiers;
@@ -57,13 +58,14 @@ namespace NeoLayoutViewer{
 		 */
 		public delegate void KeybindingHandlerFunc(Gdk.Event event);
 
-		public KeybindingManager(NeoWindow neo_win)
-		{
+		public KeybindingManager(NeoWindow neo_win) {
 			this.neo_win = neo_win;
 
 			// init filter to retrieve X.Events
 			unowned Gdk.Window rootwin = Gdk.get_default_root_window();
-			if(rootwin != null) {
+
+			if (rootwin != null) {
+
 				rootwin.add_filter(event_filter);
 
 				unowned X.Display display = Gdk.x11_get_default_xdisplay();
@@ -79,7 +81,7 @@ namespace NeoLayoutViewer{
 				modifier_keycodes[8] = display.keysym_to_keycode(XK_Alt_L);
 				modifier_keycodes[9] = display.keysym_to_keycode(XK_Alt_R);
 
-				Timeout.add (100, modifier_timer);
+				Timeout.add(100, modifier_timer);
 
 			}
 		}
@@ -90,8 +92,8 @@ namespace NeoLayoutViewer{
 		 * @param accelerator accelerator parsable by Gtk.accelerator_parse
 		 * @param handler handler called when given accelerator is pressed
 		 */
-		public void bind(string accelerator, KeybindingHandlerFunc handler)
-		{
+		public void bind(string accelerator, KeybindingHandlerFunc handler) {
+
 			debug("Binding key " + accelerator);
 
 			// convert accelerator
@@ -102,7 +104,7 @@ namespace NeoLayoutViewer{
 			unowned X.Display display = Gdk.x11_get_default_xdisplay();
 			int keycode = display.keysym_to_keycode(keysym);
 
-			if(keycode != 0) {
+			if (keycode != 0) {
 				X.Window root_window = Gdk.x11_get_default_root_xwindow();
 
 				// trap XErrors to avoid closing of application
@@ -111,9 +113,8 @@ namespace NeoLayoutViewer{
 
 				// grab key finally
 				// also grab all keys which are combined with a lock key such NumLock
-				foreach(uint lock_modifier in lock_modifiers) {
-					display.grab_key(keycode, modifiers|lock_modifier, root_window, false,
-							X.GrabMode.Async, X.GrabMode.Async);
+				foreach (uint lock_modifier in lock_modifiers) {
+					display.grab_key(keycode, modifiers|lock_modifier, root_window, false, X.GrabMode.Async, X.GrabMode.Async);
 				}
 
 				// wait until all X request have been processed
@@ -123,17 +124,17 @@ namespace NeoLayoutViewer{
 				Keybinding binding = new Keybinding(accelerator, keycode, modifiers, handler);
 				bindings.add(binding);
 
-				debug("Successfully binded key " + accelerator);
+				debug("Successfully bound key " + accelerator);
 			}
 		}
+
 		/**
 		 * Unbind given accelerator.
 		 *
 		 * @param accelerator accelerator parsable by Gtk.accelerator_parse
 		 */
 
-		public void unbind(string accelerator)
-		{
+		public void unbind(string accelerator) {
 			debug("Unbinding key " + accelerator);
 
 			unowned X.Display display = Gdk.x11_get_default_xdisplay();
@@ -141,11 +142,15 @@ namespace NeoLayoutViewer{
 
 			// unbind all keys with given accelerator
 			Gee.List<Keybinding> remove_bindings = new Gee.ArrayList<Keybinding>();
-			foreach(Keybinding binding in bindings) {
-				if(str_equal(accelerator, binding.accelerator)) {
-					foreach(uint lock_modifier in lock_modifiers) {
+
+			foreach (Keybinding binding in bindings) {
+
+				if (str_equal(accelerator, binding.accelerator)) {
+
+					foreach (uint lock_modifier in lock_modifiers) {
 						display.ungrab_key(binding.keycode, binding.modifiers, root_window);
 					}
+
 					remove_bindings.add(binding);
 				}
 			}
@@ -158,8 +163,7 @@ namespace NeoLayoutViewer{
 		/**
 		 * Event filter method needed to fetch X.Events
 		 */
-		private Gdk.FilterReturn event_filter(Gdk.XEvent gdk_xevent, Gdk.Event gdk_event)
-		{
+		private Gdk.FilterReturn event_filter(Gdk.XEvent gdk_xevent, Gdk.Event gdk_event) {
 			Gdk.FilterReturn filter_return = Gdk.FilterReturn.CONTINUE;
 #if VALA_0_16 || VALA_0_17
 			X.Event* xevent = (X.Event*) gdk_xevent;
@@ -168,11 +172,13 @@ namespace NeoLayoutViewer{
 			X.Event* xevent = (X.Event*) pointer;
 #endif
 
-			if(xevent->type == X.EventType.KeyPress) {
+			if (xevent->type == X.EventType.KeyPress) {
+
 				foreach(Keybinding binding in bindings) {
 					// remove NumLock, CapsLock and ScrollLock from key state
 					uint event_mods = xevent.xkey.state & ~ (lock_modifiers[7]);
-					if(xevent->xkey.keycode == binding.keycode && event_mods == binding.modifiers) {
+
+					if (xevent->xkey.keycode == binding.keycode && event_mods == binding.modifiers) {
 						// call all handlers with pressed key and modifiers
 						binding.handler(gdk_event);
 					}
@@ -183,20 +189,20 @@ namespace NeoLayoutViewer{
 		}
 
 		/*
-			Checks periodical which modifier are pressed.
+			Checks periodically which modifier are pressed.
 		*/
 		private bool modifier_timer(){
 			unowned X.Display display = Gdk.x11_get_default_xdisplay();
 
-			checkModifier(display,&modifier_keycodes[0], modifier_keycodes.length, &modifier_pressed[0]);
+			checkModifier(display, &modifier_keycodes[0], modifier_keycodes.length, &modifier_pressed[0]);
 
 			// Convert modifier keys to modifier/layer
-			neo_win.change_active_modifier( 1, true, (int) ( ( modifier_pressed[0] | modifier_pressed[1] )
-					!= (checkCapsLock(display)?1:0) ) );
-			neo_win.change_active_modifier( 2, true, (int) ( modifier_pressed[2] | modifier_pressed[3] ) );
-			neo_win.change_active_modifier( 3, true, (int) ( modifier_pressed[4] | modifier_pressed[5] ) );
-			neo_win.change_active_modifier( 4, true, (int) ( modifier_pressed[6] | modifier_pressed[7] ) );
-			neo_win.change_active_modifier( 5, true, (int) ( modifier_pressed[8] | modifier_pressed[9] ) );
+			neo_win.change_active_modifier(1, true, (int)((modifier_pressed[0] | modifier_pressed[1])
+					!= (checkCapsLock(display) ? 1 : 0)) );
+			neo_win.change_active_modifier(2, true, (int)(modifier_pressed[2] | modifier_pressed[3]));
+			neo_win.change_active_modifier(3, true, (int)(modifier_pressed[4] | modifier_pressed[5]));
+			neo_win.change_active_modifier(4, true, (int)(modifier_pressed[6] | modifier_pressed[7]));
+			neo_win.change_active_modifier(5, true, (int)(modifier_pressed[8] | modifier_pressed[9]));
 
 			neo_win.redraw();
 

@@ -1,8 +1,9 @@
 using Gtk;
 
-namespace NeoLayoutViewer{
+namespace NeoLayoutViewer {
 
 	public class AppStatusIcon {
+
 		public StatusIcon trayicon;
 		private Gtk.Menu menuMain;
 		private NeoWindow neo_win;
@@ -10,8 +11,6 @@ namespace NeoLayoutViewer{
 		public AppStatusIcon(NeoWindow neo_win) {
 			this.neo_win = neo_win;
 			/* Create tray icon */
-			//trayicon = new StatusIcon.from_stock(Stock.HOME);
-			//trayicon = new StatusIcon.from_file("Neo-Icon.png");
 			trayicon = new StatusIcon.from_pixbuf(neo_win.get_icon());
 			trayicon.set_tooltip_text ("Neo 2.0 Layout Viewer");
 			trayicon.set_visible(true);
@@ -21,7 +20,6 @@ namespace NeoLayoutViewer{
 			trayicon.popup_menu.connect(menuMain_popup);
 
 			/* Connect main window with left click/acitvation */
-			//trayicon.activate.connect(this.neo_win.show_all);
 			trayicon.activate.connect(()=>{this.neo_win.toggle();});
 		}
 
