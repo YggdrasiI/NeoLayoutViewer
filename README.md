@@ -4,8 +4,8 @@ Beschreibung
 Der NeoLayoutViewer bietet eine einfache Möglichkeit, das NEO2-
 Tastaturlayout¹ auf dem Bildschirm anzuzeigen.
 
-Eine Ebene wird angezeigt, sobald eine der zugehörigen Mod-Tasten 
-gedrückt wird. Dabei kann auch wenn ein anderes Fenster
+Eine Ebene wird angezeigt, sobald eine der zugehörigen Mod-Tasten (Shift,…)
+gedrückt wird. Dabei kann auch ein anderes Fenster
 selektiert sein.
 
 Autoren: Olaf Schulz 2011, rixx 2013
