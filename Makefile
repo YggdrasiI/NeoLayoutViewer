@@ -13,6 +13,8 @@ BUILDTYPE = debug
 PROGRAM = neo_layout_viewer
 BINDIR = bin
 
+#########################################################
+
 VALAC = valac --thread --Xcc="-lm" --Xcc="-DXK_TECHNICAL" --Xcc="-DXK_PUBLISHING" --Xcc="-DXK_APL" -D $(ICON) 
 VAPIDIR = --vapidir=vapi/ 
 
@@ -53,16 +55,17 @@ info:
 	@echo "Buildtype: $(BUILDTYPE)"
 	@echo "Trayicon: $(ICON)"
 	@echo ""
-	@echo "Edit the variable ICON in the header of the Makefile"
+	@echo "Notes:"
+	@echo "Edit the variable ICON in the head of Makefile"
 	@echo "if you want enable a tray icon."
 	@echo ""
-	@echo "Edit the variabe BUILDTYPE in the header of the Makefile"
+	@echo "Edit the variabe BUILDTYPE in the head of Makefile"
 	@echo "to switch build type to 'release'."
 	@echo ""
 	@echo ""
 
 # the 'release' target builds a release build
-# you might want to disabled asserts also
+# you might want disable asserts also
 release: $(BINDIR) clean bulid_$(BUILDTYPE)
 
 $(BINDIR):
@@ -76,6 +79,6 @@ bulid_debug:
 bulid_release:
 	@$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o $(BINDIR)/$(PROGRAM) $(PKGS) $(CC_INCLUDES)
  
-# clean all built files
+# clean all build files
 clean:
 	@rm -v -fr *~ *.c src/*.c src/*~ 

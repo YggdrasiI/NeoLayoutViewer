@@ -41,7 +41,7 @@ namespace NeoLayoutViewer{
 		/*
 			 Standardwerte der Einstellungen. Sie werden in eine Konfigurationsdatei geschrieben, falls
 			 diese Datei nicht vorhanden ist.
-			 Standard values. This vaules will be written in the config file if no config file found.
+			 Standard values. This vaules will be written in the config file if no config file was found.
 		 */
 		public void add_defaults(){
 			//config.set("show_shortcut","<Mod4><Super_L>n", "Toggle the visibility of the window.");
@@ -51,14 +51,12 @@ namespace NeoLayoutViewer{
 			addSetting("width","1000","Width in Pixel. Min_width and max_width bound sensible values. ");//Skalierung, sofern wert zwischen width(resolution)*max_width und width(resolution)*min_width
 			addSetting("min_width","0.25", "Minimal width. 1=full screen width");//Relativ zur Auflösung
 			addSetting("max_width","0.5", "Maximal width. 1=full screen width");//Relativ zur Auflösung
-			//addSetting("move_shortcut","<Mod4><Super_L>R", "Circle the window posisition");
-			addSetting("move_shortcut","<Ctrl><Alt>N", "Circle the window posisition");
-			//addSetting("position_cycle","3 3 9 1 3 9 1 7 7", "List of positions (num pad orientation)");
-			addSetting("position_cycle","2 3 6 1 3 9 4 7 8", "List of positions (num pad orientation)\n# The n-th number marks the next position of the window.\n# Limit the used position to the corners with\n#position_cycle = 3 3 9 1 3 9 1 7 7");
+			addSetting("move_shortcut","<Ctrl><Alt>N", "Circle through window posisitions.");
+			addSetting("position_cycle","2 3 6 1 3 9 4 7 8", "List of positions (num pad orientation)\n# The n-th number marks the next position of the window.\n# To limit the used positions to screen corners use\n#position_cycle = 3 3 9 1 3 9 1 7 7");
 			addSetting("display_numpad","1", null);
 			addSetting("display_function_keys","0", null);
-			addSetting("window_selectable","0","To use the keyboard window as virtual keyboard, disable this entry.");
-			addSetting("window_decoration","0","Show window decoration/border. Not recommended.");
+			addSetting("window_selectable","0","To use the keyboard window as virtual keyboard, disable this entry (option is out of use).");
+			addSetting("window_decoration","0","Show window decoration/border (not recommended).");
 			addSetting("screen_width","auto", "Set the resolution of your screen manually, if the automatic detection fails.");
 			addSetting("screen_height","auto", "Set the resolution of your screen manually, if the automatic detection fails.");
 		}
