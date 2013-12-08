@@ -24,7 +24,7 @@ namespace NeoLayoutViewer{
 				string testfile = @"$(path)/$(conffile)";
 				if( search_config_file(conffile) ){
 					conffile2 = testfile;
-					continue;
+					break;
 				}
 			}
 
@@ -34,7 +34,7 @@ namespace NeoLayoutViewer{
 					string testfile = @"$(path)/$(conffile)";
 					if( create_conf_file(testfile) > -1){
 						conffile2 = testfile;
-						continue;
+						break;
 					}
 				}
 			}

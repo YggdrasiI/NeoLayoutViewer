@@ -36,7 +36,7 @@ namespace NeoLayoutViewer{
 		debug(@"Path: $path");
 
 		string[] paths = {
-			//GLib.Environment.get_user_config_dir(),
+			GLib.Environment.get_user_config_dir(),
 			GLib.Environment.get_home_dir(),
 			GLib.Environment.get_current_dir()
 		};
@@ -110,7 +110,8 @@ namespace NeoLayoutViewer{
 		var file = File.new_for_path (path+filename);
 		if( file.query_exists(null)) return path;
 
-		string[] datadirs = GLib.Environment.get_system_data_dirs();
+		//string[] datadirs = GLib.Environment.get_system_data_dirs();
+		var datadirs = GLib.Environment.get_system_data_dirs();
 		foreach( var s in datadirs ){
 			var path2 = s+"NeoLayoutViewer/assets";
 			var file2 = File.new_for_path (path2+filename);
