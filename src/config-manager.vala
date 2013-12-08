@@ -59,6 +59,7 @@ namespace NeoLayoutViewer{
 			addSetting("window_decoration","0","Show window decoration/border (not recommended).");
 			addSetting("screen_width","auto", "Set the resolution of your screen manually, if the automatic detection fails.");
 			addSetting("screen_height","auto", "Set the resolution of your screen manually, if the automatic detection fails.");
+			addSetting("show_on_startup","1", "Show window on startup.");
 		}
 
 		/*
@@ -100,7 +101,7 @@ namespace NeoLayoutViewer{
 					}
 					data_stream.put_string ( e.key+" = "+e.value+"\n" );
 				}
-			} // Streams 
+			} // Streams
 			catch ( GLib.IOError e){ return -1; }
 			catch ( GLib.Error e){ return -1; }
 
@@ -128,7 +129,7 @@ namespace NeoLayoutViewer{
 					split = regex.split(line);
 					if(split.length>1){
 						//debug(split[0]+" "+split[1]+"\n");
-						this.config.set(split[0],split[1]);
+						this.config.set(split[0].strip(),split[1].strip());
 					}
 				}
 			} catch (GLib.IOError e) {

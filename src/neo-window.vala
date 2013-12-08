@@ -141,7 +141,7 @@ namespace NeoLayoutViewer{
 
 			this.status = new Label("");
 			status.show();
-			int width; 
+			int width;
 			int height;
 			this.get_size2(out width, out height);
 
@@ -182,16 +182,21 @@ namespace NeoLayoutViewer{
 			}
 
 
-			this.show();
+			if( this.config.get("show_on_startup") != "0" ){
+				//Move ist erst nach show() erfolgreich
+				this.show();
+				this.numkeypad_move(int.parse(config.get("position")));
+			}else{
+				this.hide(); 
+				this.numkeypad_move(int.parse(config.get("position")));
+			}
 
-			//Move ist erst nach show() erfolgreich
-			this.numkeypad_move(int.parse(config.get("position")));
 		}
 
 		public override void show(){
 			this.minimized = false;
-			base.show();
 			this.move(this.position_on_hide_x,this.position_on_hide_y);
+			base.show();
 
 			if( config.get("on_top")=="1")
 				this.set_keep_above(true);
@@ -273,6 +278,12 @@ namespace NeoLayoutViewer{
 			}
 
 			this.position_num = pos;
+
+			//store current coordinates 
+			this.position_on_hide_x = x;
+			this.position_on_hide_y = y;
+
+
 			this.move(x,y);
 		}
 

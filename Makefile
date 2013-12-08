@@ -41,8 +41,8 @@ PKGS += --pkg appindicator3-0.1
 endif
  
 # compiler options for a debug build
-#VALAC_DEBUG_OPTS = -g --save-temps
-VALAC_DEBUG_OPTS =  -g 
+VALAC_DEBUG_OPTS = -g --save-temps
+#VALAC_DEBUG_OPTS =  -g 
 # compiler options for a debug build
 VALAC_RELEASE_OPTS = -X -O2 --disable-assert 
 

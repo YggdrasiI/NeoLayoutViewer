@@ -72,7 +72,7 @@ namespace NeoLayoutViewer{
 	tray menu or indicator menu */
 	private static void about_dialog() {
 			var about = new Gtk.AboutDialog();
-			about.set_version("0.8");
+			about.set_version("0.9");
 			about.set_program_name("Neo2.0 Ebenenanzeige");
 			about.set_comments(@"Erleichtert das Nachschlagen von Tastenkombinationen im Neo 2.0-Layout.\n\n Olaf Schulz\n funwithkinect-AT-googlemail.com\n\n\nTastenkombinationen:\n Ein-/Ausblenden - $(neo_win.config.get("show_shortcut"))\n Bewegen - $(neo_win.config.get("move_shortcut"))\n Beenden (sofern Fenster selektiert) - q\n");
 			about.set_copyright("GPLv3");
