@@ -78,7 +78,10 @@ bulid_debug:
 
 bulid_release:
 	@$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o $(BINDIR)/$(PROGRAM) $(PKGS) $(CC_INCLUDES)
- 
+
+install:
+	@echo "ToDo"
+
 # clean all build files
 clean:
 	@rm -v -fr *~ *.c src/*.c src/*~ 

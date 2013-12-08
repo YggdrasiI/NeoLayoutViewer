@@ -35,7 +35,28 @@ namespace NeoLayoutViewer{
 		}
 		debug(@"Path: $path");
 
-		configm = new ConfigManager(path,"neo_layout_viewer.conf");
+		string[] paths = {
+			//GLib.Environment.get_user_config_dir(),
+			GLib.Environment.get_home_dir(),
+			GLib.Environment.get_current_dir()
+		};
+
+		configm = new ConfigManager(paths,".neo_layout_viewer.conf");
+
+		// Try to find asset folder (images)
+		string asset_folder = search_asset_folder( configm.getConfig().get("asset_folder") );
+		if( asset_folder == null ){
+			stdout.printf("Application start failed. Asset folder was not found.\n");
+			stdout.flush();
+			return 0;
+		}
+		//add path to asset folder
+		configm.getConfig().set("asset_folder",asset_folder);
+
+		debug(@"Asset folder: $(asset_folder)\n");
+
+
+
 
 		neo_win = new NeoWindow (slayer, configm.getConfig());
 
@@ -79,6 +100,26 @@ namespace NeoLayoutViewer{
 			about.run();
 			about.hide();
 		}
+
+	/* Check given path and shared files folders for the asset folder.
+		 The folder will be assumed as right one if one required file was found.
+		 @return: assed folder or null.
+	 */
+	private static string? search_asset_folder(string path){
+		string filename = "/icons/Neo-Icon.png";
+		var file = File.new_for_path (path+filename);
+		if( file.query_exists(null)) return path;
+
+		string[] datadirs = GLib.Environment.get_system_data_dirs();
+		foreach( var s in datadirs ){
+			var path2 = s+"NeoLayoutViewer/assets";
+			var file2 = File.new_for_path (path2+filename);
+			if( file2.query_exists(null)) return path2;
+		}
+
+		return null;
+	}
+
 
 }
 

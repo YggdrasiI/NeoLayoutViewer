@@ -288,7 +288,7 @@ namespace NeoLayoutViewer{
 		}
 
 		public Gdk.Pixbuf open_image (int layer) {
-			var bildpfad = "assets/neo2.0/tastatur_neo_Ebene%i.png".printf(layer);
+			var bildpfad = @"$(config.get("asset_folder"))/neo2.0/tastatur_neo_Ebene$(layer).png";
 			return open_image_str(bildpfad);
 		}
 
@@ -302,7 +302,7 @@ namespace NeoLayoutViewer{
 
 		public void load_image_buffer () {
 			this.image_buffer = new Gdk.Pixbuf[7];
-			this.image_buffer[0] = open_image_str(@"$(this.config.get("path"))assets/icons/Neo-Icon.png");
+			this.image_buffer[0] = open_image_str(@"$(config.get("asset_folder"))/icons/Neo-Icon.png");
 
 			int screen_width = Gdk.Screen.width();
 			int max_width = (int) ( double.parse( this.config.get("max_width") )*screen_width );

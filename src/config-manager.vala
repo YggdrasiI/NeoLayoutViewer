@@ -5,7 +5,7 @@ namespace NeoLayoutViewer{
 		public Gee.Map<string,string> config;
 		private Gee.Map<string,string> description;// allow optional commenting config entrys. 
 
-		public ConfigManager(string path, string conffile) {
+		public ConfigManager(string[] paths, string conffile) {
 			this.config =  new Gee.TreeMap<string, string>();
 			this.description =  new Gee.TreeMap<string, string>();
 
@@ -16,14 +16,33 @@ namespace NeoLayoutViewer{
 			//no, it's better to create the conffile in the current dir.
 			//var conffile2 = @"$(path)$(conffile)";
 
-			if(!search_config_file(conffile))
-				create_conf_file(conffile);
+			//try to read/create config file on given array of paths
+			string conffile2 = null;
 
-			if(search_config_file(conffile))
-				load_config_file(conffile);
+			//1. Try to read conf file
+			foreach( var path in paths ){
+				string testfile = @"$(path)/$(conffile)";
+				if( search_config_file(conffile) ){
+					conffile2 = testfile;
+					continue;
+				}
+			}
 
-			//add path
-			config.set("path",path);
+			//2. Try to write new conf file if read fails
+			if( conffile2 == null ){
+				foreach( var path in paths ){
+					string testfile = @"$(path)/$(conffile)";
+					if( create_conf_file(testfile) > -1){
+						conffile2 = testfile;
+						continue;
+					}
+				}
+			}
+
+			debug(@"Config file: $(conffile2)");
+
+			if(search_config_file(conffile2))
+				load_config_file(conffile2);
 
 			add_intern_values();
 		}
@@ -60,6 +79,7 @@ namespace NeoLayoutViewer{
 			addSetting("screen_width","auto", "Set the resolution of your screen manually, if the automatic detection fails.");
 			addSetting("screen_height","auto", "Set the resolution of your screen manually, if the automatic detection fails.");
 			addSetting("show_on_startup","1", "Show window on startup.");
+			addSetting("asset_folder","./assets", "Default lookup folder image data.");
 		}
 
 		/*
