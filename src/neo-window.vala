@@ -152,7 +152,7 @@ namespace NeoLayoutViewer {
 
 			this.status = new Label("");
 			status.show();
-			int width; 
+			int width;
 			int height;
 			this.get_size2(out width, out height);
 
@@ -194,16 +194,21 @@ namespace NeoLayoutViewer {
 			}
 
 
-			this.show();
+			if( this.config.get("show_on_startup") != "0" ){
+				//Move ist erst nach show() erfolgreich
+				this.show();
+				this.numkeypad_move(int.parse(config.get("position")));
+			}else{
+				this.hide(); 
+				this.numkeypad_move(int.parse(config.get("position")));
+			}
 
-			//Move ist erst nach show() erfolgreich
-			this.numkeypad_move(int.parse(config.get("position")));
 		}
 
 		public override void show() {
 			this.minimized = false;
+			this.move(this.position_on_hide_x,this.position_on_hide_y);
 			base.show();
-			this.move(this.position_on_hide_x, this.position_on_hide_y);
 
 			if (config.get("on_top") == "1") {
 				this.set_keep_above(true);
@@ -286,11 +291,17 @@ namespace NeoLayoutViewer {
 			}
 
 			this.position_num = pos;
-			this.move(x, y);
+
+			//store current coordinates 
+			this.position_on_hide_x = x;
+			this.position_on_hide_y = y;
+
+
+			this.move(x,y);
 		}
 
-		public Gdk.Pixbuf open_image(int layer) {
-			var bildpfad = "assets/neo2.0/tastatur_neo_Ebene%i.png".printf(layer);
+		public Gdk.Pixbuf open_image (int layer) {
+			var bildpfad = @"$(config.get("asset_folder"))/neo2.0/tastatur_neo_Ebene$(layer).png";
 			return open_image_str(bildpfad);
 		}
 
@@ -304,7 +315,7 @@ namespace NeoLayoutViewer {
 
 		public void load_image_buffer () {
 			this.image_buffer = new Gdk.Pixbuf[7];
-			this.image_buffer[0] = open_image_str(@"$(this.config.get("path"))assets/icons/Neo-Icon.png");
+			this.image_buffer[0] = open_image_str(@"$(config.get("asset_folder"))/icons/Neo-Icon.png");
 
 			int screen_width = Gdk.Screen.width();
 			int max_width = (int) (double.parse(this.config.get("max_width")) * screen_width);

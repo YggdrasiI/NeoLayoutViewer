@@ -4,9 +4,9 @@ namespace NeoLayoutViewer {
 	public class ConfigManager {
 
 		public Gee.Map<string,string> config;
-		private Gee.Map<string,string> description; // allow optional commenting config entrys. 
+		private Gee.Map<string,string> description; // allow optional commenting config entrys.
 
-		public ConfigManager(string path, string conffile) {
+		public ConfigManager(string[] paths, string conffile) {
 			this.config =  new Gee.TreeMap<string, string>();
 			this.description =  new Gee.TreeMap<string, string>();
 
@@ -16,14 +16,33 @@ namespace NeoLayoutViewer {
 			//no, it's better to create the conffile in the current dir.
 			//var conffile2 = @"$(path)$(conffile)";
 
-			if (!search_config_file(conffile)) {
-				create_conf_file(conffile);
-			} else {
-				load_config_file(conffile);
+			//try to read/create config file on given array of paths
+			string conffile2 = null;
+
+			//1. Try to read conf file
+			foreach( var path in paths ){
+				string testfile = @"$(path)/$(conffile)";
+				if( search_config_file(conffile) ){
+					conffile2 = testfile;
+					break;
+				}
 			}
 
-			//add path
-			config.set("path", path);
+			//2. Try to write new conf file if read fails
+			if( conffile2 == null ){
+				foreach( var path in paths ){
+					string testfile = @"$(path)/$(conffile)";
+					if( create_conf_file(testfile) > -1){
+						conffile2 = testfile;
+						break;
+					}
+				}
+			}
+
+			debug(@"Config file: $(conffile2)");
+
+			if(search_config_file(conffile2))
+				load_config_file(conffile2);
 
 			add_intern_values();
 		}
@@ -41,26 +60,27 @@ namespace NeoLayoutViewer {
 		}
 
 		/*
-			 Standardwerte der Einstellungen. Sie werden in eine Konfigurationsdatei geschrieben, falls
-			 diese Datei nicht vorhanden ist.
-			 Standard values. This vaules will be written in the config file if no config file found.
-		*/
+			 Standard values. This vaules will be written in the config file if
+             config file was not found.
+		 */
 		public void add_defaults(){
-
-			addSetting("show_shortcut","<Ctrl><Alt>q", "Toggle the visibility of the window.");
+			//config.set("show_shortcut","<Mod4><Super_L>n", "Toggle the visibility of the window.");
+			addSetting("show_shortcut","<Ctrl><Alt>Q", "Toggle the visibility of the window.");
 			addSetting("on_top","1", "Show window on top.");
 			addSetting("position","3", "Window position on startup (num pad orientation)");
 			addSetting("width","1000","Width in Pixel. Min_width and max_width bound sensible values. ");//Skalierung, sofern wert zwischen width(resolution)*max_width und width(resolution)*min_width
 			addSetting("min_width","0.25", "Minimal width. 1=full screen width");//Relativ zur Auflösung
 			addSetting("max_width","0.5", "Maximal width. 1=full screen width");//Relativ zur Auflösung
-			addSetting("move_shortcut","<Ctrl><Alt>N", "Circle the window posisition");
-			addSetting("position_cycle","2 3 6 1 3 9 4 7 8", "List of positions (num pad orientation)\n# The n-th number marks the next position of the window.\n# Limit the used position to the corners with\n#position_cycle = 3 3 9 1 3 9 1 7 7");
+			addSetting("move_shortcut","<Ctrl><Alt>N", "Circle through window posisitions.");
+			addSetting("position_cycle","2 3 6 1 3 9 4 7 8", "List of positions (num pad orientation)\n# The n-th number marks the next position of the window.\n# To limit the used positions to screen corners use\n#position_cycle = 3 3 9 1 3 9 1 7 7");
 			addSetting("display_numpad","1", null);
 			addSetting("display_function_keys","0", null);
-			addSetting("window_selectable","0","To use the keyboard window as virtual keyboard, disable this entry.");
-			addSetting("window_decoration","0","Show window decoration/border. Not recommended.");
+			addSetting("window_selectable","0","To use the keyboard window as virtual keyboard, disable this entry (option is out of use).");
+			addSetting("window_decoration","0","Show window decoration/border (not recommended).");
 			addSetting("screen_width","auto", "Set the resolution of your screen manually, if the automatic detection fails.");
 			addSetting("screen_height","auto", "Set the resolution of your screen manually, if the automatic detection fails.");
+			addSetting("show_on_startup","1", "Show window on startup.");
+			addSetting("asset_folder","./assets", "Default lookup folder image data.");
 		}
 
 		/*
@@ -69,7 +89,7 @@ namespace NeoLayoutViewer {
 		private void add_intern_values() {
 			config.set("numpad_width","350");
 			config.set("function_keys_height","30");
-		} 
+		}
 
 		private bool search_config_file(string conffile) {
 			var file = File.new_for_path(conffile);
@@ -89,7 +109,7 @@ namespace NeoLayoutViewer {
 					return -1;
 				}
 
-				// Write text data to file 
+				// Write text data to file
 				var data_stream = new DataOutputStream(file_stream);
 
 				foreach (Gee.Map.Entry<string, string> e in this.config.entries) {
@@ -100,9 +120,9 @@ namespace NeoLayoutViewer {
 
 					data_stream.put_string(e.key + " = " + e.value + "\n");
 				}
-			} // Streams 
-			catch (GLib.IOError e) { return -1; }
-			catch (GLib.Error e) { return -1; }
+			} // Streams
+			catch ( GLib.IOError e){ return -1; }
+			catch ( GLib.Error e){ return -1; }
 
 			return 0;
 		}
@@ -127,9 +147,8 @@ namespace NeoLayoutViewer {
 					if (comment.match(line)) continue;
 
 					split = regex.split(line);
-
-					if (split.length > 1) {
-						this.config.set(split[0], split[1]);
+					if(split.length>1){
+						this.config.set(split[0].strip(),split[1].strip());
 					}
 				}
 			} catch (GLib.IOError e) {

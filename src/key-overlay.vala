@@ -745,7 +745,7 @@ namespace NeoLayoutViewer {
 				});
 
 			// Image of pressed Button
-			Gdk.Pixbuf image_buffer = winMain.open_image_str(@"assets/neo2.0/$(pressed_key_image)");
+			Gdk.Pixbuf image_buffer = winMain.open_image_str(@"$(winMain.config.get("asset_folder"))/neo2.0/$(pressed_key_image)");
 			var w = image_buffer.width;
 			var h = image_buffer.height;
 			image_buffer = image_buffer.scale_simple(width, h*width/w,Gdk.InterpType.BILINEAR);
