@@ -58,7 +58,11 @@ VALAC_RELEASE_OPTS = -X -O2 --disable-assert
 
  
 # the 'all' target build a debug build
-all: $(BINDIR) info bulid_debug
+all: $(BINDIR) info bulid_$(BUILDTYPE)
+
+# the 'release' target builds a release build
+# you might want disable asserts also
+release: $(BINDIR) clean bulid_release
 
 info:
 	@echo ""
@@ -73,10 +77,6 @@ info:
 	@echo "to switch build type to 'release'."
 	@echo ""
 	@echo ""
-
-# the 'release' target builds a release build
-# you might want disable asserts also
-release: $(BINDIR) clean bulid_$(BUILDTYPE)
 
 $(BINDIR):
 	@mkdir -p $(BINDIR)
