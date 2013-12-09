@@ -1,4 +1,4 @@
 *~
 *.swp
 bin/
-neo_layout_viewer.conf
+.neo_layout_viewer.conf
