@@ -226,9 +226,16 @@ KeyMod keymod;
    XGetInputFocus(display, &winFocus, &revert);
 
 	keymod = getKeyModCodes(rootwin, keysym, modifiers);
+	
+	/* Bugfix?!
+	 * for the first layer (=no modifier is pressed) the above fuction 
+	 * returns 33 for the modifier, if the neo layer is activated.
+	 * This will be corrected to 0.
+	 */
+	if( keymod.modifiers == 33 ) keymod.modifiers = 0;
 
 	XKeyEvent event;
-	//printf("Send key %u %i\n", keysym, modifiers);
+	//printf("Send key %u %i   %u %u\n", keysym, modifiers, keymod.keyval, keymod.modifiers);
 
 	// Send a fake key press event to the focused window.
 	event = createKeyEvent(display, winFocus, winRoot, True, keymod.keyval, keymod.modifiers);

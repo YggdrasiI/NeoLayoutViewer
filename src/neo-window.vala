@@ -196,8 +196,8 @@ namespace NeoLayoutViewer {
 
 			if( this.config.get("show_on_startup") != "0" ){
 				//Move ist erst nach show() erfolgreich
-				this.show();
 				this.numkeypad_move(int.parse(config.get("position")));
+				this.show();
 			}else{
 				this.hide(); 
 				this.numkeypad_move(int.parse(config.get("position")));

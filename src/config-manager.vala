@@ -22,8 +22,10 @@ namespace NeoLayoutViewer {
 			//1. Try to read conf file
 			foreach( var path in paths ){
 				string testfile = @"$(path)/$(conffile)";
-				if( search_config_file(conffile) ){
+				debug(@"Search $(testfile)\n");
+				if( search_config_file(testfile) ){
 					conffile2 = testfile;
+					debug(@"Found $(testfile)\n");
 					break;
 				}
 			}
@@ -33,6 +35,7 @@ namespace NeoLayoutViewer {
 				foreach( var path in paths ){
 					string testfile = @"$(path)/$(conffile)";
 					if( create_conf_file(testfile) > -1){
+						debug(@"Create $(testfile)\n");
 						conffile2 = testfile;
 						break;
 					}

@@ -661,7 +661,7 @@ namespace NeoLayoutViewer {
 		private NeoWindow winMain;
 		private int width;
 		private int height;
-		private Gtk.Image image; 
+		private Gtk.Image image;
 
 		/*
 			 Die Reihenfolge der Zeichen in keysyms passt nicht
@@ -698,10 +698,10 @@ namespace NeoLayoutViewer {
 					// Alt-Mask do not work :-(
 					keysend(ks,modi);
 				} else {
-					debug("Zweiter Modi");
+					//debug("Variante mit zweitem Modifier.");
 					keysend2(ks,modi & Gdk.ModifierType.CONTROL_MASK, modi & Gdk.ModifierType.MOD1_MASK);
 				}
-					
+
 				return false;
 			});
 		}
@@ -756,7 +756,7 @@ namespace NeoLayoutViewer {
 
 			add(this.image);
 
-			winMain.modifier_key_images.add(  new Modkey(ref this.image, this.modifier_index) ); 
+			winMain.modifier_key_images.add(  new Modkey(ref this.image, this.modifier_index) );
 
 		}
 
@@ -769,7 +769,7 @@ namespace NeoLayoutViewer {
 		 * the widget how large it wishes to be. It's not guaranteed
 		 * that Gtk+ will actually give this size to the widget.
 		 */
-		 
+
 		public override void get_preferred_width(out int minimum_width, out int natural_width){
 			minimum_width = width;
 			natural_width = width;

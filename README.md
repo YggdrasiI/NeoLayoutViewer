@@ -9,7 +9,7 @@ Wird eine der Mod-Tasten (Shift,…) gedrückt oder losgelassen, wechselt die An
 Ebene. Außerdem kann das Fenster per Tastenkombination bewegt oder ausgeblendet werden. 
 Alle Einstellungen können über eine Konfigurationsdatei angepasst werden.
 
-Autoren: Olaf Schulz 2011, rixx 2013
+Autoren: Olaf Schulz 2011-2014, rixx 2013
 
 Lizenz: GPLv3
 

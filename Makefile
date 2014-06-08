@@ -8,7 +8,8 @@ ICON = indicator
 
 # Build type. Possible values:
 # debug, release
-BUILDTYPE = release
+#BUILDTYPE = release
+BUILDTYPE = debug
 
 BINNAME = neo_layout_viewer
 BINDIR = bin
@@ -53,7 +54,7 @@ endif
 # compiler options for a debug build
 VALAC_DEBUG_OPTS = -g --save-temps
 #VALAC_DEBUG_OPTS =  -g 
-# compiler options for a debug build
+# compiler options for a release build
 VALAC_RELEASE_OPTS = -X -O2 --disable-assert 
 
  
