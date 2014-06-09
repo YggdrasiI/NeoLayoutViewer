@@ -101,6 +101,12 @@ namespace NeoLayoutViewer {
 			this.config = config;
 			this.minimized = true;
 
+			/* Set window type to let tiling window manager the chance
+			 * to float the window automatically.
+			 */
+			//this.type_hint = Gdk.WindowTypeHint.SPLASHSCREEN;
+			this.type_hint = Gdk.WindowTypeHint.UTILITY;
+
 			this.NEO_MODIFIER_MASK = {
 				0,
 				Gdk.ModifierType.SHIFT_MASK, //1
@@ -292,7 +298,7 @@ namespace NeoLayoutViewer {
 
 			this.position_num = pos;
 
-			//store current coordinates 
+			//store current coordinates
 			this.position_on_hide_x = x;
 			this.position_on_hide_y = y;
 
@@ -348,7 +354,7 @@ namespace NeoLayoutViewer {
 				h = this.image_buffer[i].height;
 				this.image_buffer[i] = this.image_buffer[i].scale_simple(width, h * width / w, Gdk.InterpType.BILINEAR);
 			}
-			
+
 		}
 
 		private bool on_key_pressed (Widget source, Gdk.EventKey key) {
@@ -372,7 +378,7 @@ namespace NeoLayoutViewer {
 		}
 
 		/*
-			 Use the for values 
+			 Use the for values
 			 - “modifier was pressed”
 			 - “modifier is pressed”
 			 - “modifier was seleted by mouseclick” and

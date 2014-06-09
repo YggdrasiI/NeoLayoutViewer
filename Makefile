@@ -8,8 +8,7 @@ ICON = indicator
 
 # Build type. Possible values:
 # debug, release
-#BUILDTYPE = release
-BUILDTYPE = debug
+BUILDTYPE = release
 
 BINNAME = neo_layout_viewer
 BINDIR = bin
