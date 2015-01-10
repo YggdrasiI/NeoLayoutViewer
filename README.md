@@ -4,7 +4,7 @@ Beschreibung
 Der NeoLayoutViewer bietet eine einfache Möglichkeit, das NEO2-
 Tastaturlayout¹ auf dem Bildschirm anzuzeigen. 
 
-Das Programmfenster besteht nur aus einem Bild einer der sechs Ebenen des Layouts.
+Das Programmfenster besteht nur aus dem Bild einer der sechs Ebenen des Layouts.
 Wird eine der Mod-Tasten (Shift,…) gedrückt oder losgelassen, wechselt die Anzeige zur zugehörigen
 Ebene. Außerdem kann das Fenster per Tastenkombination bewegt oder ausgeblendet werden. 
 Alle Einstellungen können über eine Konfigurationsdatei angepasst werden.
@@ -35,7 +35,7 @@ Geben Sie in diesem Falle „make ICON=tray“ ein.
 Hinweise
 ========================================================================
 • Beim ersten Start wird die Datei $HOME/.config/.neo_layout_viewer.conf erstellt.
-	Sollte die Datei in diesem Verzeichnis nicht angewegt werden können, wird $HOME
+	Sollte die Datei in diesem Verzeichnis nicht angelegt werden können, wird als Speicherort $HOME
 	und das derzeitge Verzeichnis ausprobiert.
 	In der Konfigurationsdatei können unter anderem folgende Einstellungen vorgenommen
 	werden:
