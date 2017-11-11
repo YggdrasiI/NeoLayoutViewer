@@ -13,7 +13,8 @@ namespace NeoLayoutViewer {
 
 			indicator = new AppIndicator.Indicator.with_path("Neo Layout Viewer", "Neo-Icon",
 					AppIndicator.IndicatorCategory.APPLICATION_STATUS,
-					"/home/olaf/vala/NeoLayoutViewer/assets/icons/" );
+          configm.getConfig().get("asset_folder")+"/icons/");
+					//"./assets/icons/" );
 
 			create_menuMain();
 			indicator.set_menu(this.menuMain);

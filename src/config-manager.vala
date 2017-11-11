@@ -5,6 +5,7 @@ namespace NeoLayoutViewer {
 
 		public Gee.Map<string,string> config;
 		private Gee.Map<string,string> description; // allow optional commenting config entrys.
+    public string used_config_path;
 
 		public ConfigManager(string[] paths, string conffile) {
 			this.config =  new Gee.TreeMap<string, string>();
@@ -30,7 +31,20 @@ namespace NeoLayoutViewer {
 				}
 			}
 
-			//2. Try to write new conf file if read fails
+			//2. Try deprecated name with leading dot.
+      if( conffile2 == null ){
+        foreach( var path in paths ){
+          string testfile = @"$(path)/.$(conffile)";
+          debug(@"Search $(testfile)\n");
+          if( search_config_file(testfile) ){
+            conffile2 = testfile;
+            debug(@"Found $(testfile)\n");
+            break;
+          }
+        }
+      }
+
+			//3. Try to write new conf file if read fails
 			if( conffile2 == null ){
 				foreach( var path in paths ){
 					string testfile = @"$(path)/$(conffile)";
@@ -48,6 +62,7 @@ namespace NeoLayoutViewer {
 				load_config_file(conffile2);
 
 			add_intern_values();
+      used_config_path = conffile2;
 		}
 
 		public Gee.Map<string, string> getConfig() {
@@ -68,13 +83,13 @@ namespace NeoLayoutViewer {
 		 */
 		public void add_defaults(){
 			//config.set("show_shortcut","<Mod4><Super_L>n", "Toggle the visibility of the window.");
-			addSetting("show_shortcut","<Ctrl><Alt>Q", "Toggle the visibility of the window.");
+			addSetting("show_shortcut","<Ctrl><Alt>q", "Toggle the visibility of the window.");
 			addSetting("on_top","1", "Show window on top.");
 			addSetting("position","3", "Window position on startup (num pad orientation)");
 			addSetting("width","1000","Width in Pixel. Min_width and max_width bound sensible values. ");//Skalierung, sofern wert zwischen width(resolution)*max_width und width(resolution)*min_width
 			addSetting("min_width","0.25", "Minimal width. 1=full screen width");//Relativ zur Auflösung
 			addSetting("max_width","0.5", "Maximal width. 1=full screen width");//Relativ zur Auflösung
-			addSetting("move_shortcut","<Ctrl><Alt>N", "Circle through window posisitions.");
+			addSetting("move_shortcut","<Ctrl><Alt>n", "Circle through window posisitions.");
 			addSetting("position_cycle","2 3 6 1 3 9 4 7 8", "List of positions (num pad orientation)\n# The n-th number marks the next position of the window.\n# To limit the used positions to screen corners use\n#position_cycle = 3 3 9 1 3 9 1 7 7");
 			addSetting("display_numpad","1", null);
 			addSetting("display_function_keys","0", null);

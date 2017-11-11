@@ -9,9 +9,10 @@ Wird eine der Mod-Tasten (Shift,…) gedrückt oder losgelassen, wechselt die An
 Ebene. Außerdem kann das Fenster per Tastenkombination bewegt oder ausgeblendet werden. 
 Alle Einstellungen können über eine Konfigurationsdatei angepasst werden.
 
-Autoren: Olaf Schulz 2011-2016, rixx 2013
+Autoren: Olaf Schulz 2011-2017, rixx 2013
 
 Lizenz: GPLv3
+
 
 
 Kompilation & Installation
@@ -19,9 +20,9 @@ Kompilation & Installation
 
 Das Programm benötigt einen Kompiler der Programmiersprache Vala (mind. Version 0.16)
 und die Developer-Pakete einiger Bibliotheken. Die Abhängigkeiten können unter Ubuntu
-mit dem folgenden Befehl nachinstalliert werden, sofern sie nicht bereits vorhanden sind (Stand: Ubuntu 12.04, September 2013). Bei anderen Distributionen muss der Befehl ggf. angepasst werden.
+mit dem folgenden Befehl nachinstalliert werden, sofern sie nicht bereits vorhanden sind (Stand: Ubuntu 16.04, November 2017). Bei anderen Distributionen muss der Befehl ggf. angepasst werden.
 
-    sudo apt-get install valac libgee-dev libgtk-3-dev libx11-dev libunique-3.0-dev libappindicator3-dev
+    sudo apt-get install valac libgee-0.8-dev libgtk-3-dev libx11-dev libunique-3.0-dev libappindicator3-dev
 
 Mittels
 
@@ -29,12 +30,12 @@ Mittels
 
 kann das Programm kompiliert und unter /usr/local installiert werden.
 Unter Gnome 2.x wird eine andere Bibliothek für die Anzeige des Tray-Icons benötigt.
-Geben Sie in diesem Falle „make ICON=tray“ ein.
+Geben Sie in diesem Falle „ICON=tray make“ ein.
 
 
 Hinweise
 ========================================================================
-• Beim ersten Start wird die Datei $HOME/.config/.neo_layout_viewer.conf
+• Beim ersten Start wird die Datei $HOME/.config/neo_layout_viewer.conf
 	erstellt. (Sollte die Datei in diesem Verzeichnis nicht angelegt werden können,
 	wird als Speicherort $HOME und das derzeitge Verzeichnis ausprobiert.)
 	In der Konfigurationsdatei können unter anderem folgende Einstellungen vorgenommen

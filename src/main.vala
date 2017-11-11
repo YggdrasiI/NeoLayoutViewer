@@ -42,7 +42,7 @@ namespace NeoLayoutViewer{
 			GLib.Environment.get_current_dir()
 		};
 
-		configm = new ConfigManager(paths,".neo_layout_viewer.conf");
+		configm = new ConfigManager(paths,"neo_layout_viewer.conf");
 
 		// Try to find asset folder (images)
 		string asset_folder = search_asset_folder( configm.getConfig().get("asset_folder") );
@@ -91,9 +91,24 @@ namespace NeoLayoutViewer{
 	tray menu or indicator menu */
 	private static void about_dialog() {
 			var about = new Gtk.AboutDialog();
-			about.set_version("0.9");
+			about.set_version(@"1.0 (git $(GIT_COMMIT_VERSION)) )");
 			about.set_program_name("Neo2.0 Ebenenanzeige");
-			about.set_comments(@"Erleichtert das Nachschlagen von Tastenkombinationen im Neo 2.0-Layout.\n\n Olaf Schulz\n funwithkinect-AT-googlemail.com\n\n\nTastenkombinationen:\n Ein-/Ausblenden - $(neo_win.config.get("show_shortcut"))\n Bewegen - $(neo_win.config.get("move_shortcut"))\n Beenden (sofern Fenster selektiert) - q\n");
+			about.set_comments("""Erleichtert das Nachschlagen von Tastenkombinationen im Neo 2.0-Layout.
+
+ Olaf Schulz
+ funwithkinect-AT-googlemail.com
+
+
+Tastenkombinationen:
+ Ein-/Ausblenden - %s
+ Bewegen - %s
+ Beenden (sofern Fenster selektiert) - q
+
+ Verwendete Konfigurationsdatei: %s
+""".printf(neo_win.config.get("show_shortcut"),
+neo_win.config.get("move_shortcut"),
+configm.used_config_path)
+);
 			about.set_copyright("GPLv3");
 			about.run();
 			about.hide();
@@ -107,6 +122,11 @@ namespace NeoLayoutViewer{
 		string filename = "/icons/Neo-Icon.png";
 		var file = File.new_for_path (path+filename);
 		if( file.query_exists(null)) return path;
+
+    // Check '../assets'
+    var path1 = "../" + path;
+		var file1 = File.new_for_path (path1+filename);
+		if( file1.query_exists(null)) return path1;
 
 		//string[] datadirs = GLib.Environment.get_system_data_dirs();
 		var datadirs = GLib.Environment.get_system_data_dirs();

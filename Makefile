@@ -4,11 +4,11 @@
 
 # Tray icon flag. Possible values:
 # none, tray (for gnome 2.x) , indicator (for gnome 3.x)
-ICON = indicator
+ICON ?= indicator
 
 # Build type. Possible values:
 # debug, release
-BUILDTYPE = release
+BUILD_TYPE ?= release
 
 BINNAME = neo_layout_viewer
 BINDIR = bin
@@ -17,16 +17,30 @@ BINDIR = bin
 PREFIX = /usr/local
 APPNAME = NeoLayoutViewer
 
+GIT_COMMIT_VERSION=$(shell git log --oneline --max-count=1 | head --bytes=7)
+ENV_FILE=.build_env
+
+#STATIC=-static
+
 #########################################################
 
 EXEC_PREFIX = $(PREFIX)
 DATADIR = $(PREFIX)/share
 
-VALAC = valac --thread --Xcc="-lm" --Xcc="-DXK_TECHNICAL" --Xcc="-DXK_PUBLISHING" --Xcc="-DXK_APL" -D $(ICON) 
+VALAC = valac --thread  -D $(ICON) \
+				--Xcc="-lm" --Xcc="-DXK_TECHNICAL" --Xcc="-DXK_PUBLISHING" --Xcc="-DXK_APL"
 VAPIDIR = --vapidir=vapi/ 
 
 # Source files 
-SRC = src/main.vala src/unique.vala src/neo-window.vala src/key-overlay.vala src/config-manager.vala src/keybinding-manager.vala csrc/keysend.c csrc/checkModifier.c
+SRC = src/version.vala \
+      src/main.vala \
+      src/unique.vala \
+      src/neo-window.vala \
+      src/key-overlay.vala \
+      src/config-manager.vala \
+      src/keybinding-manager.vala \
+      csrc/keysend.c \
+      csrc/checkModifier.c
 
 # Asset files
 ASSET_FILES=$(wildcard assets/**/*.png)
@@ -57,36 +71,58 @@ VALAC_DEBUG_OPTS = -g --save-temps
 VALAC_RELEASE_OPTS = -X -O2 --disable-assert 
 
  
+.PHONY: debug release install clean last_build_env
+# .FORCE: last_build_env
+
+
 # the 'all' target build a debug build
-all: $(BINDIR) info bulid_$(BUILDTYPE)
+all: $(BINDIR) info last_build_env $(BINDIR)/$(BINNAME)
+	@echo "Done"
+
+$(BINDIR)/$(BINNAME): $(SRC) Makefile
+	make bulid_$(BUILD_TYPE)
+
+# Remove binary if current env differs from last build env
+# This toggles a rebuild.
+last_build_env:
+	@(test "$$(env|sort)" = "$$(test -f $(ENV_FILE) && cat $(ENV_FILE) )" \
+		&& echo "Same environment as last build.") \
+		|| (echo "Env has changed. Force build" \
+		&& env | sort > "$(ENV_FILE)" \
+		&& rm -f $(BINDIR)/$(BINNAME)\
+		)
 
 # the 'release' target builds a release build
 # you might want disable asserts also
 release: $(BINDIR) clean bulid_release
 
 info:
-	@echo ""
-	@echo "Buildtype: $(BUILDTYPE)"
-	@echo "Trayicon: $(ICON)"
-	@echo ""
-	@echo "Notes:"
-	@echo "Edit the variable ICON in the head of Makefile"
-	@echo "if you want enable a tray icon."
-	@echo ""
-	@echo "Edit the variabe BUILDTYPE in the head of Makefile"
-	@echo "to switch build type to 'release'."
-	@echo ""
-	@echo ""
+	@echo " \n"\
+		"Buildtype: $(BUILD_TYPE)\n" \
+		"Trayicon: $(ICON)\n" \
+		"\n" \
+		"Notes:\n" \
+		"  Edit the variable ICON in the head of Makefile\n" \
+		"  if you want enable a tray icon.\n" \
+		"\n" \
+		"  Edit the variabe BUILD_TYPE in the head of Makefile\n" \
+		"  to switch build type to 'debug'.\n" \
+		"\n" \
+
+gen_version:
+	@echo "namespace NeoLayoutViewer{\n  public const string GIT_COMMIT_VERSION " \
+		"= \"$(GIT_COMMIT_VERSION)\";\n}" \
+		> src/version.vala
 
 $(BINDIR):
 	@mkdir -p $(BINDIR)
 	@ln -s ../assets bin/assets
 
-bulid_debug:
-#	@echo $(VALAC) $(VAPIDIR) $(VALAC_DEBUG_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME) $(PKGS) $(CC_INCLUDES)
+bulid_debug: gen_version 
+	#	@echo $(VALAC) $(VAPIDIR) $(VALAC_DEBUG_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME) $(PKGS) $(CC_INCLUDES)
 	$(VALAC) $(VAPIDIR) $(VALAC_DEBUG_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME) $(PKGS) $(CC_INCLUDES)
 
-bulid_release:
+bulid_release: gen_version 
 	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME) $(PKGS) $(CC_INCLUDES)
 
 install: all

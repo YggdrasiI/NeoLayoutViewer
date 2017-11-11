@@ -1,4 +1,8 @@
 *~
 *.swp
 bin/
+.build_env
 .neo_layout_viewer.conf
+neo_layout_viewer.conf
+src/*.c
+src/version.vala
