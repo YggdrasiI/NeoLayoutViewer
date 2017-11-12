@@ -503,6 +503,16 @@ namespace NeoLayoutViewer {
 			this.check_modifier(iet1);
 		}
 
+    public int get_screen_width(){
+      // Return value derived from config.get("screen_width")) or Gdk.Screen.width()
+      return screen_dim[0];
+    }
+
+    public int get_screen_height(){
+      // Return value derived from config.get("screen_height")) or Gdk.Screen.height()
+      return screen_dim[1];
+    }
+
 	} //End class NeoWindow
 
 }

@@ -91,6 +91,7 @@ namespace NeoLayoutViewer{
 	tray menu or indicator menu */
 	private static void about_dialog() {
 			var about = new Gtk.AboutDialog();
+			about.set_logo(neo_win.getIcon());
 			about.set_destroy_with_parent (true);
 			about.set_transient_for (neo_win);
 			about.set_version(@"1.0 (git $(GIT_COMMIT_VERSION)) )");
@@ -107,14 +108,28 @@ Tastenkombinationen:
  Beenden (sofern Fenster selektiert) - q
 
  Verwendete Konfigurationsdatei: %s
-""".printf(neo_win.config.get("show_shortcut"),
-neo_win.config.get("move_shortcut"),
-configm.used_config_path)
-);
+""".printf(
+				neo_win.config.get("show_shortcut"),
+				neo_win.config.get("move_shortcut"),
+				configm.used_config_path)
+			);
 			about.set_copyright("GPLv3");
+			center_window(about);
 			about.run();
 			about.hide();
+			about.destroy();
+
 		}
+
+	private void center_window(Gtk.Window win){
+		int screen_width = neo_win.get_screen_width();
+		int screen_height = neo_win.get_screen_height();
+		int x,y,w,h;
+		win.get_size(out w, out h);
+		x = (screen_width - w) / 2;
+		y = (screen_height - h) / 2;
+		win.move(x,y);
+	}
 
 	/* Check given path and shared files folders for the asset folder.
 		 The folder will be assumed as right one if one required file was found.
