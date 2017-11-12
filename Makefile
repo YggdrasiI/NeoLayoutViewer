@@ -109,8 +109,10 @@ info:
 		"  Use 'BUILD_TYPE=[release|debug] make' to switch build type\n\n" \
 
 gen_version:
-	@echo "namespace NeoLayoutViewer{\n  public const string GIT_COMMIT_VERSION " \
-		"= \"$(GIT_COMMIT_VERSION)\";\n}" \
+	@echo "namespace NeoLayoutViewer{\n" \
+		"public const string GIT_COMMIT_VERSION = \"$(GIT_COMMIT_VERSION)\";\n" \
+		"public const string SHARED_ASSETS_PATH = \"$(DATADIR)/$(APPNAME)/assets\";\n" \
+		"}" \
 		> src/version.vala
 
 $(BINDIR):
@@ -125,7 +127,7 @@ bulid_release: gen_version
 	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME) $(PKGS) $(CC_INCLUDES)
 
 install:
-	test ! -f $(BINDIR)/$(BINNAME) || make all
+	test -f $(BINDIR)/$(BINNAME) || make all
 	install -d $(EXEC_PREFIX)/bin
 	install -D -m 0755 $(BINDIR)/$(BINNAME) $(EXEC_PREFIX)/bin
 	$(foreach ASSET_FILE,$(ASSET_FILES), install -D -m 0644 $(ASSET_FILE) $(DATADIR)/$(APPNAME)/$(ASSET_FILE) ; )

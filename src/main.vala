@@ -39,7 +39,7 @@ namespace NeoLayoutViewer{
 		string[] paths = {
 			GLib.Environment.get_user_config_dir(),
 			GLib.Environment.get_home_dir(),
-			GLib.Environment.get_current_dir()
+			GLib.Environment.get_current_dir(),
 		};
 
 		configm = new ConfigManager(paths,"neo_layout_viewer.conf");
@@ -47,7 +47,7 @@ namespace NeoLayoutViewer{
 		// Try to find asset folder (images)
 		string asset_folder = search_asset_folder( configm.getConfig().get("asset_folder") );
 		if( asset_folder == null ){
-			stdout.printf("Application start failed. Asset folder was not found.\n");
+			stdout.printf(@"Application start failed because asset folder was not found.\nTry to set path manually in the config file '$(configm.used_config_path)'\n");
 			stdout.flush();
 			return 0;
 		}
@@ -137,21 +137,26 @@ Tastenkombinationen:
 	 */
 	private static string? search_asset_folder(string path){
 		const string filename = "/icons/Neo-Icon.png";
-		const string subpath = "NeoLayoutViewer/assets";
-		var file = File.new_for_path (path+filename);
-		if( file.query_exists(null)) return path;
 
-		// Check '../assets'
-		var path1 = "../" + path;
-		var file1 = File.new_for_path (path1+filename);
-		if( file1.query_exists(null)) return path1;
+		string[] paths = {
+			path, // path from config file
+			"./assets",
+			"../assets",
+			SHARED_ASSETS_PATH, // path given by Makefile
+		};
 
-		//string[] datadirs = GLib.Environment.get_system_data_dirs();
+		foreach( var p in paths ){
+			debug(@"Search assets in $(p)\n");
+			var file = File.new_for_path (p+filename);
+			if( file.query_exists(null)) return p;
+		}
+
 		var datadirs = GLib.Environment.get_system_data_dirs();
 		foreach( var s in datadirs ){
-			var path2 = s+subpath;
-			var file2 = File.new_for_path (path2+filename);
-			if( file2.query_exists(null)) return path2;
+			var env_path = s + "/NeoLayoutViewer/assets";
+			debug(@"Search assets in $(env_path)\n");
+			var file2 = File.new_for_path (env_path+filename);
+			if( file2.query_exists(null)) return env_path;
 		}
 
 		return null;
