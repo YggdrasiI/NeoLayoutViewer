@@ -93,7 +93,7 @@ namespace NeoLayoutViewer {
 			addSetting("position_cycle","2 3 6 1 3 9 4 7 8", "List of positions (num pad orientation)\n# The n-th number marks the next position of the window.\n# To limit the used positions to screen corners use\n#position_cycle = 3 3 9 1 3 9 1 7 7");
 			addSetting("display_numpad","1", null);
 			addSetting("display_function_keys","0", null);
-			addSetting("window_selectable","0","To use the keyboard window as virtual keyboard, disable this entry (option is out of use).");
+			addSetting("window_selectable","0","Disable window selection to use the program as virtual keyboard.");
 			addSetting("window_decoration","0","Show window decoration/border (not recommended).");
 			addSetting("screen_width","auto", "Set the resolution of your screen manually, if the automatic detection fails.");
 			addSetting("screen_height","auto", "Set the resolution of your screen manually, if the automatic detection fails.");

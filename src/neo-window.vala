@@ -76,19 +76,19 @@ namespace NeoLayoutViewer {
 			{0,1,0,3,1,3},
 			{0,1,2,0,4,2} };
 
-        /*
-         Modifier können per Tastatur und Maus aktiviert werden. Diese Abbildung entscheidet,
-         wie bei einer Zustandsänderung verfahren werden soll. 
-         k,m,K,M ∈ {0,1}.
-         k - Taste wurde gedrückt gehalten
-         m - Taste wurde per Mausklick selektiert.
-         K - Taste wird gedrückt
-         M - Taste wird per Mausklick selektiert.
-  
-         k' = f(k,m,K,M). Und wegen der Symmetrie(!)
-         m' = f(m,k,M,K)
-         Siehe auch change_active_modifier(…). 
-        */ 
+		/*
+			 Modifier können per Tastatur und Maus aktiviert werden. Diese Abbildung entscheidet,
+			 wie bei einer Zustandsänderung verfahren werden soll.
+			 k,m,K,M ∈ {0,1}.
+			 k - Taste wurde gedrückt gehalten
+			 m - Taste wurde per Mausklick selektiert.
+			 K - Taste wird gedrückt
+			 M - Taste wird per Mausklick selektiert.
+
+			 k' = f(k,m,K,M). Und wegen der Symmetrie(!)
+			 m' = f(m,k,M,K)
+			 Siehe auch change_active_modifier(…).
+		 */
 		private short[,,,] MODIFIER_KEYBOARD_MOUSE_MAP = {
 			//		 k		=				f(k,m,K,M,) and m = f(m,k,M,K)
 			{ { {0, 0} , {1, 0} } ,	// 0000, 0001; 0010, 0011;
@@ -205,7 +205,7 @@ namespace NeoLayoutViewer {
 				this.numkeypad_move(int.parse(config.get("position")));
 				this.show();
 			}else{
-				this.hide(); 
+				this.hide();
 				this.numkeypad_move(int.parse(config.get("position")));
 			}
 
@@ -214,7 +214,14 @@ namespace NeoLayoutViewer {
 		public override void show() {
 			this.minimized = false;
 			this.move(this.position_on_hide_x,this.position_on_hide_y);
+			debug(@"Show window on $(this.position_on_hide_x), $(this.position_on_hide_y)\n");
 			base.show();
+			this.move(this.position_on_hide_x,this.position_on_hide_y);
+			/* Second move fixes issue for i3-wm(?). The move() before show()
+				 moves the current window as expected, but somehow does not propagate this values
+				 correcty to the wm. => The next hide() call will fetch wrong values
+				 and a second show() call plaes the window in the middle of the screen.
+			 */
 
 			if (config.get("on_top") == "1") {
 				this.set_keep_above(true);
@@ -230,6 +237,7 @@ namespace NeoLayoutViewer {
 			this.get_position(out tmpx, out tmpy);
 			this.position_on_hide_x = tmpx;
 			this.position_on_hide_y = tmpy;
+			debug(@"Hide window on $(this.position_on_hide_x), $(this.position_on_hide_y)\n");
 
 			this.minimized = true;
 			base.hide();

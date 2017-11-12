@@ -91,6 +91,8 @@ namespace NeoLayoutViewer{
 	tray menu or indicator menu */
 	private static void about_dialog() {
 			var about = new Gtk.AboutDialog();
+			about.set_destroy_with_parent (true);
+			about.set_transient_for (neo_win);
 			about.set_version(@"1.0 (git $(GIT_COMMIT_VERSION)) )");
 			about.set_program_name("Neo2.0 Ebenenanzeige");
 			about.set_comments("""Erleichtert das Nachschlagen von Tastenkombinationen im Neo 2.0-Layout.
@@ -119,19 +121,20 @@ configm.used_config_path)
 		 @return: assed folder or null.
 	 */
 	private static string? search_asset_folder(string path){
-		string filename = "/icons/Neo-Icon.png";
+		const string filename = "/icons/Neo-Icon.png";
+		const string subpath = "NeoLayoutViewer/assets";
 		var file = File.new_for_path (path+filename);
 		if( file.query_exists(null)) return path;
 
-    // Check '../assets'
-    var path1 = "../" + path;
+		// Check '../assets'
+		var path1 = "../" + path;
 		var file1 = File.new_for_path (path1+filename);
 		if( file1.query_exists(null)) return path1;
 
 		//string[] datadirs = GLib.Environment.get_system_data_dirs();
 		var datadirs = GLib.Environment.get_system_data_dirs();
 		foreach( var s in datadirs ){
-			var path2 = s+"NeoLayoutViewer/assets";
+			var path2 = s+subpath;
 			var file2 = File.new_for_path (path2+filename);
 			if( file2.query_exists(null)) return path2;
 		}

@@ -13,7 +13,7 @@ namespace NeoLayoutViewer {
 
 			indicator = new AppIndicator.Indicator.with_path("Neo Layout Viewer", "Neo-Icon",
 					AppIndicator.IndicatorCategory.APPLICATION_STATUS,
-          configm.getConfig().get("asset_folder")+"/icons/");
+					configm.getConfig().get("asset_folder")+"/icons/");
 					//"./assets/icons/" );
 
 			create_menuMain();
@@ -37,6 +37,10 @@ namespace NeoLayoutViewer {
 			var menuAnzeigen = new Gtk.MenuItem.with_label("Anzeigen");
 			menuAnzeigen.activate.connect(() => { this.neo_win.toggle(); });
 			menuMain.append(menuAnzeigen);
+
+			//var about_icon = new Gtk.Image.from_icon_name( "document-about", IconSize.SMALL_TOOLBAR);
+			//var menuAbout = new ImageMenuItem.with_mnemonic("_About");
+			//menuAbout.set_image(about_icon);
 
 			var menuAbout = new ImageMenuItem.from_stock(Stock.ABOUT, null);
 			menuAbout.activate.connect(NeoLayoutViewer.about_dialog);

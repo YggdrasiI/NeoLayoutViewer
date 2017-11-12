@@ -68,7 +68,7 @@ namespace NeoLayoutViewer {
 
 				rootwin.add_filter(event_filter);
 
-				unowned X.Display display = Gdk.x11_get_default_xdisplay();
+				unowned X.Display display = Gdk.X11.get_default_xdisplay();
 
 				modifier_keycodes[0] = display.keysym_to_keycode(XK_Shift_L);
 				modifier_keycodes[1] = display.keysym_to_keycode(XK_Shift_R);
@@ -101,11 +101,11 @@ namespace NeoLayoutViewer {
 			Gdk.ModifierType modifiers;
 			Gtk.accelerator_parse(accelerator, out keysym, out modifiers);
 
-			unowned X.Display display = Gdk.x11_get_default_xdisplay();
+			unowned X.Display display = Gdk.X11.get_default_xdisplay();
 			int keycode = display.keysym_to_keycode(keysym);
 
 			if (keycode != 0) {
-				X.Window root_window = Gdk.x11_get_default_root_xwindow();
+				X.Window root_window = Gdk.X11.get_default_root_xwindow();
 
 				// trap XErrors to avoid closing of application
 				// even when grabing of key fails
@@ -137,8 +137,8 @@ namespace NeoLayoutViewer {
 		public void unbind(string accelerator) {
 			debug("Unbinding key " + accelerator);
 
-			unowned X.Display display = Gdk.x11_get_default_xdisplay();
-			X.Window root_window = Gdk.x11_get_default_root_xwindow();
+			unowned X.Display display = Gdk.X11.get_default_xdisplay();
+			X.Window root_window = Gdk.X11.get_default_root_xwindow();
 
 			// unbind all keys with given accelerator
 			Gee.List<Keybinding> remove_bindings = new Gee.ArrayList<Keybinding>();
@@ -192,7 +192,7 @@ namespace NeoLayoutViewer {
 			Checks periodically which modifier are pressed.
 		*/
 		private bool modifier_timer(){
-			unowned X.Display display = Gdk.x11_get_default_xdisplay();
+			unowned X.Display display = Gdk.X11.get_default_xdisplay();
 
 			checkModifier(display, &modifier_keycodes[0], modifier_keycodes.length, &modifier_pressed[0]);
 

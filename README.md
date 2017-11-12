@@ -18,7 +18,7 @@ Lizenz: GPLv3
 Kompilation & Installation
 ========================================================================
 
-Das Programm benötigt einen Kompiler der Programmiersprache Vala (mind. Version 0.16)
+Das Programm benötigt einen Kompiler der Programmiersprache Vala (mind. Version 0.24)
 und die Developer-Pakete einiger Bibliotheken. Die Abhängigkeiten können unter Ubuntu
 mit dem folgenden Befehl nachinstalliert werden, sofern sie nicht bereits vorhanden sind (Stand: Ubuntu 16.04, November 2017). Bei anderen Distributionen muss der Befehl ggf. angepasst werden.
 

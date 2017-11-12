@@ -102,12 +102,11 @@ info:
 		"Trayicon: $(ICON)\n" \
 		"\n" \
 		"Notes:\n" \
-		"  Edit the variable ICON in the head of Makefile\n" \
-		"  if you want enable a tray icon.\n" \
-		"\n" \
-		"  Edit the variabe BUILD_TYPE in the head of Makefile\n" \
-		"  to switch build type to 'debug'.\n" \
-		"\n" \
+		"  Use 'ICON=... make' to switch type of panel menu.\n" \
+		"    indicator: For gnome 3.x (default)\n" \
+		"    tray: For gnome 2.x (default)\n" \
+		"    none: Disables icon\n\n" \
+		"  Use 'BUILD_TYPE=[release|debug] make' to switch build type\n\n" \
 
 gen_version:
 	@echo "namespace NeoLayoutViewer{\n  public const string GIT_COMMIT_VERSION " \
@@ -125,7 +124,8 @@ bulid_debug: gen_version
 bulid_release: gen_version 
 	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME) $(PKGS) $(CC_INCLUDES)
 
-install: all
+install:
+	test ! -f $(BINDIR)/$(BINNAME) || make all
 	install -d $(EXEC_PREFIX)/bin
 	install -D -m 0755 $(BINDIR)/$(BINNAME) $(EXEC_PREFIX)/bin
 	$(foreach ASSET_FILE,$(ASSET_FILES), install -D -m 0644 $(ASSET_FILE) $(DATADIR)/$(APPNAME)/$(ASSET_FILE) ; )

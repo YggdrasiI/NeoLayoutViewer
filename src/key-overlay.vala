@@ -20,7 +20,7 @@ namespace NeoLayoutViewer {
 		}
 	}
 
-	public class KeyOverlay : VBox {
+	public class KeyOverlay : Box {
 
 		public Gee.HashMap<int,KeyEventBox> keyBoxes;
 		public Gee.HashMap<int,ArrayBox> keysyms;
@@ -28,6 +28,7 @@ namespace NeoLayoutViewer {
 
 		public KeyOverlay(NeoWindow winMain) {
 
+			this.set_orientation(Gtk.Orientation.VERTICAL);
 			this.set_homogeneous(false);
 			this.set_spacing(0);
 			this.winMain = winMain;
