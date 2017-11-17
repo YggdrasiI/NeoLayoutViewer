@@ -145,16 +145,41 @@ namespace NeoLayoutViewer {
 			this.layer = int.parse(slayer);
 			if (this.layer < 1 || this.layer > 6) { this.layer = 1; }
 
-			//Lade die Pngs der sechs Ebenen
+
+			// Crawl dimensions of screen/display/monitor
+		  // Should be done before load_image_buffer() is called.
+			screen_dim_auto[0] = (config.get("screen_width") == "auto");
+			screen_dim_auto[1] = (config.get("screen_height") == "auto");
+
+			if (screen_dim_auto[0]) {
+				this.screen_dim[0] = this.get_screen_width();
+				this.screen_dim_auto[0] = false; // Disables further re-evaluations
+			} else {
+				this.screen_dim[0] = int.max(1, int.parse(config.get("screen_width")));
+			}
+
+			if(screen_dim_auto[1]) {
+				this.screen_dim[1] = this.get_screen_height();
+				this.screen_dim_auto[1] = false; // Disables further re-evaluations
+			} else {
+				this.screen_dim[1] = int.max(1, int.parse(config.get("screen_height")));
+			}
+
+
+			// Load pngs of all six layers
 			this.load_image_buffer();
 			this.image = new Gtk.Image();//.from_pixbuf(this.image_buffer[layer]);
+
 
 			image.show();
 			render_page();
 			var fixed = new Fixed();
 
 			fixed.put(this.image, 0, 0);
+
+#if _NO_WIN
 			fixed.put(new KeyOverlay(this), 0, 0);
+#endif
 
 			this.status = new Label("");
 			status.show();
@@ -173,7 +198,7 @@ namespace NeoLayoutViewer {
 			this.button_press_event.connect(on_button_pressed);
 			this.destroy.connect(Gtk.main_quit);
 
-			this.set_gravity(Gdk.Gravity.SOUTH);
+			//this.set_gravity(Gdk.Gravity.SOUTH);
 			this.decorated = (config.get("window_decoration") != "0");
 			this.skip_taskbar_hint = true;
 
@@ -182,23 +207,6 @@ namespace NeoLayoutViewer {
 
 			//Nicht selektierbar (für virtuelle Tastatur)
 			this.set_accept_focus((config.get("window_selectable") != "0"));
-
-			screen_dim_auto[0] = (config.get("screen_width") == "auto");
-			screen_dim_auto[1] = (config.get("screen_height") == "auto");
-
-			//Dimension des Bildschirms festlegen
-			if (screen_dim_auto[0]) {
-				screen_dim[0] = Gdk.Screen.width();
-			} else {
-				screen_dim[0] = int.max(1, int.parse(config.get("screen_width")));
-			}
-
-			if(screen_dim_auto[1]) {
-				screen_dim[1] = Gdk.Screen.height();
-			} else {
-				screen_dim[1] = int.max(1, int.parse(config.get("screen_height")));
-			}
-
 
 			if( this.config.get("show_on_startup") != "0" ){
 				//Move ist erst nach show() erfolgreich
@@ -256,8 +264,8 @@ namespace NeoLayoutViewer {
 		}
 
 		public void numkeypad_move(int pos){
-			int screen_width = (screen_dim_auto[0] ? Gdk.Screen.width() : screen_dim[0]);
-			int screen_height = (screen_dim_auto[1] ? Gdk.Screen.height() : screen_dim[1]);
+			int screen_width = this.get_screen_width();
+			int screen_height = this.get_screen_height();
 
 			int x,y,w,h;
 			this.get_size(out w, out h);
@@ -331,7 +339,7 @@ namespace NeoLayoutViewer {
 			this.image_buffer = new Gdk.Pixbuf[7];
 			this.image_buffer[0] = open_image_str(@"$(config.get("asset_folder"))/icons/Neo-Icon.png");
 
-			int screen_width = Gdk.Screen.width();
+			int screen_width = this.get_screen_width(); //Gdk.Screen.width();
 			int max_width = (int) (double.parse(this.config.get("max_width")) * screen_width);
 			int min_width = (int) (double.parse(this.config.get("min_width")) * screen_width);
 			int width = int.min(int.max(int.parse(config.get("width")),min_width),max_width);
@@ -505,11 +513,55 @@ namespace NeoLayoutViewer {
 
     public int get_screen_width(){
       // Return value derived from config.get("screen_width")) or Gdk.Screen.width()
+
+			if( this.screen_dim_auto[0] ){
+				//Re-evaluate
+
+#if GTK_MINOR_VERSION == 18 || GTK_MINOR_VERSION == 19 || GTK_MINOR_VERSION == 20 || GTK_MINOR_VERSION == 21
+				// Old variant for ubuntu 16.04 ( '<' check not defined in vala preprozessor :-()
+				var display = Gdk.Display.get_default();
+				var screen = display.get_default_screen();
+				//Gdk.Rectangle geometry = {0, 0, screen.get_width(), screen.get_height()};
+				screen_dim[0] = screen.get_width();
+#else
+				var display = Gdk.Display.get_default();
+				var screen = this.get_screen();
+				var monitor = display.get_monitor_at_window(screen.get_active_window());
+				//Note that type of this is Gtk.Window, but get_active_window() return Gdk.Window
+				if( monitor == null){
+					monitor = display.get_primary_monitor();
+				}
+				Gdk.Rectangle geometry = monitor.get_geometry();
+				screen_dim[0] = geometry.width;
+#endif
+			}
       return screen_dim[0];
     }
 
     public int get_screen_height(){
       // Return value derived from config.get("screen_height")) or Gdk.Screen.height()
+
+			if( this.screen_dim_auto[1] ){
+				//Re-evaluate
+
+#if GTK_MINOR_VERSION == 18 || GTK_MINOR_VERSION == 19 || GTK_MINOR_VERSION == 20 || GTK_MINOR_VERSION == 21
+				// Old variant for ubuntu 16.04 ( '<' check not defined in vala preprozessor :-()
+				var display = Gdk.Display.get_default();
+				var screen = display.get_default_screen();
+				//Gdk.Rectangle geometry = {0, 0, screen.get_width(), screen.get_height()};
+				screen_dim[1] = screen.get_height();
+#else
+				var display = Gdk.Display.get_default();
+				var screen = this.get_screen();
+				var monitor = display.get_monitor_at_window(screen.get_active_window());
+				//Note that type of this is Gtk.Window, but get_active_window() return Gdk.Window
+				if( monitor == null){
+					monitor = display.get_primary_monitor();
+				}
+				Gdk.Rectangle geometry = monitor.get_geometry();
+				screen_dim[1] = geometry.height;
+#endif
+			}
       return screen_dim[1];
     }
 

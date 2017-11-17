@@ -3,7 +3,9 @@ using X;
 namespace NeoLayoutViewer{
 
 	public NeoWindow neo_win;
+#if _NO_WIN
 	public KeybindingManager manager;
+#endif
 	public ConfigManager configm;
 
 #if tray
@@ -60,13 +62,17 @@ namespace NeoLayoutViewer{
 
 		neo_win = new NeoWindow (slayer, configm.getConfig());
 
+#if _NO_WIN
 		var app = showPreviousInstance("org.gnome.neo_layout_viewer", neo_win);
 
 		if (app == null) {
 			return 0;
 		}
+#endif
 
+#if _NO_WIN
 		manager = new KeybindingManager(neo_win);
+#endif
 
 #if tray
 		neo_tray = new AppStatusIcon(neo_win);
@@ -76,8 +82,10 @@ namespace NeoLayoutViewer{
 		neo_indicator = new NeoIndicator(neo_win);
 #endif
 
+#if _NO_WIN
 		manager.bind(configm.getConfig().get("show_shortcut"), ()=>{neo_win.toggle();});
 		manager.bind(configm.getConfig().get("move_shortcut"), ()=>{neo_win.numkeypad_move(0);});
+#endif
 
 		//move window (Fehlerquelle: config von configm ist im allgemeinen nicht gleich neo_win.config?! Derzeit gleiches Objekt.)
 
@@ -165,8 +173,10 @@ Tastenkombinationen:
 
 }
 
+#if _NO_WIN
 /* Extern C routines */
 extern int keysend(uint keysym, int modifiers);
 extern int keysend2(uint keysym, uint modsym1, uint modsym2);
 extern bool checkCapsLock(X.Display* d);
 extern void checkModifier(X.Display* d, int* keycodes, int nkeycodes, int* pressed );
+#endif

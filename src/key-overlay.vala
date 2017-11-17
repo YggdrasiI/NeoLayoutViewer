@@ -695,6 +695,7 @@ namespace NeoLayoutViewer {
 				int modi = winMain.getActiveModifierMask({4,5}); //ctrl+alt mask
 				if (ks < 1) return false;
 
+#if _NO_WIN
 				if (modi == 0 || true) {
 					// Alt-Mask do not work :-(
 					keysend(ks,modi);
@@ -702,6 +703,7 @@ namespace NeoLayoutViewer {
 					//debug("Variante mit zweitem Modifier.");
 					keysend2(ks,modi & Gdk.ModifierType.CONTROL_MASK, modi & Gdk.ModifierType.MOD1_MASK);
 				}
+#endif
 
 				return false;
 			});
