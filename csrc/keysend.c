@@ -160,6 +160,9 @@ getKeyModCodes (GdkWindow *rootwin,
 // zu wählen ist 'add_modifiers | modifiers'
 			keymod.keyval = keys[k].keycode;
 			keymod.modifiers = add_modifiers | modifiers;
+
+			//printf(" Foo %u %u\n", keymod.keyval, keymod.modifiers);
+			break;
 	}
 
 	g_free(keys);
@@ -231,8 +234,10 @@ KeyMod keymod;
 	 * for the first layer (=no modifier is pressed) the above fuction 
 	 * returns 33 for the modifier, if the neo layer is activated.
 	 * This will be corrected to 0.
+	 *
+	 * 33 = Mod4+Shift
 	 */
-	if( keymod.modifiers == 33 ) keymod.modifiers = 0;
+	//if( keymod.modifiers == 33 ) keymod.modifiers = 0;
 
 	XKeyEvent event;
 	//printf("Send key %u %i   %u %u\n", keysym, modifiers, keymod.keyval, keymod.modifiers);

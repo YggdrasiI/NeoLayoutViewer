@@ -704,6 +704,7 @@ namespace NeoLayoutViewer {
 					keysend2(ks,modi & Gdk.ModifierType.CONTROL_MASK, modi & Gdk.ModifierType.MOD1_MASK);
 				}
 #endif
+				//GLib.stdout.printf(@"Key: $(ks)\n"); GLib.stdout.flush();
 
 				return false;
 			});
