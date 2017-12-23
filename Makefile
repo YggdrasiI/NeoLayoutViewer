@@ -20,7 +20,18 @@ APPNAME = NeoLayoutViewer
 GIT_COMMIT_VERSION=$(shell git log --oneline --max-count=1 | head --bytes=7)
 ENV_FILE=.build_env
 
-#WIN = 1
+# compiler options for a debug build
+#VALAC_DEBUG_OPTS = -g --save-temps
+VALAC_DEBUG_OPTS = -g
+# compiler options for a release build
+VALAC_RELEASE_OPTS = -X -O2 --disable-assert
+
+
+#########################################################
+
+# Test build under MingW for Windows
+WIN ?=
+
 ifeq ($(WIN),)
 NL = \n
 BINEXT = 
@@ -28,18 +39,17 @@ else
 BUILD_TYPE = win
 BINEXT = .exe
 ICON = tray
-PKG_CONFIG_PATH=${HOME}/software/gtk/gtk+-3.10_win64/lib/pkgconfig
-GCC_WIN = x86_64-w64-mingw32-gcc -mwindows
-GCC_WIN_FLAGS =$(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --cflags --libs gtk+-3.0 gee-$(GEEVERSION))
+GTK_PREBUILD_ZIP="http://win32builder.gnome.org/gtk+-bundle_3.10.4-20131202_win64.zip"
+GEE_XZ="https://ftp.gnome.org/pub/gnome/sources/libgee/0.8/libgee-0.8.8.tar.xz"
+PKG_CONFIG_PATH="$(shell pwd)/win/lib/pkgconfig"
+#PKG_CONFIG_PATH=${HOME}/software/gtk/gtk+-3.10_win64/lib/pkgconfig
+GCC_WIN = x86_64-w64-mingw32-gcc
+GCC_WIN_FLAGS = -mwindows $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --cflags --libs gtk+-3.0 gee-$(GEEVERSION))
+VALAC_RELEASE_OPTS += -D _OLD_GTK_STOCK  # Old gtk-versions (<3.16) do not define `gtk_label_set_xalign`
+VALAC_DEBUG_OPTS += -D _OLD_GTK_STOCK
 endif
 
-# compiler options for a debug build
-VALAC_DEBUG_OPTS = -g --save-temps
-#VALAC_DEBUG_OPTS =  -g 
-# compiler options for a release build
-VALAC_RELEASE_OPTS = -X -O2 --disable-assert 
 
- 
 #########################################################
 
 EXEC_PREFIX = $(PREFIX)
@@ -47,30 +57,30 @@ DATADIR = $(PREFIX)/share
 
 VALAC = valac --thread  -D $(ICON) \
 				--Xcc="-lm" --Xcc="-DXK_TECHNICAL" --Xcc="-DXK_PUBLISHING" --Xcc="-DXK_APL"
-VAPIDIR = --vapidir=vapi/ 
+VAPIDIR = --vapidir=vapi/
 
-# Source files 
+# Source files
 SRC = src/version.vala \
       src/main.vala \
       src/neo-window.vala \
       src/config-manager.vala
 
 ifeq ($(WIN),)
-VALAC_DEBUG_OPTS += -D _NO_WIN 
+VALAC_DEBUG_OPTS += -D _NO_WIN
 VALAC_RELEASE_OPTS += -D _NO_WIN
 SRC += src/key-overlay.vala \
       src/unique.vala \
       src/keybinding-manager.vala \
       csrc/keysend.c \
       csrc/checkModifier.c
-else
 endif
 
 # Asset files
 ASSET_FILES=$(wildcard assets/**/*.png)
 
-#test for valac version, workaround for Arch Linux bug
+# Test for valac version, workaround for Arch Linux bug
 ifeq ($(wildcard /usr/include/gee-0.8),)
+# Similar, but for Windows/MingW
 ifeq ($(wildcard /mingw64/include/gee-0.8),)
 	GEEVERSION=1.0
 else
@@ -80,7 +90,7 @@ else
 	GEEVERSION=0.8
 endif
 
-# packges 
+# Packages
 PKGS = --pkg x11 --pkg keysym --pkg gtk+-3.0 --pkg gee-$(GEEVERSION) --pkg gdk-x11-3.0 --pkg posix  --pkg unique-3.0 --pkg gdk-3.0
 
 # Add some args if tray icon is demanded.
@@ -91,7 +101,8 @@ ifeq ($(ICON),indicator)
 SRC += src/indicator.vala
 PKGS += --pkg appindicator3-0.1
 endif
- 
+
+
 .PHONY: debug release install clean last_build_env
 # .FORCE: last_build_env
 
@@ -129,6 +140,8 @@ info:
 		"    none: Disables icon$(NL)$(NL)" \
 		"  Use 'BUILD_TYPE=[release|debug] make' to switch build type$(NL)$(NL)" \
 
+src/version.vala: gen_version
+
 gen_version:
 	@echo "namespace NeoLayoutViewer{$(NL)" \
 		"public const string GIT_COMMIT_VERSION = \"$(GIT_COMMIT_VERSION)\";$(NL)" \
@@ -140,28 +153,17 @@ $(BINDIR):
 	@mkdir -p $(BINDIR)
 	@ln -s ../assets bin/assets
 
-build_debug: gen_version 
-	#	@echo $(VALAC) $(VAPIDIR) $(VALAC_DEBUG_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME)$(BINEXT) $(PKGS) $(CC_INCLUDES)
+build_debug: gen_version
 	$(VALAC) $(VAPIDIR) $(VALAC_DEBUG_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME)$(BINEXT) $(PKGS) $(CC_INCLUDES)
 
-build_release: gen_version 
+build_release: gen_version
 	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME)$(BINEXT) $(PKGS) $(CC_INCLUDES)
 
 # Two staged compiling
-build_release2: gen_version 
+build_release2: gen_version
 	$(VALAC) --ccode $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) $(PKGS) $(CC_INCLUDES)
 	gcc $(SRC:.vala=.c) $(CC_INCLUDES) -o $(BINDIR)/$(BINNAME)$(BINEXT) \
 		`pkg-config --cflags --libs gtk+-3.0 gee-$(GEEVERSION) unique-3.0`
-
-build_win: gen_version 
-	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME)$(BINEXT) $(PKGS) $(CC_INCLUDES)
-
-build_cross_win: build_ccode
-	echo "Flags: $(GCC_WIN_FLAGS)"
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-									$(VALAC) --ccode $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) $(PKGS) $(CC_INCLUDES)
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-									$(GCC_WIN) $(SRC:.vala=.c) -o $(BINDIR)/$(BINNAME)$(BINEXT) $(GCC_WIN_FLAGS)
 
 install:
 	test -f $(BINDIR)/$(BINNAME)$(BINEXT) || make all
@@ -175,7 +177,52 @@ uninstall:
 
 # clean all build files
 clean:
-	@rm -v -fr *~ *.c src/*.c src/*~ 
+	@rm -v -fr *~ *.c src/*.c src/*~
 
 run:
 	bin/neo_layout_viewer
+
+
+######################################################
+## Windows stuff
+
+# Building under MingW
+build_win: gen_version
+	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME)$(BINEXT) $(PKGS) $(CC_INCLUDES)
+
+# Cross compiling under Debian/Ubuntu
+build_cross_win: bin/libgtk-3-0.dll
+	test "$(WIN)" = "1" || (echo "Call this target with WIN=1" && exit 1)
+	echo "Flags: $(GCC_WIN_FLAGS)"
+	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
+									$(VALAC) --ccode $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) $(PKGS) $(CC_INCLUDES)
+	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
+									$(GCC_WIN) $(SRC:.vala=.c) -o $(BINDIR)/$(BINNAME)$(BINEXT) $(GCC_WIN_FLAGS)
+
+bin/libgtk-3-0.dll:
+	WIN=1 make win_gtk
+
+win_download_gtk:
+	test "$(WIN)" = "1" || (echo "Call this target with WIN=1" && exit 1)
+	test -d win || mkdir win
+	test -f win/$$(basename $(GTK_PREBUILD_ZIP)) || \
+		( cd win && wget -c $(GTK_PREBUILD_ZIP) && \
+		unzip $$(basename $(GTK_PREBUILD_ZIP)) )
+	cd win && find -name '*.pc' | while read pc; do sed -e "s@^prefix=.*@prefix=$$PWD@" -i "$$pc"; done
+
+win_build_gee:
+	test "$(WIN)" = "1" || (echo "Call this target with WIN=1" && exit 1)
+	cd win && wget -c $(GEE_XZ) && \
+		tar xJvf ./libgee-0.8.8.tar.xz > /dev/null
+	cd win/libgee-0.8.8 && \
+		sed -i -e 's/if test ".cross_compiling" != yes; then/if test 0 != 0; then/' ./configure
+	cd win/libgee-0.8.8 && \
+		PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) CC=$(GCC_WIN) \
+		CC_FLAGS="$(GCC_WIN_FLAGS)" \
+		./configure --build=x86_64 --prefix=$(PKG_CONFIG_PATH)/../.. && \
+		make && make install
+
+win_gtk: win_download_gtk win_build_gee
+	test "$(WIN)" = "1" || (echo "Call this target with WIN=1" && exit 1)
+	cp win/bin/*.dll bin/.
+
