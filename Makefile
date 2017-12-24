@@ -129,7 +129,7 @@ last_build_env:
 release: $(BINDIR) clean build_release
 
 info:
-	@echo " $(NL)"\
+	@/bin/echo -e " $(NL)"\
 		"Buildtype: $(BUILD_TYPE)$(NL)" \
 		"Trayicon: $(ICON)$(NL)" \
 		"$(NL)" \
@@ -143,7 +143,7 @@ info:
 src/version.vala: gen_version
 
 gen_version:
-	@echo "namespace NeoLayoutViewer{$(NL)" \
+	@/bin/echo -e "namespace NeoLayoutViewer{$(NL)" \
 		"public const string GIT_COMMIT_VERSION = \"$(GIT_COMMIT_VERSION)\";$(NL)" \
 		"public const string SHARED_ASSETS_PATH = \"$(DATADIR)/$(APPNAME)/assets\";$(NL)" \
 		"}" \
@@ -153,14 +153,14 @@ $(BINDIR):
 	@mkdir -p $(BINDIR)
 	@ln -s ../assets bin/assets
 
-build_debug: gen_version
+build_debug: $(SRC)
 	$(VALAC) $(VAPIDIR) $(VALAC_DEBUG_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME)$(BINEXT) $(PKGS) $(CC_INCLUDES)
 
-build_release: gen_version
+build_release: $(SRC)
 	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME)$(BINEXT) $(PKGS) $(CC_INCLUDES)
 
 # Two staged compiling
-build_release2: gen_version
+build_release2: $(SRC)
 	$(VALAC) --ccode $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) $(PKGS) $(CC_INCLUDES)
 	gcc $(SRC:.vala=.c) $(CC_INCLUDES) -o $(BINDIR)/$(BINNAME)$(BINEXT) \
 		`pkg-config --cflags --libs gtk+-3.0 gee-$(GEEVERSION) unique-3.0`
@@ -187,7 +187,7 @@ run:
 ## Windows stuff
 
 # Building under MingW
-build_win: gen_version
+build_win: $(SRC)
 	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME)$(BINEXT) $(PKGS) $(CC_INCLUDES)
 
 # Cross compiling under Debian/Ubuntu
