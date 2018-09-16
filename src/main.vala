@@ -121,7 +121,7 @@ Tastenkombinationen:
 				neo_win.config.get("move_shortcut"),
 				configm.used_config_path)
 			);
-			about.set_copyright("GPLv3");
+			about.set_copyright("LGPLv3");
 			center_window(about);
 			about.run();
 			about.hide();
