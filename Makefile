@@ -177,7 +177,7 @@ uninstall:
 
 # clean all build files
 clean:
-	@rm -v -fr *~ *.c src/*.c src/*~
+	@rm -v -fr *~ *.c src/*.c src/*~ bin .build_env
 
 run:
 	bin/neo_layout_viewer
