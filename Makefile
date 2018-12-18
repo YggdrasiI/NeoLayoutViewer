@@ -17,6 +17,7 @@ BINDIR = bin
 PREFIX = /usr/local
 APPNAME = NeoLayoutViewer
 
+RELEASE_VERSION=1.2
 GIT_COMMIT_VERSION=$(shell git log --oneline --max-count=1 | head --bytes=7)
 ENV_FILE=.build_env
 
@@ -26,6 +27,10 @@ VALAC_DEBUG_OPTS = -g
 # compiler options for a release build
 VALAC_RELEASE_OPTS = -X -O2 --disable-assert
 
+# Debian Packaging version number
+# Pattern: [epoch:]upstream_version[-debian_revision].
+# The absence of a debian_revision is equivalent to a debian_revision of 0.
+VERSION=$(RELEASE_VERSION)-0
 
 #########################################################
 
@@ -144,6 +149,7 @@ src/version.vala: gen_version
 
 gen_version:
 	@/bin/echo -e "namespace NeoLayoutViewer{$(NL)" \
+		"public const string RELEASE_VERSION = \"$(RELEASE_VERSION)\";$(NL)" \
 		"public const string GIT_COMMIT_VERSION = \"$(GIT_COMMIT_VERSION)\";$(NL)" \
 		"public const string SHARED_ASSETS_PATH = \"$(DATADIR)/$(APPNAME)/assets\";$(NL)" \
 		"}" \
@@ -182,6 +188,8 @@ clean:
 run:
 	bin/neo_layout_viewer
 
+src-package:
+	tar czf ../neo-layout-viewer-${VERSION}.tar.gz --exclude=.git --exclude=.gitignore --transform 's,^\./,neo-layout-viewer-${VERSION}/,' .
 
 ######################################################
 ## Windows stuff
