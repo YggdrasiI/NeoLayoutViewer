@@ -1,0 +1,93 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" (C) Copyright 2018 Marco Herrn <marco@mherrn.de>,
+.\"
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH Neo-layout-viewer 1 "December 18 2018"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+neo-layout-viewer \- keyboard layout viewer for Neo 2
+.SH SYNOPSIS
+.B neo-layout-viewer
+.SH DESCRIPTION
+This manual page documents briefly the
+.B neo-layout-viewer
+commands.
+.B NeoLayoutViewer
+provides an easy way to display the 
+.B NEO 2 
+keyboard layout on screen.
+.PP
+The application window is an image of one of the six levels of the 
+.B Neo 2
+keyboard layout. If one of the Mod-keys (Shift, …) is pressed or released
+the display switches to the corresponding level.
+.PP
+The application window can be hidden and moved via keyboard shortcuts. All
+settings can be modified via config file.
+.PP
+.SH OPTIONS
+.B neo-layout-viewer
+doesn't support any command line options.
+.SH KEYBINDINGS
+NeoLayoutViewer supports two keyboard shortcuts:
+.TP
+.B <Ctrl><Alt>q
+Hide/Show the application window
+.TP
+.B <Ctrl><Alt>n
+Move the application window around. This cycles the position of the
+application window between 8 different positions (each screen corner and
+centered at the top or the bottom of the screen).
+.PP
+Both shortcuts can be adapted by modifying the
+.B config file
+(see below).
+.SH CONFIGURATION
+The single configuration file is located in
+~/.config/neo_layout_viewer.conf. This file is created on the first start
+of the application.
+.PP
+The config entries in the generated file are commented to identify the
+meaning of those options. The most important ones are:
+.TP
+.B width
+The exact width of the application window
+.TP
+.B max_width, max_height
+The relative width and height of the application window in relation to the screen size
+.TP
+.B display_function_keys
+Whether to display the function key row
+.TP
+.B display_numpad
+Whether to display the numpad block
+.TP
+.B show_shortcut
+The keyboard shortcut to hide/display the application window
+.TP
+.B move_shortcut
+The keyboard shortcut to move the window around. To remove the shortcut
+just leave it empty.
+.SH SEE ALSO
+.TP
+.I http://neo-layout.org/
+The official homepage of the Neo 2 keyboard layout at
+.\" .BR bar (1),
+.\" .BR baz (1).
+.\" .br
+.\" The programs are documented fully by
+.\" .IR "The Rise and Fall of a Fooish Bar" ,
+.\" available via the Info system.
