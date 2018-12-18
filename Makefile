@@ -189,7 +189,16 @@ run:
 	bin/neo_layout_viewer
 
 src-package:
-	tar czf ../neo-layout-viewer-${VERSION}.tar.gz --exclude=.git --exclude=.gitignore --transform 's,^\./,neo-layout-viewer-${VERSION}/,' .
+	tar czf ../neo-layout-viewer-${VERSION}.tar.gz \
+		--exclude=.git --exclude=.gitignore --exclude=win \
+		--transform 's,^\./,neo-layout-viewer-${VERSION}/,' \
+		.
+
+dist-package: release
+	tar czf ../neo-layout-viewer-${VERSION}.tgz \
+		--transform 's,^$(BINDIR)/,,' \
+		--transform 's,^,neo-layout-viewer-${VERSION}/,' \
+		"$(BINDIR)/$(BINNAME)" assets AUTHORS COPYING README.md
 
 ######################################################
 ## Windows stuff
