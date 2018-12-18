@@ -44,12 +44,12 @@ else
 BUILD_TYPE = win
 BINEXT = .exe
 ICON = tray
-GTK_PREBUILD_ZIP="http://win32builder.gnome.org/gtk+-bundle_3.10.4-20131202_win64.zip"
-GEE_XZ="https://ftp.gnome.org/pub/gnome/sources/libgee/0.8/libgee-0.8.8.tar.xz"
-PKG_CONFIG_PATH="$(shell pwd)/win/lib/pkgconfig"
+GTK_PREBUILD_ZIP=http://win32builder.gnome.org/gtk+-bundle_3.10.4-20131202_win64.zip
+GEE_XZ=https://ftp.gnome.org/pub/gnome/sources/libgee/0.8/libgee-0.8.8.tar.xz
+PKG_CONFIG_PATH=$(shell pwd)/win/lib/pkgconfig
 #PKG_CONFIG_PATH=${HOME}/software/gtk/gtk+-3.10_win64/lib/pkgconfig
 GCC_WIN = x86_64-w64-mingw32-gcc
-GCC_WIN_FLAGS = -mwindows $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --cflags --libs gtk+-3.0 gee-$(GEEVERSION))
+GCC_WIN_FLAGS = -mwindows $(shell PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)" pkg-config --cflags --libs gtk+-3.0 gee-$(GEEVERSION))
 VALAC_RELEASE_OPTS += -D _OLD_GTK_STOCK  # Old gtk-versions (<3.16) do not define `gtk_label_set_xalign`
 VALAC_DEBUG_OPTS += -D _OLD_GTK_STOCK
 endif
@@ -112,11 +112,11 @@ endif
 # .FORCE: last_build_env
 
 
-# the 'all' target build a debug build
-all: $(BINDIR) info last_build_env $(BINDIR)/$(BINNAME)$(BINEXT)
+# The target respects BUILD_TYPE and cleaning if it changes
+all: info last_build_env "$(BINDIR)/$(BINNAME)$(BINEXT)"
 	@echo "Done"
 
-$(BINDIR)/$(BINNAME)$(BINEXT): $(SRC) Makefile
+"$(BINDIR)/$(BINNAME)$(BINEXT)": $(SRC) Makefile "$(BINDIR)"
 	make build_$(BUILD_TYPE)
 
 # Remove binary if current env differs from last build env
@@ -125,13 +125,12 @@ last_build_env:
 	@(test "$$(env|sort)" = "$$(test -f $(ENV_FILE) && cat $(ENV_FILE) )" \
 		&& echo "Same environment as last build.") \
 		|| (echo "Env has changed. Force build" \
+		&& make clean \
 		&& env | sort > "$(ENV_FILE)" \
-		&& rm -f $(BINDIR)/$(BINNAME)$(BINEXT)\
 		)
 
-# the 'release' target builds a release build
-# you might want disable asserts also
-release: $(BINDIR) clean build_release
+# Clean release build, similar to 'BUILD_TYPE=release make all'
+release: clean build_release
 
 info:
 	@/bin/echo -e " $(NL)"\
@@ -155,38 +154,39 @@ gen_version:
 		"}" \
 		> src/version.vala
 
-$(BINDIR):
-	@mkdir -p $(BINDIR)
-	@ln -s ../assets bin/assets
+"$(BINDIR)":
+	@test -d "$(BINDIR)" || \
+		(mkdir -p "$(BINDIR)" && ln -s ../assets "$(BINDIR)/assets")
 
-build_debug: $(SRC)
-	$(VALAC) $(VAPIDIR) $(VALAC_DEBUG_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME)$(BINEXT) $(PKGS) $(CC_INCLUDES)
+build_debug: $(SRC) "$(BINDIR)"
+	$(VALAC) $(VAPIDIR) $(VALAC_DEBUG_OPTS) $(SRC) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" $(PKGS) $(CC_INCLUDES)
 
-build_release: $(SRC)
-	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME)$(BINEXT) $(PKGS) $(CC_INCLUDES)
+build_release: $(SRC) "$(BINDIR)"
+	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" $(PKGS) $(CC_INCLUDES)
 
 # Two staged compiling
-build_release2: $(SRC)
+build_release2: $(SRC) "$(BINDIR)"
 	$(VALAC) --ccode $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) $(PKGS) $(CC_INCLUDES)
-	gcc $(SRC:.vala=.c) $(CC_INCLUDES) -o $(BINDIR)/$(BINNAME)$(BINEXT) \
+	gcc $(SRC:.vala=.c) $(CC_INCLUDES) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" \
 		`pkg-config --cflags --libs gtk+-3.0 gee-$(GEEVERSION) unique-3.0`
 
 install:
-	test -f $(BINDIR)/$(BINNAME)$(BINEXT) || make all
+	test -f "$(BINDIR)/$(BINNAME)$(BINEXT)" || make all
 	install -d $(EXEC_PREFIX)/bin
-	install -D -m 0755 $(BINDIR)/$(BINNAME)$(BINEXT) $(EXEC_PREFIX)/bin
-	$(foreach ASSET_FILE,$(ASSET_FILES), install -D -m 0644 $(ASSET_FILE) $(DATADIR)/$(APPNAME)/$(ASSET_FILE) ; )
+	install -D -m 0755 "$(BINDIR)/$(BINNAME)$(BINEXT)" "$(EXEC_PREFIX)/bin"
+	$(foreach ASSET_FILE,$(ASSET_FILES), install -D -m 0644 $(ASSET_FILE) "$(DATADIR)/$(APPNAME)/$(ASSET_FILE)" ; )
 
 uninstall:
-	@rm -v $(EXEC_PREFIX)/bin/$(BINNAME)$(BINEXT)
-	@rm -v -r $(DATADIR)/$(APPNAME)
+	@rm -v "$(EXEC_PREFIX)/bin/$(BINNAME)$(BINEXT)"
+	@test -d "$(DATADIR)/$(APPNAME)/assets" && rm -v -r "$(DATADIR)/$(APPNAME)"
+# Prefixed with test because of dangerous -r-flag...
 
 # clean all build files
 clean:
-	@rm -v -fr *~ *.c src/*.c src/*~ bin .build_env
+	@rm -v -d -f *~ *.c src/*.c src/*~ "$(BINDIR)"/* "$(BINDIR)" "$(ENV_FILE)"
 
 run:
-	bin/neo_layout_viewer
+	"$(BINDIR)/$(BINNAME)$(BINEXT)"
 
 src-package:
 	tar czf ../neo-layout-viewer-${VERSION}.tar.gz \
@@ -200,21 +200,22 @@ dist-package: release
 		--transform 's,^,neo-layout-viewer-${VERSION}/,' \
 		"$(BINDIR)/$(BINNAME)" assets AUTHORS COPYING README.md
 
+
 ######################################################
 ## Windows stuff
 
 # Building under MingW
 build_win: $(SRC)
-	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o $(BINDIR)/$(BINNAME)$(BINEXT) $(PKGS) $(CC_INCLUDES)
+	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" $(PKGS) $(CC_INCLUDES)
 
 # Cross compiling under Debian/Ubuntu
 build_cross_win: bin/libgtk-3-0.dll
 	test "$(WIN)" = "1" || (echo "Call this target with WIN=1" && exit 1)
 	echo "Flags: $(GCC_WIN_FLAGS)"
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
+	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)" \
 									$(VALAC) --ccode $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) $(PKGS) $(CC_INCLUDES)
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-									$(GCC_WIN) $(SRC:.vala=.c) -o $(BINDIR)/$(BINNAME)$(BINEXT) $(GCC_WIN_FLAGS)
+	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH), \
+									$(GCC_WIN) $(SRC:.vala=.c) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" $(GCC_WIN_FLAGS)
 
 bin/libgtk-3-0.dll:
 	WIN=1 make win_gtk
@@ -222,14 +223,14 @@ bin/libgtk-3-0.dll:
 win_download_gtk:
 	test "$(WIN)" = "1" || (echo "Call this target with WIN=1" && exit 1)
 	test -d win || mkdir win
-	test -f win/$$(basename $(GTK_PREBUILD_ZIP)) || \
-		( cd win && wget -c $(GTK_PREBUILD_ZIP) && \
-		unzip $$(basename $(GTK_PREBUILD_ZIP)) )
+	test -f win/$$(basename "$(GTK_PREBUILD_ZIP)") || \
+		( cd win && wget -c "$(GTK_PREBUILD_ZIP), && \
+		unzip $$(basename "$(GTK_PREBUILD_ZIP)") )
 	cd win && find -name '*.pc' | while read pc; do sed -e "s@^prefix=.*@prefix=$$PWD@" -i "$$pc"; done
 
 win_build_gee:
 	test "$(WIN)" = "1" || (echo "Call this target with WIN=1" && exit 1)
-	cd win && wget -c $(GEE_XZ) && \
+	cd win && wget -c "$(GEE_XZ)" && \
 		tar xJvf ./libgee-0.8.8.tar.xz > /dev/null
 	cd win/libgee-0.8.8 && \
 		sed -i -e 's/if test ".cross_compiling" != yes; then/if test 0 != 0; then/' ./configure
