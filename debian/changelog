@@ -1,0 +1,5 @@
+neo-layout-viewer (1.0.0-SNAPSHOT-1) unstable; urgency=medium
+
+  * Initial debian package
+
+ -- Marco Herrn <marco@mherrn.de>  Tue, 18 Dec 2018 16:48:01 +0100
