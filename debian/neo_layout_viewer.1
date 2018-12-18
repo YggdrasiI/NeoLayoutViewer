@@ -4,7 +4,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH Neo-layout-viewer 1 "December 18 2018"
+.TH Neo-layout-viewer 1 "December 19 2018"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -49,8 +49,9 @@ Hide/Show the application window
 .TP
 .B <Ctrl><Alt>n
 Move the application window around. This cycles the position of the
-application window between 8 different positions (each screen corner and
-centered at the top or the bottom of the screen).
+application window between 8 different positions (each screen corner
+and centered on the screen edges.).
+The used positions can be reduced, see below.
 .PP
 Both shortcuts can be adapted by modifying the
 .B config file
@@ -64,10 +65,14 @@ The config entries in the generated file are commented to identify the
 meaning of those options. The most important ones are:
 .TP
 .B width
-The exact width of the application window
+The exact width of the application window. To avoid unexpected behavior on
+on other resolutions, the width argument is ignored if it exceeds the range
+     [screen_width * min_width, screen_width * min_width]
 .TP
-.B max_width, max_height
-The relative width and height of the application window in relation to the screen size
+.B max_width, min_width
+This relative values limits the application window size.
+As example, max_with = 0.5 restricts the size on 50% of the screen width.
+The height can't be restricted directly.
 .TP
 .B display_function_keys
 Whether to display the function key row
