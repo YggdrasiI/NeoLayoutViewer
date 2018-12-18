@@ -5,17 +5,14 @@ namespace NeoLayoutViewer {
 
 		public Gee.Map<string,string> config;
 		private Gee.Map<string,string> description; // allow optional commenting config entrys.
-    public string used_config_path;
+		public string used_config_path;
 
 		public ConfigManager(string[] paths, string conffile) {
 			this.config =  new Gee.TreeMap<string, string>();
 			this.description =  new Gee.TreeMap<string, string>();
 
-			//add defaults values, if key not set in the config file
+			//add default values, if key not set in the config file
 			add_defaults();
-
-			//no, it's better to create the conffile in the current dir.
-			//var conffile2 = @"$(path)$(conffile)";
 
 			//try to read/create config file on given array of paths
 			string conffile2 = null;
@@ -31,20 +28,20 @@ namespace NeoLayoutViewer {
 				}
 			}
 
-			//2. Try deprecated name with leading dot.
-      if( conffile2 == null ){
-        foreach( var path in paths ){
-          string testfile = @"$(path)/.$(conffile)";
-          debug(@"Search $(testfile)\n");
-          if( search_config_file(testfile) ){
-            conffile2 = testfile;
-            debug(@"Found $(testfile)\n");
-            break;
-          }
-        }
-      }
+			//2. Try deprecated name with leading dot
+			if( conffile2 == null ){
+				foreach( var path in paths ){
+					string testfile = @"$(path)/.$(conffile)";
+					debug(@"Search $(testfile)\n");
+					if( search_config_file(testfile) ){
+						conffile2 = testfile;
+						debug(@"Found $(testfile)\n");
+						break;
+					}
+				}
+			}
 
-			//3. Try to write new conf file if read fails
+			//3. Try to write new conf file if read had failed
 			if( conffile2 == null ){
 				foreach( var path in paths ){
 					string testfile = @"$(path)/$(conffile)";
@@ -62,7 +59,7 @@ namespace NeoLayoutViewer {
 				load_config_file(conffile2);
 
 			add_intern_values();
-      used_config_path = conffile2;
+			used_config_path = conffile2;
 		}
 
 		public Gee.Map<string, string> getConfig() {
@@ -78,17 +75,19 @@ namespace NeoLayoutViewer {
 		}
 
 		/*
-			 Standard values. This vaules will be written in the config file if
-             config file was not found.
+			 Standard values. This vaules will be written in the config file
+			 if it was not found.
 		 */
 		public void add_defaults(){
 			//config.set("show_shortcut","<Mod4><Super_L>n", "Toggle the visibility of the window.");
 			addSetting("show_shortcut","<Ctrl><Alt>q", "Toggle the visibility of the window.");
 			addSetting("on_top","1", "Show window on top.");
 			addSetting("position","3", "Window position on startup (num pad orientation)");
-			addSetting("width","1000","Width in Pixel. Min_width and max_width bound sensible values. ");//Skalierung, sofern wert zwischen width(resolution)*max_width und width(resolution)*min_width
-			addSetting("min_width","0.25", "Minimal width. 1=full screen width");//Relativ zur Auflösung
-			addSetting("max_width","0.5", "Maximal width. 1=full screen width");//Relativ zur Auflösung
+			/* width of application window
+				 if value between 'resolution width'*max_width and  'resolution width'*min_width */
+			addSetting("width","1000","Width in Pixel. Min_width and max_width bound sensible values. ");
+			addSetting("min_width","0.25", "Minimal width. 1=full screen width");
+			addSetting("max_width","0.5", "Maximal width. 1=full screen width");
 			addSetting("move_shortcut","<Ctrl><Alt>n", "Circle through window posisitions.");
 			addSetting("position_cycle","2 3 6 1 3 9 4 7 8", "List of positions (num pad orientation)\n# The n-th number marks the next position of the window.\n# To limit the used positions to screen corners use\n#position_cycle = 3 3 9 1 3 9 1 7 7");
 			addSetting("display_numpad","1", null);
@@ -102,8 +101,9 @@ namespace NeoLayoutViewer {
 		}
 
 		/*
-			 Einstellungen, die der Übersicht halber nicht in der Konfigurationsdatei stehen.
-		*/
+			 Enrich setting map by some values. User can not change them because
+			 intern values overrides external values.
+		 */
 		private void add_intern_values() {
 			config.set("numpad_width","350");
 			config.set("function_keys_height","30");

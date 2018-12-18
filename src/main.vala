@@ -115,8 +115,8 @@ Tastenkombinationen:
  Bewegen - %s
  Beenden (sofern Fenster selektiert) - q
 
- Verwendete Konfigurationsdatei: %s
-""".printf(
+ Verwendete Konfigurationsdatei:\n
+ %s""".printf(
 				neo_win.config.get("show_shortcut"),
 				neo_win.config.get("move_shortcut"),
 				configm.used_config_path)

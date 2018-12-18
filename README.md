@@ -20,7 +20,8 @@ Kompilation & Installation
 
 Das Programm benötigt einen Kompiler der Programmiersprache Vala (mind. Version 0.24)
 und die Developer-Pakete einiger Bibliotheken. Die Abhängigkeiten können unter Ubuntu
-mit dem folgenden Befehl nachinstalliert werden, sofern sie nicht bereits vorhanden sind (Stand: Ubuntu 16.04, November 2017). Bei anderen Distributionen muss der Befehl ggf. angepasst werden.
+mit dem folgenden Befehl nachinstalliert werden, sofern sie nicht bereits vorhanden sind
+(Stand: Ubuntu 16.04, November 2017). Bei anderen Distributionen muss der Befehl ggf. angepasst werden.
 
     sudo apt-get install valac libgee-0.8-dev libgtk-3-dev libx11-dev libunique-3.0-dev libappindicator3-dev
 
@@ -41,7 +42,7 @@ Hinweise
 	In der Konfigurationsdatei können unter anderem folgende Einstellungen vorgenommen
 	werden:
 	- Breite des Fensters. Mit „width“ können Sie die exakte Breite einstellen und mit
-		„max_width“ und „min_width“ die relative Breite in Bezug auf die derzeitge Auflösung.
+		„max_width“ und „min_width“ die relative Breite in Bezug auf die derzeitige Auflösung.
 	- Anzeige des Numblocks und der Funktionstasten.
 	- Tastenkürzel für Anzeige und Bewegung des Fensters. Möchten Sie die Tasten-
 		kombination nicht nutzen, löschen Sie den Text hinter dem Gleichheitszeichen.
@@ -50,6 +51,10 @@ Hinweise
 		Positionen genutzt werden, kann „position_cycle“ angepasst werden.
 		Der Wert X∈{1,…,9} ist entsprechend der Position auf dem Numblocks zu interpretieren.
 		Beim Druck der Tastenkombination springt das Fenster von Position X zu position_cycle[X].
+
+• Das Programm kann auch als virtuelle Tastatur genutzt werden. Damit die Eingabe das
+  richtige Fenster erreicht muss in der Konfigurationsdatei „window_selectable = 0“
+  eingetragen werden.
 
 • Das Programm zeigt unter Gnome 3.x in der Indicator-Leiste ein Symbol an. Unter Gnome 2.x
 	war für diese Funktion noch eine andere Bibliothek verantwortlich. Sie können im
