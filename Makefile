@@ -26,6 +26,9 @@ VALAC_DEBUG_OPTS = -g
 # compiler options for a release build
 VALAC_RELEASE_OPTS = -X -O2 --disable-assert
 
+# FIXME: The version number should be taken from some file or environment
+# variable
+VERSION=0-$(shell date +%Y%m%d%H%M%S)
 
 #########################################################
 
@@ -182,6 +185,8 @@ clean:
 run:
 	bin/neo_layout_viewer
 
+src-package:
+	tar czf ../neo-layout-viewer-${VERSION}.tar.gz --exclude=.git --exclude=.gitignore --transform 's,^\./,neo-layout-viewer-${VERSION}/,' .
 
 ######################################################
 ## Windows stuff
