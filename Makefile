@@ -144,7 +144,7 @@ info:
 		"    none: Disables icon$(NL)$(NL)" \
 		"  Use 'BUILD_TYPE=[release|debug] make' to switch build type$(NL)$(NL)" \
 
-src/version.vala: gen_version
+src/version.vala: Makefile gen_version
 
 gen_version:
 	@/bin/echo -e "namespace NeoLayoutViewer{$(NL)" \
@@ -170,11 +170,18 @@ build_release2: $(SRC) "$(BINDIR)"
 	gcc $(SRC:.vala=.c) $(CC_INCLUDES) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" \
 		`pkg-config --cflags --libs gtk+-3.0 gee-$(GEEVERSION) unique-3.0`
 
-install:
+man: man/neo_layout_viewer.1.gz
+
+man/%.gz: man/%
+	gzip -c "$<" > "$@"
+
+install: man
 	test -f "$(BINDIR)/$(BINNAME)$(BINEXT)" || make all
 	install -d $(EXEC_PREFIX)/bin
 	install -D -m 0755 "$(BINDIR)/$(BINNAME)$(BINEXT)" "$(EXEC_PREFIX)/bin"
-	$(foreach ASSET_FILE,$(ASSET_FILES), install -D -m 0644 $(ASSET_FILE) "$(DATADIR)/$(APPNAME)/$(ASSET_FILE)" ; )
+	$(foreach ASSET_FILE,$(ASSET_FILES), \
+		install -D -m 0644 $(ASSET_FILE) "$(DATADIR)/$(APPNAME)/$(ASSET_FILE)" ; )
+	install -t /usr/share/man/man1/ doc/neo_layout_viewer.1.gz
 
 uninstall:
 	@rm -v "$(EXEC_PREFIX)/bin/$(BINNAME)$(BINEXT)"
@@ -184,6 +191,7 @@ uninstall:
 # clean all build files
 clean:
 	@rm -v -d -f *~ *.c src/*.c src/*~ "$(BINDIR)"/* "$(BINDIR)" "$(ENV_FILE)"
+	@rm man/*.gz
 
 run:
 	"$(BINDIR)/$(BINNAME)$(BINEXT)"
@@ -198,7 +206,8 @@ dist-package: release
 	tar czf ../neo-layout-viewer-${VERSION}.tgz \
 		--transform 's,^$(BINDIR)/,,' \
 		--transform 's,^,neo-layout-viewer-${VERSION}/,' \
-		"$(BINDIR)/$(BINNAME)" assets AUTHORS COPYING README.md
+		"$(BINDIR)/$(BINNAME)" assets AUTHORS COPYING README.md \
+		man/*.gz
 
 
 ######################################################
