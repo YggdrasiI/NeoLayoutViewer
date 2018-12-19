@@ -181,7 +181,7 @@ install: man
 	install -D -m 0755 "$(BINDIR)/$(BINNAME)$(BINEXT)" "$(EXEC_PREFIX)/bin"
 	$(foreach ASSET_FILE,$(ASSET_FILES), \
 		install -D -m 0644 $(ASSET_FILE) "$(DATADIR)/$(APPNAME)/$(ASSET_FILE)" ; )
-	install -t /usr/share/man/man1/ doc/neo_layout_viewer.1.gz
+	install -t /usr/share/man/man1/ man/neo_layout_viewer.1.gz
 
 uninstall:
 	@rm -v "$(EXEC_PREFIX)/bin/$(BINNAME)$(BINEXT)"
