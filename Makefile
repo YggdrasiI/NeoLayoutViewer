@@ -191,7 +191,7 @@ uninstall:
 # clean all build files
 clean:
 	@rm -v -d -f *~ *.c src/*.c src/*~ "$(BINDIR)"/* "$(BINDIR)" "$(ENV_FILE)"
-	@rm man/*.gz
+	@rm -v -f man/*.gz
 
 run:
 	"$(BINDIR)/$(BINNAME)$(BINEXT)"
