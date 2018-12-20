@@ -198,20 +198,29 @@ clean:
 run:
 	"$(BINDIR)/$(BINNAME)$(BINEXT)"
 
+######################################################
+## Targets for .*deb build
+
 src-package:
-	tar czf ../neo-layout-viewer_${RELEASE_VERSION}.orig.tar.gz \
+	tar czf ../neo-layout-viewer_$(RELEASE_VERSION).orig.tar.gz \
 		--exclude=.git --exclude=.gitignore --exclude=win \
 		--exclude=bin --exclude=man/*.gz --exclude=.pc\
-		--transform 's,^\./,neo-layout-viewer-${RELEASE_VERSION}/,' \
+		--transform 's,^\./,neo-layout-viewer-$(RELEASE_VERSION)/,' \
 		.
 
 dist-package: release man
-	tar czf ../neo-layout-viewer_${RELEASE_VERSION}.tgz \
+	tar czf ../neo-layout-viewer_$(RELEASE_VERSION).tgz \
 		--transform 's,^$(BINDIR)/,,' \
-		--transform 's,^,neo-layout-viewer-${RELEASE_VERSION}/,' \
+		--transform 's,^,neo-layout-viewer-$(RELEASE_VERSION)/,' \
 		"$(BINDIR)/$(BINNAME)" assets AUTHORS COPYING README.md \
 		man/*.gz
 
+# TODO
+debuild: src-package
+	debuild
+
+debuild_bin: src-package
+	debuild -i -us -uc -b
 
 ######################################################
 ## Windows stuff
