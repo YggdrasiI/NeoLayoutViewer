@@ -17,8 +17,8 @@ BINDIR = bin
 PREFIX = /usr/local
 APPNAME = NeoLayoutViewer
 
-RELEASE_VERSION=1.2
 GIT_COMMIT_VERSION=$(shell git log --oneline --max-count=1 | head --bytes=7)
+RELEASE_VERSION=1.2
 ENV_FILE=.build_env
 
 # compiler options for a debug build
@@ -60,7 +60,7 @@ endif
 EXEC_PREFIX = $(PREFIX)
 DATADIR = $(PREFIX)/share
 
-VALAC = valac --thread  -D $(ICON) \
+VALAC = valac -D $(ICON) \
 				--Xcc="-lm" --Xcc="-DXK_TECHNICAL" --Xcc="-DXK_PUBLISHING" --Xcc="-DXK_APL"
 VAPIDIR = --vapidir=vapi/
 
@@ -181,12 +181,14 @@ install: man
 	install -D -m 0755 "$(BINDIR)/$(BINNAME)$(BINEXT)" "$(EXEC_PREFIX)/bin"
 	$(foreach ASSET_FILE,$(ASSET_FILES), \
 		install -D -m 0644 $(ASSET_FILE) "$(DATADIR)/$(APPNAME)/$(ASSET_FILE)" ; )
-	install -t /usr/share/man/man1/ man/neo_layout_viewer.1.gz
+	install -d $(PREFIX)/share/man/man1/
+	install -t $(PREFIX)/share/man/man1/ man/neo_layout_viewer.1.gz
 
 uninstall:
-	@rm -v "$(EXEC_PREFIX)/bin/$(BINNAME)$(BINEXT)"
+	@rm -fv "$(EXEC_PREFIX)/bin/$(BINNAME)$(BINEXT)"
 	@test -d "$(DATADIR)/$(APPNAME)/assets" && rm -v -r "$(DATADIR)/$(APPNAME)"
 # Prefixed with test because of dangerous -r-flag...
+	@rm -fv $(PREFIX)/share/man/man1/neo_layout_viewer.1.gz
 
 # clean all build files
 clean:
@@ -197,15 +199,15 @@ run:
 	"$(BINDIR)/$(BINNAME)$(BINEXT)"
 
 src-package:
-	tar czf ../neo-layout-viewer-${VERSION}.tar.gz \
+	tar czf ../neo-layout-viewer_${RELEASE_VERSION}.orig.tar.gz \
 		--exclude=.git --exclude=.gitignore --exclude=win \
-		--transform 's,^\./,neo-layout-viewer-${VERSION}/,' \
+		--transform 's,^\./,neo-layout-viewer-${RELEASE_VERSION}/,' \
 		.
 
-dist-package: release
-	tar czf ../neo-layout-viewer-${VERSION}.tgz \
+dist-package: release man
+	tar czf ../neo-layout-viewer_${RELEASE_VERSION}.tgz \
 		--transform 's,^$(BINDIR)/,,' \
-		--transform 's,^,neo-layout-viewer-${VERSION}/,' \
+		--transform 's,^,neo-layout-viewer-${RELEASE_VERSION}/,' \
 		"$(BINDIR)/$(BINNAME)" assets AUTHORS COPYING README.md \
 		man/*.gz
 
