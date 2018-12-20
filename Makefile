@@ -30,7 +30,7 @@ VALAC_RELEASE_OPTS = -X -O2 --disable-assert
 # Debian Packaging version number
 # Pattern: [epoch:]upstream_version[-debian_revision].
 # The absence of a debian_revision is equivalent to a debian_revision of 0.
-VERSION=$(RELEASE_VERSION)-0
+VERSION=$(RELEASE_VERSION)
 
 #########################################################
 
@@ -201,6 +201,7 @@ run:
 src-package:
 	tar czf ../neo-layout-viewer_${RELEASE_VERSION}.orig.tar.gz \
 		--exclude=.git --exclude=.gitignore --exclude=win \
+		--exclude=bin --exclude=man/*.gz --exclude=.pc\
 		--transform 's,^\./,neo-layout-viewer-${RELEASE_VERSION}/,' \
 		.
 
