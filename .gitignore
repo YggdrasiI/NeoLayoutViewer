@@ -6,3 +6,5 @@ bin/
 neo_layout_viewer.conf
 src/*.c
 src/version.vala
+dist/
+tmp/
