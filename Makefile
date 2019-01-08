@@ -31,6 +31,12 @@ VALAC_RELEASE_OPTS = -X -O2 --disable-assert
 # Pattern: [epoch:]upstream_version[-debian_revision].
 # The absence of a debian_revision is equivalent to a debian_revision of 0.
 VERSION=$(RELEASE_VERSION)
+DISTDIR = dist
+TMPDIR = tmp
+DIST = stretch
+ARCHS = amd64 i386
+MIRROR = http://ftp.de.debian.org/debian
+BASETGZ_DIR = /var/cache/pbuilder
 
 #########################################################
 
@@ -158,6 +164,14 @@ gen_version:
 	@test -d "$(BINDIR)" || \
 		(mkdir -p "$(BINDIR)" && ln -s ../assets "$(BINDIR)/assets")
 
+"$(DISTDIR)":
+	@test -d "$(DISTDIR)" || \
+		(mkdir -p "$(DISTDIR)")
+
+"$(TMPDIR)":
+	@test -d "$(TMPDIR)" || \
+		(mkdir -p "$(TMPDIR)")
+
 build_debug: $(SRC) "$(BINDIR)"
 	$(VALAC) $(VAPIDIR) $(VALAC_DEBUG_OPTS) $(SRC) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" $(PKGS) $(CC_INCLUDES)
 
@@ -192,7 +206,9 @@ uninstall:
 
 # clean all build files
 clean:
-	@rm -v -d -f *~ *.c src/*.c src/*~ "$(BINDIR)"/* "$(BINDIR)" "$(ENV_FILE)"
+	@rm -v -d -f *~ *.c src/*.c src/*~ "$(BINDIR)"/* "$(BINDIR)" "$(ENV_FILE)" "$(DISTDIR)"/* "$(DISTDIR)"
+	@rm -v -d -f -r "$(TMPDIR)"/*
+	@rm -v -d -f "$(TMPDIR)"
 	@rm -v -f man/*.gz
 
 run:
@@ -201,26 +217,43 @@ run:
 ######################################################
 ## Targets for .*deb build
 
-src-package:
-	tar czf ../neo-layout-viewer_$(RELEASE_VERSION).orig.tar.gz \
+src-package: "$(DISTDIR)"
+	tar czf "$(DISTDIR)"/neo-layout-viewer_$(RELEASE_VERSION)-src.tar.gz \
 		--exclude=.git --exclude=.gitignore --exclude=win \
 		--exclude=bin --exclude=man/*.gz --exclude=.pc\
+		--exclude=dist --exclude=tmp \
 		--transform 's,^\./,neo-layout-viewer-$(RELEASE_VERSION)/,' \
 		.
 
-dist-package: release man
-	tar czf ../neo-layout-viewer_$(RELEASE_VERSION).tgz \
+dist-package: "$(DISTDIR)" release man
+	tar czf "$(DISTDIR)"/neo-layout-viewer_$(RELEASE_VERSION).tgz \
 		--transform 's,^$(BINDIR)/,,' \
 		--transform 's,^,neo-layout-viewer-$(RELEASE_VERSION)/,' \
 		"$(BINDIR)/$(BINNAME)" assets AUTHORS COPYING README.md \
 		man/*.gz
 
-# TODO
-debuild: src-package
-	debuild
+deb-packages: "$(TMPDIR)" "$(DISTDIR)" src-package
+	cp "$(DISTDIR)"/neo-layout-viewer_$(RELEASE_VERSION)-src.tar.gz "$(TMPDIR)"/neo-layout-viewer_$(RELEASE_VERSION).orig.tar.gz && \
+		cd "$(TMPDIR)" && \
+		tar xzf neo-layout-viewer_$(RELEASE_VERSION).orig.tar.gz && \
+		cd neo-layout-viewer-$(RELEASE_VERSION) && \
+		for arch in $(ARCHS); do \
+		  sudo mkdir -p $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
+			sudo pbuilder update --override-config --distribution "$(DIST)" --mirror "$(MIRROR)" --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ || \
+			sudo pbuilder create --override-config --distribution $(DIST) --mirror $(MIRROR) --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
+			DEB_BUILD_OPTIONS="noautodbgsym" pdebuild --buildresult .. --debbuildopts "-i -us -uc -b" -- --override-config --distribution $(DIST) --mirror $(MIRROR) --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
+			mv ../neo-layout-viewer*deb ../../dist/ ; \
+		done
 
-debuild_bin: src-package
-	debuild -i -us -uc -b
+deb-package: "$(TMPDIR)" "$(DISTDIR)" src-package
+	cp "$(DISTDIR)"/neo-layout-viewer_$(RELEASE_VERSION)-src.tar.gz "$(TMPDIR)"/neo-layout-viewer_$(RELEASE_VERSION).orig.tar.gz && \
+		cd "$(TMPDIR)" && \
+		tar xzf neo-layout-viewer_$(RELEASE_VERSION).orig.tar.gz && \
+		cd neo-layout-viewer-$(RELEASE_VERSION) && \
+		DEB_BUILD_OPTIONS="noautodbgsym" pdebuild --buildresult .. --debbuildopts "-i -us -uc -b" && \
+		mv ../neo-layout-viewer*deb ../../dist/
+
+dist: src-package dist-package deb-packages
 
 ######################################################
 ## Windows stuff
