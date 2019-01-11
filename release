@@ -225,6 +225,7 @@ show_help() {
   printf "Options:\n"
   printf "  perform: Perform a release\n"
   printf "  rollback: Rollback a release\n"
+  printf "  prepare: Like perform, but stop before non-local changes starts.\n"
   printf "  clean: Cleanup release info (No rollback will be possible afterwards)\n"
   printf "$KRST"
 }
@@ -241,6 +242,9 @@ case "$1" in
    ;;
  rollback) 
    rollback
+   ;;
+ prepare)  # Do not includes non-local operations
+   check_clean_state && prepare_release
    ;;
  clean) 
    clean
