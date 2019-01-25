@@ -3,8 +3,8 @@ namespace NeoLayoutViewer {
 
 	public class ConfigManager {
 
-		public Gee.Map<string,string> config;
-		private Gee.Map<string,string> description; // allow optional commenting config entrys.
+		public Gee.Map<string, string> config;
+		private Gee.Map<string, string> description; // allow optional commenting config entrys.
 		public string used_config_path;
 
 		public ConfigManager(string[] paths, string conffile) {
@@ -79,25 +79,25 @@ namespace NeoLayoutViewer {
 			 if it was not found.
 		 */
 		public void add_defaults(){
-			//config.set("show_shortcut","<Mod4><Super_L>n", "Toggle the visibility of the window.");
-			addSetting("show_shortcut","<Ctrl><Alt>q", "Toggle the visibility of the window.");
-			addSetting("on_top","1", "Show window on top.");
-			addSetting("position","3", "Window position on startup (num pad orientation)");
+			//config.set("show_shortcut", "<Mod4><Super_L>n", "Toggle the visibility of the window.");
+			addSetting("show_shortcut", "<Ctrl><Alt>q", "Toggle the visibility of the window.");
+			addSetting("on_top", "1", "Show window on top.");
+			addSetting("position", "3", "Window position on startup (num pad orientation)");
 			/* width of application window
 				 if value between 'resolution width'*max_width and  'resolution width'*min_width */
-			addSetting("width","1000","Width in Pixel. Min_width and max_width bound sensible values. ");
-			addSetting("min_width","0.25", "Minimal width. 1=full screen width");
-			addSetting("max_width","0.5", "Maximal width. 1=full screen width");
-			addSetting("move_shortcut","<Ctrl><Alt>n", "Circle through window posisitions.");
-			addSetting("position_cycle","2 3 6 1 3 9 4 7 8", "List of positions (num pad orientation)\n# The n-th number marks the next position of the window.\n# To limit the used positions to screen corners use\n#position_cycle = 3 3 9 1 3 9 1 7 7");
-			addSetting("display_numpad","1", null);
-			addSetting("display_function_keys","0", null);
-			addSetting("window_selectable","0","Disable window selection to use the program as virtual keyboard.");
-			addSetting("window_decoration","0","Show window decoration/border (not recommended).");
-			addSetting("screen_width","auto", "Set the resolution of your screen manually, if the automatic detection fails.");
-			addSetting("screen_height","auto", "Set the resolution of your screen manually, if the automatic detection fails.");
-			addSetting("show_on_startup","1", "Show window on startup.");
-			addSetting("asset_folder","./assets", "Default lookup folder image data.");
+			addSetting("width", "1000", "Width in Pixel. Min_width and max_width bound sensible values. ");
+			addSetting("min_width", "0.25", "Minimal width. 1=full screen width");
+			addSetting("max_width", "0.5", "Maximal width. 1=full screen width");
+			addSetting("move_shortcut", "<Ctrl><Alt>n", "Circle through window posisitions.");
+			addSetting("position_cycle", "2 3 6 1 3 9 4 7 8", "List of positions (num pad orientation)\n# The n-th number marks the next position of the window.\n# To limit the used positions to screen corners use\n#position_cycle = 3 3 9 1 3 9 1 7 7");
+			addSetting("display_numpad", "1", null);
+			addSetting("display_function_keys", "0", null);
+			addSetting("window_selectable", "0", "Disable window selection to use the program as virtual keyboard.");
+			addSetting("window_decoration", "0", "Show window decoration/border (not recommended).");
+			addSetting("screen_width", "auto", "Set the resolution of your screen manually, if the automatic detection fails.");
+			addSetting("screen_height", "auto", "Set the resolution of your screen manually, if the automatic detection fails.");
+			addSetting("show_on_startup", "1", "Show window on startup.");
+			addSetting("asset_folder", "./assets", "Default lookup folder image data.");
 		}
 
 		/*
@@ -105,8 +105,8 @@ namespace NeoLayoutViewer {
 			 intern values overrides external values.
 		 */
 		private void add_intern_values() {
-			config.set("numpad_width","350");
-			config.set("function_keys_height","30");
+			config.set("numpad_width", "350");
+			config.set("function_keys_height", "30");
 		}
 
 		private bool search_config_file(string conffile) {
@@ -166,7 +166,7 @@ namespace NeoLayoutViewer {
 
 					split = regex.split(line);
 					if(split.length>1){
-						this.config.set(split[0].strip(),split[1].strip());
+						this.config.set(split[0].strip(), split[1].strip());
 					}
 				}
 			} catch (GLib.IOError e) {

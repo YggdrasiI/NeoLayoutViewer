@@ -27,7 +27,7 @@ namespace NeoLayoutViewer {
 		}
 	}
 
-	public class NeoWindow : Gtk.Window {
+	public class NeoWindow : Gtk.ApplicationWindow {
 
 		private Gtk.Image image;
 		public Gtk.Label status;
@@ -35,7 +35,12 @@ namespace NeoLayoutViewer {
 		public Gee.List<Modkey> modifier_key_images; // for modifier which didn't toggle a layout layer. I.e. ctrl, alt.
 		public Gee.Map<string, string> config;
 
-		public int layer;
+		public bool fix_layer = false;
+		private int _layer = 1;
+		public int layer {
+			get { return _layer; }
+			set { if (value < 1 || value > 6) { _layer = 1; }else{ _layer = value; } }
+		}
 		public int[] active_modifier_by_keyboard;
 		public int[] active_modifier_by_mouse;
 		public int numpad_width;
@@ -54,16 +59,26 @@ namespace NeoLayoutViewer {
 
 		/* Falls ein Modifier (oder eine andere Taste) gedrückt wird und schon Modifier gedrückt sind, gibt die Map an, welche Ebene dann aktiviert ist. */
 		private short[,] MODIFIER_MAP = {
-			{0,1,2,3,4,5},
-			{1,1,4,3,4,5},
-			{2,4,2,5,4,5},
-			{3,3,5,3,4,5} };
+			{0, 1, 2, 3, 4, 5},
+			{1, 1, 4, 3, 4, 5},
+			{2, 4, 2, 5, 4, 5},
+			{3, 3, 5, 3, 4, 5} };
 
-		/* [0,1]^3->{0,5}, Bildet aktive Modifier auf angezeigte Ebene ab.
-			 Interpretationsreihenfolge der Dimensionen: Shift,Neo-Mod3, Neo-Mod4. */
+		/* [0, 1]^3->{0, 5}, Bildet aktive Modifier auf angezeigte Ebene ab.
+			 Interpretationsreihenfolge der Dimensionen: Shift, Neo-Mod3, Neo-Mod4. */
 		private short[,,] MODIFIER_MAP2 = {
 			{ {0 , 3}, {2 , 5 } },  // 000, 001; 010, 011
 			{ {1 , 3}, {4 , 5}}	  // 100, 101; 110, 111
+		};
+
+		/* {0, 5} -> [0, 1]^3 */
+		private short[,] LAYER_TO_MODIFIERS = {
+			{0 , 0, 0}, // 0
+			{1 , 0, 0}, // 1
+			{0 , 1, 0}, // 2
+			{0 , 0, 1}, // 3
+			{1 , 1, 0}, // 4
+			{1 , 1, 1}  // 5
 		};
 
 		/* Analog zu oben für den Fall, dass eine Taste losgelassen wird. Funktioniert nicht immer.
@@ -71,34 +86,34 @@ namespace NeoLayoutViewer {
 			 Die Fehler sind imo zu vernachlässigen.
 		 */
 		private short[,] MODIFIER_MAP_RELEASE = {
-			{0,0,0,0,0,0},
-			{0,0,2,3,2,5},
-			{0,1,0,3,1,3},
-			{0,1,2,0,4,2} };
+			{0, 0, 0, 0, 0, 0},
+			{0, 0, 2, 3, 2, 5},
+			{0, 1, 0, 3, 1, 3},
+			{0, 1, 2, 0, 4, 2} };
 
 		/*
 			 Modifier können per Tastatur und Maus aktiviert werden. Diese Abbildung entscheidet,
 			 wie bei einer Zustandsänderung verfahren werden soll.
-			 k,m,K,M ∈ {0,1}.
+			 k, m, K, M ∈ {0, 1}.
 			 k - Taste wurde gedrückt gehalten
 			 m - Taste wurde per Mausklick selektiert.
 			 K - Taste wird gedrückt
 			 M - Taste wird per Mausklick selektiert.
 
-			 k' = f(k,m,K,M). Und wegen der Symmetrie(!)
-			 m' = f(m,k,M,K)
+			 k' = f(k, m, K, M). Und wegen der Symmetrie(!)
+			 m' = f(m, k, M, K)
 			 Siehe auch change_active_modifier(…).
 		 */
 		private short[,,,] MODIFIER_KEYBOARD_MOUSE_MAP = {
-			//		 k		=				f(k,m,K,M,) and m = f(m,k,M,K)
-			{ { {0, 0} , {1, 0} } ,	// 0000, 0001; 0010, 0011;
-				{ {0, 0} , {1, 1} } },	// 0100, 0101; 0110, 0111(=swap);
+			//		 k		=				f(k, m, K, M, ) and m = f(m, k, M, K)
+			{ { {0, 0} , {1, 0} } ,  // 0000, 0001; 0010, 0011;
+				{ {0, 0} , {1, 1} } }, // 0100, 0101; 0110, 0111(=swap);
 			{ { {0, 0} , {1, 0} } , //1000, 1001; 1010, 1011(=swap);
 				{ {0, 0} , {1, 1} } }//1100, 1101; 1110, 1111; //k=m=1 should be impossible
 		};
 
-		public NeoWindow (string slayer, Gee.Map<string, string> config) {
-			this.config = config;
+		public NeoWindow (NeoLayoutViewerApp app) {
+			this.config = app.configm.getConfig();
 			this.minimized = true;
 
 			/* Set window type to let tiling window manager the chance
@@ -118,51 +133,54 @@ namespace NeoLayoutViewer {
 			this.MODIFIER_MASK = {
 				0,
 				Gdk.ModifierType.SHIFT_MASK, //1
-				Gdk.ModifierType.MOD5_MASK,//128
+				Gdk.ModifierType.MOD5_MASK, //128
 				Gdk.ModifierType.MOD3_MASK, //32
 				Gdk.ModifierType.CONTROL_MASK,
 				Gdk.ModifierType.MOD1_MASK // Alt-Mask do not work :-(
 			};
-			this.active_modifier_by_keyboard = {0,0,0,0,0,0};
-			this.active_modifier_by_mouse = {0,0,0,0,0,0};
+			this.active_modifier_by_keyboard = {0, 0, 0, 0, 0, 0};
+			this.active_modifier_by_mouse = {0, 0, 0, 0, 0, 0};
 
 			this.modifier_key_images = new Gee.ArrayList<Modkey>(); 
-			this.position_num = int.max(int.min(int.parse(config.get("position")),9),1);
+			this.position_num = int.max(int.min(int.parse(this.config.get("position")), 9), 1);
 
 			//Anlegen des Arrays, welches den Positionsdurchlauf beschreibt.
 			try {
 				var space = new Regex(" ");
-				string[] split = space.split(config.get("position_cycle"));
-				position_cycle = new int[int.max(9,split.length)];
+				string[] split = space.split(this.config.get("position_cycle"));
+				position_cycle = new int[int.max(9, split.length)];
 				for (int i = 0;i < split.length; i++) {
-					position_cycle[i] = int.max(int.min(int.parse(split[i]),9),1);//Zulässiger Bereich: 1-9
+					position_cycle[i] = int.max(int.min(int.parse(split[i]), 9), 1);//Zulässiger Bereich: 1-9
 				}
 			} catch (RegexError e) {
-				position_cycle = {3,3,9,1,3,9,1,7,7};
+				position_cycle = {3, 3, 9, 1, 3, 9, 1, 7, 7};
 			}
 
-
-			this.layer = int.parse(slayer);
-			if (this.layer < 1 || this.layer > 6) { this.layer = 1; }
-
+			if (app.start_layer > 0 ){
+				this.fix_layer = true;
+				this.layer = app.start_layer;
+				this.active_modifier_by_mouse[1] = this.LAYER_TO_MODIFIERS[this.layer-1, 0];
+				this.active_modifier_by_mouse[2] = this.LAYER_TO_MODIFIERS[this.layer-1, 1];
+				this.active_modifier_by_mouse[3] = this.LAYER_TO_MODIFIERS[this.layer-1, 2];
+			}
 
 			// Crawl dimensions of screen/display/monitor
 		  // Should be done before load_image_buffer() is called.
-			screen_dim_auto[0] = (config.get("screen_width") == "auto");
-			screen_dim_auto[1] = (config.get("screen_height") == "auto");
+			screen_dim_auto[0] = (this.config.get("screen_width") == "auto");
+			screen_dim_auto[1] = (this.config.get("screen_height") == "auto");
 
 			if (screen_dim_auto[0]) {
 				this.screen_dim[0] = this.get_screen_width();
 				this.screen_dim_auto[0] = false; // Disables further re-evaluations
 			} else {
-				this.screen_dim[0] = int.max(1, int.parse(config.get("screen_width")));
+				this.screen_dim[0] = int.max(1, int.parse(this.config.get("screen_width")));
 			}
 
 			if(screen_dim_auto[1]) {
 				this.screen_dim[1] = this.get_screen_height();
 				this.screen_dim_auto[1] = false; // Disables further re-evaluations
 			} else {
-				this.screen_dim[1] = int.max(1, int.parse(config.get("screen_height")));
+				this.screen_dim[1] = int.max(1, int.parse(this.config.get("screen_height")));
 			}
 
 
@@ -196,42 +214,42 @@ namespace NeoLayoutViewer {
 			//Fenstereigenschaften setzen
 			this.key_press_event.connect(on_key_pressed);
 			this.button_press_event.connect(on_button_pressed);
-			this.destroy.connect(Gtk.main_quit);
+			this.destroy.connect(NeoLayoutViewer.quit);
 
 			//this.set_gravity(Gdk.Gravity.SOUTH);
-			this.decorated = (config.get("window_decoration") != "0");
+			this.decorated = (this.config.get("window_decoration") != "0");
 			this.skip_taskbar_hint = true;
 
 			//Icon des Fensters
 			this.icon = this.image_buffer[0];
 
 			//Nicht selektierbar (für virtuelle Tastatur)
-			this.set_accept_focus((config.get("window_selectable") != "0"));
+			this.set_accept_focus((this.config.get("window_selectable") != "0"));
 
 			if( this.config.get("show_on_startup") != "0" ){
 				//Move ist erst nach show() erfolgreich
-				this.numkeypad_move(int.parse(config.get("position")));
+				this.numkeypad_move(int.parse(this.config.get("position")));
 				this.show();
 			}else{
 				this.hide();
-				this.numkeypad_move(int.parse(config.get("position")));
+				this.numkeypad_move(int.parse(this.config.get("position")));
 			}
 
 		}
 
 		public override void show() {
 			this.minimized = false;
-			this.move(this.position_on_hide_x,this.position_on_hide_y);
+			this.move(this.position_on_hide_x, this.position_on_hide_y);
 			debug(@"Show window on $(this.position_on_hide_x), $(this.position_on_hide_y)\n");
 			base.show();
-			this.move(this.position_on_hide_x,this.position_on_hide_y);
+			this.move(this.position_on_hide_x, this.position_on_hide_y);
 			/* Second move fixes issue for i3-wm(?). The move() before show()
 				 moves the current window as expected, but somehow does not propagate this values
 				 correcty to the wm. => The next hide() call will fetch wrong values
 				 and a second show() call plaes the window in the middle of the screen.
 			 */
 
-			if (config.get("on_top") == "1") {
+			if (this.config.get("on_top") == "1") {
 				this.set_keep_above(true);
 			} else {
 				this.present();
@@ -267,7 +285,7 @@ namespace NeoLayoutViewer {
 			int screen_width = this.get_screen_width();
 			int screen_height = this.get_screen_height();
 
-			int x,y,w,h;
+			int x, y, w, h;
 			this.get_size(out w, out h);
 
 			switch(pos) {
@@ -319,7 +337,7 @@ namespace NeoLayoutViewer {
 			this.position_on_hide_y = y;
 
 
-			this.move(x,y);
+			this.move(x, y);
 		}
 
 		public Gdk.Pixbuf open_image (int layer) {
@@ -342,26 +360,26 @@ namespace NeoLayoutViewer {
 			int screen_width = this.get_screen_width(); //Gdk.Screen.width();
 			int max_width = (int) (double.parse(this.config.get("max_width")) * screen_width);
 			int min_width = (int) (double.parse(this.config.get("min_width")) * screen_width);
-			int width = int.min(int.max(int.parse(config.get("width")),min_width),max_width);
+			int width = int.min(int.max(int.parse(this.config.get("width")), min_width), max_width);
 			int w, h;
 
-			this.numpad_width = int.parse(config.get("numpad_width"));
-			this.function_keys_height = int.parse(config.get("function_keys_height"));
+			this.numpad_width = int.parse(this.config.get("numpad_width"));
+			this.function_keys_height = int.parse(this.config.get("function_keys_height"));
 
 			for (int i = 1; i < 7; i++) {
 				this.image_buffer[i] = open_image(i);
 
 				//Funktionstasten ausblennden, falls gefordert.
-				if (config.get("display_function_keys") == "0") {
-					var tmp =  new Gdk.Pixbuf(image_buffer[i].colorspace,image_buffer[i].has_alpha,image_buffer[i].bits_per_sample, image_buffer[i].width ,image_buffer[i].height-function_keys_height);
-					this.image_buffer[i].copy_area(0,function_keys_height,tmp.width,tmp.height,tmp,0,0);
+				if (this.config.get("display_function_keys") == "0") {
+					var tmp =  new Gdk.Pixbuf(image_buffer[i].colorspace, image_buffer[i].has_alpha, image_buffer[i].bits_per_sample, image_buffer[i].width , image_buffer[i].height-function_keys_height);
+					this.image_buffer[i].copy_area(0, function_keys_height, tmp.width, tmp.height, tmp, 0, 0);
 					this.image_buffer[i] = tmp;
 				}
 
 				//Numpad-Teil abschneiden, falls gefordert.
-				if (config.get("display_numpad") == "0") {
-					var tmp =  new Gdk.Pixbuf(image_buffer[i].colorspace,image_buffer[i].has_alpha,image_buffer[i].bits_per_sample, image_buffer[i].width-numpad_width ,image_buffer[i].height);
-					this.image_buffer[i].copy_area(0,0,tmp.width,tmp.height,tmp,0,0);
+				if (this.config.get("display_numpad") == "0") {
+					var tmp =  new Gdk.Pixbuf(image_buffer[i].colorspace, image_buffer[i].has_alpha, image_buffer[i].bits_per_sample, image_buffer[i].width-numpad_width , image_buffer[i].height);
+					this.image_buffer[i].copy_area(0, 0, tmp.width, tmp.height, tmp, 0, 0);
 					this.image_buffer[i] = tmp;
 				}
 
@@ -376,7 +394,7 @@ namespace NeoLayoutViewer {
 		private bool on_key_pressed (Widget source, Gdk.EventKey key) {
 			// If the key pressed was q, quit, else show the next page
 			if (key.str == "q") {
-				Gtk.main_quit ();
+				NeoLayoutViewer.quit();
 			}
 
 			if (key.str == "h") {
@@ -455,12 +473,20 @@ namespace NeoLayoutViewer {
 
 		public void redraw() {
 			var tlayer = this.layer;
-			this.layer = this.MODIFIER_MAP2[
-				this.active_modifier_by_keyboard[1] | this.active_modifier_by_mouse[1], //shift
-				this.active_modifier_by_keyboard[2] | this.active_modifier_by_mouse[2], //neo-mod3
-				this.active_modifier_by_keyboard[3] | this.active_modifier_by_mouse[3] //neo-mod4
+			if (this.fix_layer) {  // Ignore key events
+				this.layer = this.MODIFIER_MAP2[
+					this.active_modifier_by_mouse[1], //shift
+					this.active_modifier_by_mouse[2], //neo-mod3
+					this.active_modifier_by_mouse[3] //neo-mod4
 				] + 1;
 
+			}else{
+				this.layer = this.MODIFIER_MAP2[
+					this.active_modifier_by_keyboard[1] | this.active_modifier_by_mouse[1], //shift
+					this.active_modifier_by_keyboard[2] | this.active_modifier_by_mouse[2], //neo-mod3
+					this.active_modifier_by_keyboard[3] | this.active_modifier_by_mouse[3] //neo-mod4
+				] + 1;
+			}
 			// check, which extra modifier is pressed and update.
 			foreach (var modkey in modifier_key_images) {
 				modkey.change(
@@ -511,8 +537,8 @@ namespace NeoLayoutViewer {
 			this.check_modifier(iet1);
 		}
 
-    public int get_screen_width(){
-      // Return value derived from config.get("screen_width")) or Gdk.Screen.width()
+		public int get_screen_width(){
+			// Return value derived from config.get("screen_width")) or Gdk.Screen.width()
 
 			if( this.screen_dim_auto[0] ){
 				//Re-evaluate
@@ -535,11 +561,11 @@ namespace NeoLayoutViewer {
 				screen_dim[0] = geometry.width;
 #endif
 			}
-      return screen_dim[0];
-    }
+			return screen_dim[0];
+		}
 
-    public int get_screen_height(){
-      // Return value derived from config.get("screen_height")) or Gdk.Screen.height()
+		public int get_screen_height(){
+			// Return value derived from config.get("screen_height")) or Gdk.Screen.height()
 
 			if( this.screen_dim_auto[1] ){
 				//Re-evaluate
@@ -562,8 +588,8 @@ namespace NeoLayoutViewer {
 				screen_dim[1] = geometry.height;
 #endif
 			}
-      return screen_dim[1];
-    }
+			return screen_dim[1];
+		}
 
 	} //End class NeoWindow
 

@@ -33,7 +33,8 @@ namespace NeoLayoutViewer {
 			menuMain.append(menuAbout);
 
 			var menuQuit = new ImageMenuItem.from_stock(Stock.QUIT, null);
-			menuQuit.activate.connect(Gtk.main_quit);
+			//menuQuit.activate.connect(Gtk.main_quit);
+			menuQuit.activate.connect(NeoLayoutViewer.quit);
 			menuMain.append(menuQuit);
 
 #else
@@ -58,7 +59,8 @@ namespace NeoLayoutViewer {
       quitBox.pack_start(quitIcon, false, false, 0);
       quitBox.pack_end(quitLabel, true, true, 0);
       quitMenuItem.add(quitBox);
-			quitMenuItem.activate.connect(Gtk.main_quit);
+			//quitMenuItem.activate.connect(Gtk.main_quit);
+			quitMenuItem.activate.connect(NeoLayoutViewer.quit);
       menuMain.append(quitMenuItem);
 #endif
 

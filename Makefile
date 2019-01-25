@@ -18,7 +18,7 @@ PREFIX = /usr/local
 APPNAME = NeoLayoutViewer
 
 GIT_COMMIT_VERSION=$(shell git log --oneline --max-count=1 | head --bytes=7)
-RELEASE_VERSION=1.2
+RELEASE_VERSION=1.3
 ENV_FILE=.build_env
 
 # compiler options for a debug build
@@ -72,18 +72,18 @@ VAPIDIR = --vapidir=vapi/
 
 # Source files
 SRC = src/version.vala \
-      src/main.vala \
-      src/neo-window.vala \
-      src/config-manager.vala
+			src/main.vala \
+			src/app.vala \
+			src/neo-window.vala \
+			src/config-manager.vala
 
 ifeq ($(WIN),)
 VALAC_DEBUG_OPTS += -D _NO_WIN
 VALAC_RELEASE_OPTS += -D _NO_WIN
 SRC += src/key-overlay.vala \
-      src/unique.vala \
-      src/keybinding-manager.vala \
-      csrc/keysend.c \
-      csrc/checkModifier.c
+			 src/keybinding-manager.vala \
+			 csrc/keysend.c \
+			 csrc/checkModifier.c
 endif
 
 # Asset files
@@ -102,7 +102,7 @@ else
 endif
 
 # Packages
-PKGS = --pkg x11 --pkg keysym --pkg gtk+-3.0 --pkg gee-$(GEEVERSION) --pkg gdk-x11-3.0 --pkg posix  --pkg unique-3.0 --pkg gdk-3.0
+PKGS = --pkg x11 --pkg keysym --pkg gtk+-3.0 --pkg gee-$(GEEVERSION) --pkg gdk-x11-3.0 --pkg posix  --pkg gdk-3.0
 
 # Add some args if tray icon is demanded.
 ifeq ($(ICON),tray)
@@ -182,7 +182,7 @@ build_release: $(SRC) "$(BINDIR)"
 build_release2: $(SRC) "$(BINDIR)"
 	$(VALAC) --ccode $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) $(PKGS) $(CC_INCLUDES)
 	gcc $(SRC:.vala=.c) $(CC_INCLUDES) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" \
-		`pkg-config --cflags --libs gtk+-3.0 gee-$(GEEVERSION) unique-3.0`
+		`pkg-config --cflags --libs gtk+-3.0 gee-$(GEEVERSION)`
 
 man: man/neo_layout_viewer.1.gz
 
