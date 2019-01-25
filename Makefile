@@ -18,10 +18,10 @@ PREFIX = /usr/local
 APPNAME = NeoLayoutViewer
 
 # Prefix for package name generation
-PACKAGE_NAME=neo-layout-viewer
+PACKAGE_NAME = neo-layout-viewer
 
 GIT_COMMIT_VERSION=$(shell git log --oneline --max-count=1 | head --bytes=7)
-ENV_FILE=.build_env
+ENV_FILE = .build_env
 
 # compiler options for a debug build
 #VALAC_DEBUG_OPTS = -g --save-temps
@@ -30,18 +30,35 @@ VALAC_DEBUG_OPTS = -g
 # Note that some cc-warnings can not resolved. Use '-X -w' to hide them.
 VALAC_RELEASE_OPTS = -X -O2 --disable-assert
 
+# falg required for pbuilder environment and deb-file naming scheme.
+UBUNTU ?= 0
+
+DISTDIR = dist
+TMPDIR = tmp
+ARCHS = amd64 # i386 # armhf arm64
+BASETGZ_DIR = /var/cache/pbuilder
+
+ifeq ($(UBUNTU),1)
+# Ubuntu, valac requires universe-component
+MIRROR=http://de.archive.ubuntu.com/ubuntu/
+DIST = bionic
+COMPONENTS = main universe #restricted multiverse
+UBUNTU_SUFFIX = ubuntu1
+else
+# Debian
+DIST = stretch
+MIRROR = http://ftp.de.debian.org/debian
+COMPONENTS = main
+UBUNTU_SUFFIX = 
+endif
+
 # Debian Packaging version number
 # Pattern: [epoch:]upstream_version[-debian_revision].
 # The absence of a debian_revision is equivalent to a debian_revision of 0.
 RELEASE_VERSION=$(shell sed -n "/^$(PACKAGE_NAME)\s*(\([^()]*\)[)].*/{ s//\1/p; q0 }; q1" debian/changelog || echo -n "undefined" )
 #Token for .orig.tar.gz-files: dpkg-source request upstream tarball without revision substring
-SRC_VERSION=$(shell echo -n "$(RELEASE_VERSION)" | cut -d\- -f 1)
-DISTDIR = dist
-TMPDIR = tmp
-DIST = stretch
-ARCHS = amd64 i386 # armhf arm64
-MIRROR = http://ftp.de.debian.org/debian
-BASETGZ_DIR = /var/cache/pbuilder
+SRC_VERSION=$(shell echo -n "$(RELEASE_VERSION)" | cut -d\- -f 1 -z)
+
 
 #########################################################
 
@@ -244,10 +261,10 @@ deb-packages: "$(TMPDIR)" "$(DISTDIR)" src-package
 		cd neo-layout-viewer-$(RELEASE_VERSION) && \
 		for arch in $(ARCHS); do \
 		  sudo mkdir -p $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
-			sudo pbuilder update --override-config --distribution "$(DIST)" --mirror "$(MIRROR)" --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ || \
-			sudo pbuilder create --override-config --distribution $(DIST) --mirror $(MIRROR) --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
-			DEB_BUILD_OPTIONS="noautodbgsym" pdebuild --buildresult .. --debbuildopts "-i -us -uc -b" -- --override-config --distribution $(DIST) --mirror $(MIRROR) --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
-			mv ../neo-layout-viewer*deb ../../dist/ ; \
+			sudo pbuilder update --override-config --distribution "$(DIST)" --mirror "$(MIRROR)" --components "$(COMPONENTS)" --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ || \
+			sudo pbuilder create --override-config --distribution $(DIST) --mirror $(MIRROR) --components "$(COMPONENTS)" --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
+			DEB_BUILD_OPTIONS="noautodbgsym" pdebuild --buildresult .. --debbuildopts "-i -us -uc -b" -- --override-config --distribution $(DIST) --mirror $(MIRROR) --components "$(COMPONENTS)" --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
+			mv ../neo-layout-viewer_$(RELEASE_VERSION)_$$arch*deb ../../dist/neo-layout-viewer_$(RELEASE_VERSION)$(UBUNTU_SUFFIX)_$$arch.deb ; \
 		done
 
 deb-package: "$(TMPDIR)" "$(DISTDIR)" src-package
@@ -256,7 +273,7 @@ deb-package: "$(TMPDIR)" "$(DISTDIR)" src-package
 		tar xzf neo-layout-viewer_$(SRC_VERSION).orig.tar.gz && \
 		cd neo-layout-viewer-$(RELEASE_VERSION) && \
 		DEB_BUILD_OPTIONS="noautodbgsym" pdebuild --buildresult .. --debbuildopts "-i -us -uc -b" && \
-		mv ../neo-layout-viewer*deb ../../dist/
+		mv ../neo-layout-viewer_$(RELEASE_VERSION)_$(shell dpkg --print-architecture).deb ../../dist/neo-layout-viewer_$(RELEASE_VERSION)$(UBUNTU_SUFFIX)_$(shell dpkg --print-architecture).deb
 
 dist: src-package dist-package deb-packages
 
@@ -305,7 +322,7 @@ win_gtk: win_download_gtk win_build_gee
 
 print_version:
 	@echo "Source archive: $(PACKAGE_NAME)_$(SRC_VERSION).orig.tar.gz"
-	@echo "Deb file: $(PACKAGE_NAME)_$(RELEASE_VERSION)_$(dpkg --print-architecture).deb"
+	@echo "Deb file: $(PACKAGE_NAME)_$(RELEASE_VERSION)_$(shell dpkg --print-architecture).deb"
 
 # Test to avoid sudo. Unfortunately, dpkg-buildpackage still ask...
 deb-packages_as_user: "$(TMPDIR)" "$(DISTDIR)" src-package
@@ -316,10 +333,10 @@ deb-packages_as_user: "$(TMPDIR)" "$(DISTDIR)" src-package
 		for arch in $(ARCHS); do \
 		  mkdir -p $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
 			test "$(SKIP_PBUILDER_UPDATE)" = "1" || \
-			pbuilder update --override-config --distribution "$(DIST)" --mirror "$(MIRROR)" --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ || \
-			pbuilder create --override-config --distribution $(DIST) --mirror $(MIRROR) --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
-			DEB_BUILD_OPTIONS="noautodbgsym" pdebuild --buildresult .. --debbuildopts "-i -us -uc -b" -- --override-config --distribution $(DIST) --mirror $(MIRROR) --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
-			mv ../neo-layout-viewer*deb ../../dist/ ; \
+			pbuilder update --override-config --distribution "$(DIST)" --mirror "$(MIRROR)" --components "$(COMPONENTS)" --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ || \
+			pbuilder create --override-config --distribution $(DIST) --mirror $(MIRROR) --components "$(COMPONENTS)" --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
+			DEB_BUILD_OPTIONS="noautodbgsym" pdebuild --buildresult .. --debbuildopts "-i -us -uc -b" -- --override-config --distribution $(DIST) --mirror $(MIRROR) --components "$(COMPONENTS)" --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
+			mv ../neo-layout-viewer_$(RELEASE_VERSION)_$$arch*deb ../../dist/neo-layout-viewer_$(RELEASE_VERSION)$(UBUNTU_SUFFIX)_$$arch.deb ; \
 		done
 
 
