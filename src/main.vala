@@ -114,9 +114,8 @@ Tastenkombinationen:
 			if( file.query_exists(null)) return p;
 		}
 
-		var datadirs = GLib.Environment.get_system_data_dirs();
-		foreach( var s in datadirs ){
-			var env_path = s + "/NeoLayoutViewer/assets";
+		foreach( var s in GLib.Environment.get_system_data_dirs()){
+			var env_path = @"$(s)/NeoLayoutViewer/assets";
 			debug(@"Search assets in $(env_path)\n");
 			var file2 = File.new_for_path (env_path+filename);
 			if( file2.query_exists(null)) return env_path;

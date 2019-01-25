@@ -671,7 +671,7 @@ namespace NeoLayoutViewer {
 			 Achtung, mittlerweile ist es die Identitätsabbildung, da die zwei
 			 redundanten Layer, die durch Caps-Lock entstehen, entfernt wurden.
 		 */
-		private static const short[] layer_permutation = {0,1,2,3,5,4,6};
+		private const short[] layer_permutation = {0,1,2,3,5,4,6};
 
 		private KeyEventBox.all(NeoWindow winMain, int width, int height) {
 			this.winMain = winMain;

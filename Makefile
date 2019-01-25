@@ -26,7 +26,8 @@ ENV_FILE=.build_env
 # compiler options for a debug build
 #VALAC_DEBUG_OPTS = -g --save-temps
 VALAC_DEBUG_OPTS = -g
-# compiler options for a release build
+# compiler options for a release build.
+# Note that some cc-warnings can not resolved. Use '-X -w' to hide them.
 VALAC_RELEASE_OPTS = -X -O2 --disable-assert
 
 # Debian Packaging version number
@@ -38,7 +39,7 @@ SRC_VERSION=$(shell echo -n "$(RELEASE_VERSION)" | cut -d\- -f 1)
 DISTDIR = dist
 TMPDIR = tmp
 DIST = stretch
-ARCHS = amd64 i386
+ARCHS = amd64 i386 # armhf arm64
 MIRROR = http://ftp.de.debian.org/debian
 BASETGZ_DIR = /var/cache/pbuilder
 
@@ -305,3 +306,20 @@ win_gtk: win_download_gtk win_build_gee
 print_version:
 	@echo "Source archive: $(PACKAGE_NAME)_$(SRC_VERSION).orig.tar.gz"
 	@echo "Deb file: $(PACKAGE_NAME)_$(RELEASE_VERSION)_$(dpkg --print-architecture).deb"
+
+# Test to avoid sudo. Unfortunately, dpkg-buildpackage still ask...
+deb-packages_as_user: "$(TMPDIR)" "$(DISTDIR)" src-package
+	cp "$(DISTDIR)"/neo-layout-viewer_$(RELEASE_VERSION)-src.tar.gz "$(TMPDIR)"/neo-layout-viewer_$(SRC_VERSION).orig.tar.gz && \
+		cd "$(TMPDIR)" && \
+		tar xzf neo-layout-viewer_$(SRC_VERSION).orig.tar.gz && \
+		cd neo-layout-viewer-$(RELEASE_VERSION) && \
+		for arch in $(ARCHS); do \
+		  mkdir -p $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
+			test "$(SKIP_PBUILDER_UPDATE)" = "1" || \
+			pbuilder update --override-config --distribution "$(DIST)" --mirror "$(MIRROR)" --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ || \
+			pbuilder create --override-config --distribution $(DIST) --mirror $(MIRROR) --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
+			DEB_BUILD_OPTIONS="noautodbgsym" pdebuild --buildresult .. --debbuildopts "-i -us -uc -b" -- --override-config --distribution $(DIST) --mirror $(MIRROR) --architecture $$arch --basetgz $(BASETGZ_DIR)/$(DIST)-$$arch-base.tgz --aptcache $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
+			mv ../neo-layout-viewer*deb ../../dist/ ; \
+		done
+
+
