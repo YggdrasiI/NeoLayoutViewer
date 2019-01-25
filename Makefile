@@ -17,8 +17,10 @@ BINDIR = bin
 PREFIX = /usr/local
 APPNAME = NeoLayoutViewer
 
+# Prefix for package name generation
+PACKAGE_NAME=neo-layout-viewer
+
 GIT_COMMIT_VERSION=$(shell git log --oneline --max-count=1 | head --bytes=7)
-RELEASE_VERSION=1.3
 ENV_FILE=.build_env
 
 # compiler options for a debug build
@@ -30,7 +32,9 @@ VALAC_RELEASE_OPTS = -X -O2 --disable-assert
 # Debian Packaging version number
 # Pattern: [epoch:]upstream_version[-debian_revision].
 # The absence of a debian_revision is equivalent to a debian_revision of 0.
-VERSION=$(RELEASE_VERSION)
+RELEASE_VERSION=$(shell sed -n "/^$(PACKAGE_NAME)\s*(\([^()]*\)[)].*/{ s//\1/p; q0 }; q1" debian/changelog || echo -n "undefined" )
+#Token for .orig.tar.gz-files: dpkg-source request upstream tarball without revision substring
+SRC_VERSION=$(shell echo -n "$(RELEASE_VERSION)" | cut -d\- -f 1)
 DISTDIR = dist
 TMPDIR = tmp
 DIST = stretch
@@ -204,9 +208,9 @@ uninstall:
 # Prefixed with test because of dangerous -r-flag...
 	@rm -fv $(PREFIX)/share/man/man1/neo_layout_viewer.1.gz
 
-# clean all build files
+# clean all build files, but not dist results.
 clean:
-	@rm -v -d -f *~ *.c src/*.c src/*~ "$(BINDIR)"/* "$(BINDIR)" "$(ENV_FILE)" "$(DISTDIR)"/* "$(DISTDIR)"
+	@rm -v -d -f *~ *.c src/*.c src/*~ "$(BINDIR)"/* "$(BINDIR)" "$(ENV_FILE)"
 	@rm -v -d -f -r "$(TMPDIR)"/*
 	@rm -v -d -f "$(TMPDIR)"
 	@rm -v -f man/*.gz
@@ -233,9 +237,9 @@ dist-package: "$(DISTDIR)" release man
 		man/*.gz
 
 deb-packages: "$(TMPDIR)" "$(DISTDIR)" src-package
-	cp "$(DISTDIR)"/neo-layout-viewer_$(RELEASE_VERSION)-src.tar.gz "$(TMPDIR)"/neo-layout-viewer_$(RELEASE_VERSION).orig.tar.gz && \
+	cp "$(DISTDIR)"/neo-layout-viewer_$(RELEASE_VERSION)-src.tar.gz "$(TMPDIR)"/neo-layout-viewer_$(SRC_VERSION).orig.tar.gz && \
 		cd "$(TMPDIR)" && \
-		tar xzf neo-layout-viewer_$(RELEASE_VERSION).orig.tar.gz && \
+		tar xzf neo-layout-viewer_$(SRC_VERSION).orig.tar.gz && \
 		cd neo-layout-viewer-$(RELEASE_VERSION) && \
 		for arch in $(ARCHS); do \
 		  sudo mkdir -p $(BASETGZ_DIR)/$(DIST)-aptcache/ && \
@@ -246,9 +250,9 @@ deb-packages: "$(TMPDIR)" "$(DISTDIR)" src-package
 		done
 
 deb-package: "$(TMPDIR)" "$(DISTDIR)" src-package
-	cp "$(DISTDIR)"/neo-layout-viewer_$(RELEASE_VERSION)-src.tar.gz "$(TMPDIR)"/neo-layout-viewer_$(RELEASE_VERSION).orig.tar.gz && \
+	cp "$(DISTDIR)"/neo-layout-viewer_$(RELEASE_VERSION)-src.tar.gz "$(TMPDIR)"/neo-layout-viewer_$(SRC_VERSION).orig.tar.gz && \
 		cd "$(TMPDIR)" && \
-		tar xzf neo-layout-viewer_$(RELEASE_VERSION).orig.tar.gz && \
+		tar xzf neo-layout-viewer_$(SRC_VERSION).orig.tar.gz && \
 		cd neo-layout-viewer-$(RELEASE_VERSION) && \
 		DEB_BUILD_OPTIONS="noautodbgsym" pdebuild --buildresult .. --debbuildopts "-i -us -uc -b" && \
 		mv ../neo-layout-viewer*deb ../../dist/
@@ -298,3 +302,6 @@ win_gtk: win_download_gtk win_build_gee
 	test "$(WIN)" = "1" || (echo "Call this target with WIN=1" && exit 1)
 	cp win/bin/*.dll bin/.
 
+print_version:
+	@echo "Source archive: $(PACKAGE_NAME)_$(SRC_VERSION).orig.tar.gz"
+	@echo "Deb file: $(PACKAGE_NAME)_$(RELEASE_VERSION)_$(dpkg --print-architecture).deb"

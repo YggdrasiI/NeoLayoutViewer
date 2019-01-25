@@ -55,6 +55,8 @@ calculate_next_version() {
 }
 
 # Upload release to github
+# (hub is GitHub’s official tool that wraps git in order to extend it
+#  with extra functionality that make working with GitHub easier.)
 gh_upload_release() {
   for asset in dist/*; do
     assets="$assets"" -a ""$asset"
@@ -109,7 +111,7 @@ prepare_release() {
 	fi
 
 	if [ -z $prev_version ]; then
-	  prev_version=$(grep "^RELEASE_VERSION=" Makefile | cut -d= -f2)
+    prev_version=$(sed -n "/^\S*\s*(\([^(-)]*\)[-)].*/{ s//\1/p; q0 }; q1" debian/changelog || echo -n "undefined previous version" )
     sed -i '/prev_version=/d' $release_info
 		echo "prev_version=$prev_version" >> $release_info
 	fi
@@ -158,14 +160,12 @@ perform_release() {
   echo $prev_version_commit_hash
 
   {
-    sed -i "s/RELEASE_VERSION=.*/RELEASE_VERSION=$new_version/" Makefile && \
     dch -v "$new_version""-1" --preserve && \
     dch --release "" --preserve && \
-    git commit -m "[release] Create new release" Makefile debian/changelog && \
+    git commit -m "[release] Create new release" debian/changelog && \
     git tag $new_version_tag && \
     make clean dist && \
-    sed -i "s/RELEASE_VERSION=.*/RELEASE_VERSION=$next_version/" Makefile && \
-    git commit -m "[release] Prepare next development version" Makefile && \
+    git commit -m "[release] Prepare next development version" --allow-empty && \
     git push && \
     git push origin $new_version_tag && \
     gh_upload_release $new_version_tag dist/* && \
