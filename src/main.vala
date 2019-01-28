@@ -57,7 +57,7 @@ namespace NeoLayoutViewer{
 		about.set_logo(app.neo_win.getIcon());
 		about.set_destroy_with_parent (true);
 		about.set_transient_for (app.neo_win);
-		about.set_version(@"$(RELEASE_VERSION) (git $(GIT_COMMIT_VERSION)) )");
+		about.set_version(@"$(RELEASE_VERSION) (git $(GIT_COMMIT_VERSION))");
 		about.set_program_name("Neo2.0 Ebenenanzeige");
 		about.set_comments("""Erleichtert das Nachschlagen von Tastenkombinationen im Neo 2.0-Layout.
 
