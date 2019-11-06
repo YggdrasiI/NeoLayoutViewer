@@ -41,9 +41,7 @@ namespace NeoLayoutViewer{
 #endif
 
 #if _NO_WIN
-				manager = new KeybindingManager(this.neo_win);
-				manager.bind(configm.getConfig().get("show_shortcut"), ()=>{this.neo_win.toggle();});
-				manager.bind(configm.getConfig().get("move_shortcut"), ()=>{this.neo_win.numkeypad_move(0);});
+				bind_shortcuts();
 #endif
 
 				this.add_window(this.neo_win);
@@ -53,10 +51,35 @@ namespace NeoLayoutViewer{
 			}
 		}
 
+		private void bind_shortcuts(){
+				manager = new KeybindingManager(this.neo_win);
+				var show_shortcut = configm.getConfig().get("show_shortcut").strip();
+				var move_shortcut = configm.getConfig().get("move_shortcut").strip();
+				var monitor_shortcut = configm.getConfig().get("monitor_shortcut").strip();
+
+				if (move_shortcut.length > 0){
+					manager.bind(move_shortcut, ()=>{this.neo_win.numkeypad_move(0);});
+				}
+
+				if (show_shortcut == monitor_shortcut){
+					// combination of show + monitor move
+					debug("Use combined shortcut for window show and monitor switch.");
+					manager.bind(monitor_shortcut, ()=>{this.neo_win.monitor_move(-1, true);});
+
+				}else{
+					if (monitor_shortcut.length > 0){
+						manager.bind(monitor_shortcut, ()=>{this.neo_win.monitor_move();});
+					}
+					if (show_shortcut.length > 0){
+						manager.bind(show_shortcut, ()=>{this.neo_win.toggle();});
+					}
+				}
+		}
+
 		public override void open (File[] files, string hint) {
 			// Threat non-option argument(s) as layer to show at startup.
 			// Note: This signal is not called in remote-case.
-				
+
 			foreach (File file in files) {
 				var slayer = file.get_basename();
 				this.start_layer = int.parse(slayer);

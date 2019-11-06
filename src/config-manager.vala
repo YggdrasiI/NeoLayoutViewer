@@ -82,14 +82,26 @@ namespace NeoLayoutViewer {
 			//config.set("show_shortcut", "<Mod4><Super_L>n", "Toggle the visibility of the window.");
 			addSetting("show_shortcut", "<Ctrl><Alt>q", "Toggle the visibility of the window.");
 			addSetting("on_top", "1", "Show window on top.");
-			addSetting("position", "3", "Window position on startup (num pad orientation)");
+			addSetting("position", "3", "Window position on startup (num pad orientation)\n"
+					+ "#   Add 10 to start on second monitor, etc.");
 			/* width of application window
 				 if value between 'resolution width'*max_width and  'resolution width'*min_width */
 			addSetting("width", "1000", "Width in Pixel. Min_width and max_width bound sensible values. ");
 			addSetting("min_width", "0.25", "Minimal width. 1=full screen width");
 			addSetting("max_width", "0.5", "Maximal width. 1=full screen width");
-			addSetting("move_shortcut", "<Ctrl><Alt>n", "Circle through window posisitions.");
-			addSetting("position_cycle", "2 3 6 1 3 9 4 7 8", "List of positions (num pad orientation)\n# The n-th number marks the next position of the window.\n# To limit the used positions to screen corners use\n#position_cycle = 3 3 9 1 3 9 1 7 7");
+			addSetting("monitor_shortcut", "<Ctrl><Alt><Shift>n", "Circle window through monitors.\n"
+					+ "#   Use same value as 'show_shortcut' to combine both functionalities.");
+			addSetting("move_shortcut", "<Ctrl><Alt>n", "Circle through window positions.");
+			addSetting("position_cycle", "2 3 6 1 3 9 4 7 8 | 12 13 16 11 13 19 14 17 18 |",
+					"""List of positions (num pad orientation)
+#   The number on the n-th index marks the next position of the window.
+#
+#   Examples:
+#     pos. index   1 2 3 4 5 6 7 8 9 | 11 12 13 14 15 18 17 18 19 | …
+# position_cycle = 2 3 6 1 3 9 4 7 8 | 12 13 16 11 13 19 14 17 18 |(counter clockwise, default)
+# position_cycle = 3 3 9 1 3 9 1 7 7 | 13 13 19 11 13 19 11 17 17 |(corners only)
+# position_cycle =3 3 11 1 3 9 1 7 7 | 13 13 19 11 13 19  9 17 17 |(cycle over two monitors)""");
+
 			addSetting("display_numpad", "1", null);
 			addSetting("display_function_keys", "0", null);
 			addSetting("window_selectable", "0", "Disable window selection to use the program as virtual keyboard.");
@@ -123,7 +135,7 @@ namespace NeoLayoutViewer {
 
 				// Test for the existence of file
 				if (!file.query_exists()) {
-					stdout.printf("Can't create config file.\n");
+					GLib.stdout.printf("Can't create config file.\n");
 					return -1;
 				}
 

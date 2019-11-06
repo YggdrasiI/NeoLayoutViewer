@@ -5,6 +5,10 @@ using Posix;//system-calls
 
 namespace NeoLayoutViewer {
 
+	errordomain PositionArrayParsingError {
+		CODE_1A
+	}
+
 	public class Modkey {
 		public Gtk.Image modKeyImage;
 		public int modifier_index;
@@ -141,19 +145,49 @@ namespace NeoLayoutViewer {
 			this.active_modifier_by_keyboard = {0, 0, 0, 0, 0, 0};
 			this.active_modifier_by_mouse = {0, 0, 0, 0, 0, 0};
 
-			this.modifier_key_images = new Gee.ArrayList<Modkey>(); 
-			this.position_num = int.max(int.min(int.parse(this.config.get("position")), 9), 1);
+			this.modifier_key_images = new Gee.ArrayList<Modkey>();
+			this.position_num = int.min(200, int.max(int.parse(this.config.get("position")), 1));
 
 			//Anlegen des Arrays, welches den Positionsdurchlauf beschreibt.
 			try {
-				var space = new Regex(" ");
-				string[] split = space.split(this.config.get("position_cycle"));
-				position_cycle = new int[int.max(9, split.length)];
+				//var space = new Regex(" ");
+				//string[] split = space.split(this.config.get("position_cycle"));
+				var non_numeral = new Regex("[^0-9]+");
+				string[] split = non_numeral.split(this.config.get("position_cycle"));
+
+				/* Create array which can hold the parsed integers, but also some
+				   unused indizes (0th. entry, 10th entry, …)
+				*/
+				var min_len = ((position_num-1)/10 + 1)*10;
+				position_cycle = new int[int.max(min_len, ( (split.length-1)/10 + 1)*10)]; // multiple of 10 and > 0
+
+				GLib.assert( position_cycle.length/10 >= split.length/9 );
+
+				// Prefill with default values. Call is not redundant!
+				debug(@"Cycle array length: $(position_cycle.length)");
+				fill_position_cycle_default(ref position_cycle);
+
+				// Read positions from config string
+				int j = 1;
+				//position_cycle[0] = -1;  // already set in fill_position_cycle_default(...)
 				for (int i = 0;i < split.length; i++) {
-					position_cycle[i] = int.max(int.min(int.parse(split[i]), 9), 1);//Zulässiger Bereich: 1-9
+					// Valid range: [1, 10*number_of_monitors - 1]
+					position_cycle[j] = int.max(int.min(int.parse(split[i]), position_cycle.length-1), 1);
+
+					if ( position_cycle[j] == 0 ){
+						// Invalid number parsed (or parsing failed). Print error message and use predefined array
+						GLib.stdout.printf("Position cycle reading failed. Problematic value: $(split[i])\n");
+						throw new PositionArrayParsingError.CODE_1A("Unexpected Integer");
+					}
+					GLib.assert( position_cycle[j] > 0 );
+
+					j++;
+					if (j%10 == 0){ j++; }
 				}
+			} catch (PositionArrayParsingError e) {
+				fill_position_cycle_default(ref position_cycle);
 			} catch (RegexError e) {
-				position_cycle = {3, 3, 9, 1, 3, 9, 1, 7, 7};
+				fill_position_cycle_default(ref position_cycle);
 			}
 
 			if (app.start_layer > 0 ){
@@ -282,53 +316,107 @@ namespace NeoLayoutViewer {
 		}
 
 		public void numkeypad_move(int pos){
-			int screen_width = this.get_screen_width();
-			int screen_height = this.get_screen_height();
+
+			if( (pos%10) <= 0 ){
+				/* Resolve next position */
+				pos = this.position_cycle[this.position_num];
+			}
+
+			GLib.assert( (pos%10) > 0 );
+			if ( pos <= 0 || pos >= this.position_cycle.length ){
+				GLib.stdout.printf("=======  Positioning error! ======\n");
+				pos = 5;
+			}
+
+			var display = Gdk.Display.get_default();
+			//var screen = Gdk.Screen.get_default();
+			var screen = display.get_default_screen();
+			//var screen = this.get_screen();
+			//var monitor = display.get_monitor_at_window(screen.get_active_window());
+
+#if GTK_MAJOR_VERSION == 2 || GTK_MINOR_VERSION == 18 || GTK_MINOR_VERSION == 19 || GTK_MINOR_VERSION == 20 || GTK_MINOR_VERSION == 21
+				// Old variant for ubuntu 16.04 (Glib version < 3.22)
+			var n_monitors = screen.get_n_monitors();
+#else
+			var n_monitors = display.get_n_monitors(); // Könnte n_1+n_2+…n_k sein mit k Screens?!
+#endif
+			debug(@"Number of monitors: $(n_monitors)");
+
+			GLib.assert(n_monitors > 0);
+			GLib.assert(pos >= 0);
+
+			/* Positions supports multiple screens, now.
+					1-9 on monitor 0, 11-19 on monitor 1, …
+
+					This line shift indicies of non connected monitors to a available one.
+			*/
+			pos %= 10 * n_monitors;
+
+			// Get monitor for this position
+			int monitor_index = pos/10;
+			GLib.assert(monitor_index >= 0);
+			if (monitor_index >= n_monitors){
+				monitor_index %= n_monitors;
+			}
+
+			// Get the position within the monitor
+			int pos_on_screen = pos % 10;
+
+			Gdk.Rectangle monitor_rect_dest;
+			screen.get_monitor_geometry(monitor_index, out monitor_rect_dest);
+
+			debug(@"Monitor($(monitor_index)) values: x=$(monitor_rect_dest.width), " +
+				@"y=$(monitor_rect_dest.y), w=$(monitor_rect_dest.width), h=$(monitor_rect_dest.height)\n");
+
+			//int screen_width = this.get_screen_width();
+			//int screen_height = this.get_screen_height();
 
 			int x, y, w, h;
 			this.get_size(out w, out h);
 
-			switch(pos) {
+			switch(pos_on_screen) {
 				case 0: //Zur nächsten Position wechseln
-					numkeypad_move(this.position_cycle[this.position_num-1]);
+					GLib.assert(false); // Case should already handled.
 					return;
 				case 7:
 					x = 0;
 					y = 0;
 					break;
 				case 8:
-					x = (screen_width - w) / 2;
+					x = (monitor_rect_dest.width - w) / 2;
 					y = 0;
 					break;
 				case 9:
-					x = screen_width - w;
+					x = monitor_rect_dest.width - w;
 					y = 0;
 					break;
 				case 4:
 					x = 0;
-					y = (screen_height - h) / 2;
+					y = (monitor_rect_dest.height - h) / 2;
 					break;
 				case 5:
-					x = (screen_width - w) / 2;
-					y = (screen_height - h) / 2;
+					x = (monitor_rect_dest.width - w) / 2;
+					y = (monitor_rect_dest.height - h) / 2;
 					break;
 				case 6:
-					x = screen_width - w;
-					y = (screen_height - h) / 2;
+					x = monitor_rect_dest.width - w;
+					y = (monitor_rect_dest.height - h) / 2;
 					break;
 				case 1:
 					x = 0;
-					y = screen_height - h;
+					y = monitor_rect_dest.height - h;
 					break;
 				case 2:
-					x = (screen_width - w) / 2;
-					y = screen_height - h;
+					x = (monitor_rect_dest.width - w) / 2;
+					y = monitor_rect_dest.height - h;
 					break;
 				default:
-					x = screen_width - w;
-					y = screen_height - h;
+					x = monitor_rect_dest.width - w;
+					y = monitor_rect_dest.height - h;
 					break;
 			}
+			x += monitor_rect_dest.x;
+			y += monitor_rect_dest.y;
 
 			this.position_num = pos;
 
@@ -338,6 +426,30 @@ namespace NeoLayoutViewer {
 
 
 			this.move(x, y);
+		}
+
+		public void monitor_move(int i_monitor=-1, bool hide_after_latest=false){
+
+			if (hide_after_latest ){
+				if (this.minimized ){
+					debug(@"Show minimized window again. $(this.position_num)");
+					show();
+					return;
+				}
+			}
+
+			if ( i_monitor < 0 ){
+				numkeypad_move(this.position_num + 10);
+			}else{
+				numkeypad_move(i_monitor + (this.position_num % 10));
+			}
+			debug(@"New position: $(this.position_num)");
+
+			if( hide_after_latest && this.position_num < 10 ){
+			  // First monitor reached again
+				debug(@"Hide window. $(this.position_num)");
+				this.hide();
+			}
 		}
 
 		public Gdk.Pixbuf open_image (int layer) {
@@ -589,6 +701,41 @@ namespace NeoLayoutViewer {
 #endif
 			}
 			return screen_dim[1];
+		}
+
+		private void fill_position_cycle_default(ref int[] positions){
+			/* Position          Next position    o ← o ← o
+			   9   8   9          4   7   8       ↓       ↑
+			   6   5   6  ====>   1   3   9       o   o   o
+			   3   2   3          2   3   6       ↓     ↘ ↑
+			                                      o → o → o
+
+			Values for monitor 4 are 11,…,19 and so on.
+
+			Example output:
+				positions = {
+					-1, 3, 3, 9, 1, 3, 9, 1, 7, 7,
+					-11, 13, 13, 19, 11, 13, 19, 11, 17, 17,
+					-21, 23, 23, 29, 21, 23, 29, 21, 27, 27,
+					-31, 33, 33, 39, 31, 33, 39, 31, 37, 37,
+				};
+			*/
+
+			GLib.assert( positions.length%10 == 0 && positions.length > 0);
+			int n_monitors = positions.length/10;
+			for(int i_monitor=0; i_monitor < n_monitors; i_monitor++){
+				int s = i_monitor*10;
+				positions[s] = -1;
+				positions[s+1] = s + 2;
+				positions[s+2] = s + 3;
+				positions[s+3] = s + 6;
+				positions[s+4] = s + 1;
+				positions[s+5] = s + 3;
+				positions[s+6] = s + 9;
+				positions[s+7] = s + 4;
+				positions[s+8] = s + 7;
+				positions[s+9] = s + 8;
+			}
 		}
 
 	} //End class NeoWindow
