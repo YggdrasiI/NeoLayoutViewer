@@ -1,3 +1,6 @@
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
+// modules: X
+
 using X;
 
 namespace NeoLayoutViewer {
@@ -189,8 +192,8 @@ namespace NeoLayoutViewer {
 		}
 
 		/*
-			Checks periodically which modifier are pressed.
-		*/
+			 Checks periodically which modifier are pressed.
+		 */
 		private bool modifier_timer(){
 			unowned X.Display display = Gdk.X11.get_default_xdisplay();
 
@@ -198,7 +201,7 @@ namespace NeoLayoutViewer {
 
 			// Convert modifier keys to modifier/layer
 			neo_win.change_active_modifier(1, true, (int)((modifier_pressed[0] | modifier_pressed[1])
-					!= (checkCapsLock(display) ? 1 : 0)) );
+						!= (checkCapsLock(display) ? 1 : 0)) );
 			neo_win.change_active_modifier(2, true, (int)(modifier_pressed[2] | modifier_pressed[3]));
 			neo_win.change_active_modifier(3, true, (int)(modifier_pressed[4] | modifier_pressed[5]));
 			neo_win.change_active_modifier(4, true, (int)(modifier_pressed[6] | modifier_pressed[7]));

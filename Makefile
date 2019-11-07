@@ -97,6 +97,7 @@ SRC = src/version.vala \
 			src/main.vala \
 			src/app.vala \
 			src/neo-window.vala \
+			src/scaling-image.vala \
 			src/config-manager.vala
 
 ifeq ($(WIN),)
@@ -172,8 +173,6 @@ info:
 		"    none: Disables icon$(NL)$(NL)" \
 		"  Use 'BUILD_TYPE=[release|debug] make' to switch build type$(NL)$(NL)" \
 
-src/version.vala: Makefile gen_version
-
 gen_version:
 	@/bin/echo -e "namespace NeoLayoutViewer{$(NL)" \
 		"public const string RELEASE_VERSION = \"$(RELEASE_VERSION)\";$(NL)" \
@@ -181,6 +180,8 @@ gen_version:
 		"public const string SHARED_ASSETS_PATH = \"$(DATADIR)/$(APPNAME)/assets\";$(NL)" \
 		"}" \
 		> src/version.vala
+
+src/version.vala: Makefile gen_version
 
 "$(BINDIR)":
 	@test -d "$(BINDIR)" || \

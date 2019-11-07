@@ -1,3 +1,6 @@
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
+// modules: Gtk
+
 using Gtk;
 
 namespace NeoLayoutViewer {
@@ -14,7 +17,7 @@ namespace NeoLayoutViewer {
 			indicator = new AppIndicator.Indicator.with_path("Neo Layout Viewer", "Neo-Icon",
 					AppIndicator.IndicatorCategory.APPLICATION_STATUS,
 					configm.getConfig().get("asset_folder")+"/icons/");
-					//"./assets/icons/" );
+			//"./assets/icons/" );
 
 			create_menuMain();
 			indicator.set_menu(this.menuMain);

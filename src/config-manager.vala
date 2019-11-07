@@ -1,3 +1,5 @@
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
+// modules: Gtk
 
 namespace NeoLayoutViewer {
 
@@ -95,14 +97,21 @@ namespace NeoLayoutViewer {
 			addSetting("position_cycle", "2 3 6 1 3 9 4 7 8 | 12 13 16 11 13 19 14 17 18 |",
 					"""List of positions (num pad orientation)
 #   The number on the n-th index marks the next position of the window.
+#   Default cycle:  7 ← 8 ← 9
+#                   ↓       ↑
+#                   4   5   6
+#                   ↓     ↘ ↑
+#                   1 → 2 → 3
 #
-#   Examples:
-#     pos. index   1 2 3 4 5 6 7 8 9 | 11 12 13 14 15 18 17 18 19 | …
-# position_cycle = 2 3 6 1 3 9 4 7 8 | 12 13 16 11 13 19 14 17 18 |(counter clockwise, default)
-# position_cycle = 3 3 9 1 3 9 1 7 7 | 13 13 19 11 13 19 11 17 17 |(corners only)
-# position_cycle =3 3 11 1 3 9 1 7 7 | 13 13 19 11 13 19  9 17 17 |(cycle over two monitors)""");
+#   position_cycle = 2 3 6 1 3 9 4 7 8 | 12 13 16 11 13 19 14 17 18 |… 
+#
+#   Further examples:         
+#        monitor          1                       2
+#       position   1 2 3 4 5 6 7 8 9 | 11 12 13 14 15 18 17 18 19 |…
+# position_cycle = 3 3 9 1 3 9 1 7 7 | 13 13 19 11 13 19 11 17 17 |… (corners only)
+# position_cycle =3 3 11 1 3 9 1 7 7 | 13 13 19 11 13 19  9 17 17 |… (cycle over two monitors)""");
 
-			addSetting("display_numpad", "1", null);
+				addSetting("display_numpad", "1", null);
 			addSetting("display_function_keys", "0", null);
 			addSetting("window_selectable", "0", "Disable window selection to use the program as virtual keyboard.");
 			addSetting("window_decoration", "0", "Show window decoration/border (not recommended).");
@@ -110,6 +119,7 @@ namespace NeoLayoutViewer {
 			addSetting("screen_height", "auto", "Set the resolution of your screen manually, if the automatic detection fails.");
 			addSetting("show_on_startup", "1", "Show window on startup.");
 			addSetting("asset_folder", "./assets", "Default lookup folder image data.");
+			addSetting("color_event_boxes", "0", "(Debugging) Show event boxes of virtual keyboard.");
 		}
 
 		/*

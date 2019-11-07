@@ -1,7 +1,11 @@
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
+// modules: Gtk Gdk X Posix
+
 using Gtk;
 using Gdk;
 using X; //keysym.h
-using Posix;//system-calls
+using Posix; //system-calls
+using Cairo;
 
 namespace NeoLayoutViewer {
 
@@ -14,7 +18,7 @@ namespace NeoLayoutViewer {
 		public int modifier_index;
 		public int active;
 
-		public Modkey(ref Gtk.Image i, int m) {
+		public Modkey(Gtk.Image i, int m) {
 			this.modKeyImage = i;
 			this.modifier_index = m;
 			this.active = 0;
@@ -33,9 +37,16 @@ namespace NeoLayoutViewer {
 
 	public class NeoWindow : Gtk.ApplicationWindow {
 
-		private Gtk.Image image;
-		public Gtk.Label status;
-		private Gdk.Pixbuf[] image_buffer;
+		private ScalingImage image;
+
+#if _NO_WIN
+		private KeyOverlay key_overlay;
+#endif
+
+		public Gee.Map<string, Gdk.Pixbuf> image_buffer;
+		private Gdk.Pixbuf[] layer_pixbufs;
+		private int monitor_w = -1;
+
 		public Gee.List<Modkey> modifier_key_images; // for modifier which didn't toggle a layout layer. I.e. ctrl, alt.
 		public Gee.Map<string, string> config;
 
@@ -120,10 +131,9 @@ namespace NeoLayoutViewer {
 			this.config = app.configm.getConfig();
 			this.minimized = true;
 
-			/* Set window type to let tiling window manager the chance
-			 * to float the window automatically.
+			/* Set window type to let tiling window manager, i.e. i3-wm,
+			 * the chance to float the window automatically.
 			 */
-			//this.type_hint = Gdk.WindowTypeHint.SPLASHSCREEN;
 			this.type_hint = Gdk.WindowTypeHint.UTILITY;
 
 			this.NEO_MODIFIER_MASK = {
@@ -156,8 +166,8 @@ namespace NeoLayoutViewer {
 				string[] split = non_numeral.split(this.config.get("position_cycle"));
 
 				/* Create array which can hold the parsed integers, but also some
-				   unused indizes (0th. entry, 10th entry, …)
-				*/
+					 unused indizes (0th. entry, 10th entry, …)
+				 */
 				var min_len = ((position_num-1)/10 + 1)*10;
 				position_cycle = new int[int.max(min_len, ( (split.length-1)/10 + 1)*10)]; // multiple of 10 and > 0
 
@@ -189,6 +199,9 @@ namespace NeoLayoutViewer {
 			} catch (RegexError e) {
 				fill_position_cycle_default(ref position_cycle);
 			}
+			for (int i = 0;i < position_cycle.length; i++) {
+				GLib.stdout.printf(@"$(i)=> $(position_cycle[i])\n");
+			}
 
 			if (app.start_layer > 0 ){
 				this.fix_layer = true;
@@ -199,7 +212,7 @@ namespace NeoLayoutViewer {
 			}
 
 			// Crawl dimensions of screen/display/monitor
-		  // Should be done before load_image_buffer() is called.
+			// Should be done before load_images() is called.
 			screen_dim_auto[0] = (this.config.get("screen_width") == "auto");
 			screen_dim_auto[1] = (this.config.get("screen_height") == "auto");
 
@@ -217,30 +230,45 @@ namespace NeoLayoutViewer {
 				this.screen_dim[1] = int.max(1, int.parse(this.config.get("screen_height")));
 			}
 
+			// Load pngs of all six layers, etc
+			this.image_buffer =  new Gee.HashMap<string, Gdk.Pixbuf>();
+			this.load_images();
 
-			// Load pngs of all six layers
-			this.load_image_buffer();
-			this.image = new Gtk.Image();//.from_pixbuf(this.image_buffer[layer]);
+			this.layer_pixbufs = {
+				this.image_buffer["unscaled_1"],
+				this.image_buffer["unscaled_2"],
+				this.image_buffer["unscaled_3"],
+				this.image_buffer["unscaled_4"],
+				this.image_buffer["unscaled_5"],
+				this.image_buffer["unscaled_6"],
+			};
 
+			// Setup background image.
+			int backgroundW_unscaled = this.get_unscaled_width();
+			int backgroundH_unscaled = this.get_unscaled_height();
+
+			this.image = new ScalingImage(
+					backgroundW_unscaled, backgroundH_unscaled,
+					this, backgroundW_unscaled, backgroundH_unscaled,
+					layer_pixbufs, 0);
+
+			this.monitor_w = this.screen_dim[0];
+
+			// Setup startup size of window
+			int win_width = get_image_width_for_monitor(this.monitor_w);
+			int win_height = (backgroundH_unscaled * win_width)/ backgroundW_unscaled;
+
+			this.resize(win_width, win_height);
 
 			image.show();
-			render_page();
 			var fixed = new Fixed();
-
 			fixed.put(this.image, 0, 0);
 
 #if _NO_WIN
-			fixed.put(new KeyOverlay(this), 0, 0);
+			this.key_overlay = new KeyOverlay(this);
+			this.key_overlay.show();
+			fixed.put(this.key_overlay, 0, 0);
 #endif
-
-			this.status = new Label("");
-			status.show();
-			int width;
-			int height;
-			this.get_size2(out width, out height);
-
-			//bad position, if numpad not shown...
-			fixed.put( status, (int) ( (0.66)*width), (int) (0.40*height) );
 
 			add(fixed);
 			fixed.show();
@@ -255,7 +283,7 @@ namespace NeoLayoutViewer {
 			this.skip_taskbar_hint = true;
 
 			//Icon des Fensters
-			this.icon = this.image_buffer[0];
+			this.icon = this.image_buffer["icon"];
 
 			//Nicht selektierbar (für virtuelle Tastatur)
 			this.set_accept_focus((this.config.get("window_selectable") != "0"));
@@ -309,24 +337,7 @@ namespace NeoLayoutViewer {
 			return this.minimized;
 		}
 
-		/* Falsche Werte bei „Tiled Window Managern“. */
-		public void get_size2(out int width, out int height){
-			width = this.image_buffer[1].width;
-			height = this.image_buffer[1].height;
-		}
-
 		public void numkeypad_move(int pos){
-
-			if( (pos%10) <= 0 ){
-				/* Resolve next position */
-				pos = this.position_cycle[this.position_num];
-			}
-
-			GLib.assert( (pos%10) > 0 );
-			if ( pos <= 0 || pos >= this.position_cycle.length ){
-				GLib.stdout.printf("=======  Positioning error! ======\n");
-				pos = 5;
-			}
 
 			var display = Gdk.Display.get_default();
 			//var screen = Gdk.Screen.get_default();
@@ -335,7 +346,7 @@ namespace NeoLayoutViewer {
 			//var monitor = display.get_monitor_at_window(screen.get_active_window());
 
 #if GTK_MAJOR_VERSION == 2 || GTK_MINOR_VERSION == 18 || GTK_MINOR_VERSION == 19 || GTK_MINOR_VERSION == 20 || GTK_MINOR_VERSION == 21
-				// Old variant for ubuntu 16.04 (Glib version < 3.22)
+			// Old variant for ubuntu 16.04 (Glib version < 3.22)
 			var n_monitors = screen.get_n_monitors();
 #else
 			var n_monitors = display.get_n_monitors(); // Könnte n_1+n_2+…n_k sein mit k Screens?!
@@ -343,13 +354,32 @@ namespace NeoLayoutViewer {
 			debug(@"Number of monitors: $(n_monitors)");
 
 			GLib.assert(n_monitors > 0);
+
+			// Automatic set of next position
+			if( (pos%10) == 0 ){
+				/* Resolve next position */
+				pos = this.position_cycle[this.position_num];
+			}
+			GLib.assert( (pos%10) > 0 );
+
+			// Validate input for manual set of position.
+			// Note that 'extra monitors', which are not respected in position_cycle, will be ignored.
+			if ( pos >= this.position_cycle.length ){
+				pos %= 10;  // go back to first monitor
+			}
+
+			if ( pos < 1 ){
+				GLib.stdout.printf(@"Positioning error! Can not handle $(pos). Fall back on pos=5.\n");
+				pos = 5;
+			}
+
 			GLib.assert(pos >= 0);
 
 			/* Positions supports multiple screens, now.
-					1-9 on monitor 0, 11-19 on monitor 1, …
+				 1-9 on monitor 0, 11-19 on monitor 1, …
 
-					This line shift indicies of non connected monitors to a available one.
-			*/
+				 This line shift indicies of non connected monitors to a available one.
+			 */
 			pos %= 10 * n_monitors;
 
 			// Get monitor for this position
@@ -365,14 +395,25 @@ namespace NeoLayoutViewer {
 			Gdk.Rectangle monitor_rect_dest;
 			screen.get_monitor_geometry(monitor_index, out monitor_rect_dest);
 
-			debug(@"Monitor($(monitor_index)) values: x=$(monitor_rect_dest.width), " +
-				@"y=$(monitor_rect_dest.y), w=$(monitor_rect_dest.width), h=$(monitor_rect_dest.height)\n");
+			debug(@"Monitor($(monitor_index)) values: x=$(monitor_rect_dest.x), " +
+					@"y=$(monitor_rect_dest.y), w=$(monitor_rect_dest.width), h=$(monitor_rect_dest.height)\n");
 
-			//int screen_width = this.get_screen_width();
-			//int screen_height = this.get_screen_height();
+
+			// Check images of layers need to be rescaled
+			if (monitor_rect_dest.width != this.monitor_w && true){
+				this.monitor_w = monitor_rect_dest.width;
+
+				int width;
+				int height;
+				width = get_image_width_for_monitor(this.monitor_w);
+				height = get_unscaled_height() * width / get_unscaled_width();
+
+				this.resize(width, height);
+			}
 
 			int x, y, w, h;
-			this.get_size(out w, out h);
+			this.get_size(out w, out h);  // wrong if resolution changed?! TODO: Edit comment
+			//this.get_size2(out w, out h);  // this reflect resolution changes
 
 			switch(pos_on_screen) {
 				case 0: //Zur nächsten Position wechseln
@@ -441,12 +482,12 @@ namespace NeoLayoutViewer {
 			if ( i_monitor < 0 ){
 				numkeypad_move(this.position_num + 10);
 			}else{
-				numkeypad_move(i_monitor + (this.position_num % 10));
+				numkeypad_move( 10 * i_monitor + (this.position_num % 10));
 			}
 			debug(@"New position: $(this.position_num)");
 
 			if( hide_after_latest && this.position_num < 10 ){
-			  // First monitor reached again
+				// First monitor reached again
 				debug(@"Hide window. $(this.position_num)");
 				this.hide();
 			}
@@ -465,42 +506,77 @@ namespace NeoLayoutViewer {
 			}
 		}
 
-		public void load_image_buffer () {
-			this.image_buffer = new Gdk.Pixbuf[7];
-			this.image_buffer[0] = open_image_str(@"$(config.get("asset_folder"))/icons/Neo-Icon.png");
+		public void load_images () {
+			this.image_buffer["icon"] = open_image_str(
+					@"$(config.get("asset_folder"))/icons/Neo-Icon.png");
 
-			int screen_width = this.get_screen_width(); //Gdk.Screen.width();
-			int max_width = (int) (double.parse(this.config.get("max_width")) * screen_width);
-			int min_width = (int) (double.parse(this.config.get("min_width")) * screen_width);
-			int width = int.min(int.max(int.parse(this.config.get("width")), min_width), max_width);
-			int w, h;
+			/*
+				 int screen_width = this.get_screen_width(); //Gdk.Screen.width();
+				 int max_width = (int) (double.parse(this.config.get("max_width")) * screen_width);
+				 int min_width = (int) (double.parse(this.config.get("min_width")) * screen_width);
+				 int width = int.min(int.max(int.parse(this.config.get("width")), min_width), max_width);
+				 int w, h;
+			 */
 
 			this.numpad_width = int.parse(this.config.get("numpad_width"));
 			this.function_keys_height = int.parse(this.config.get("function_keys_height"));
 
 			for (int i = 1; i < 7; i++) {
-				this.image_buffer[i] = open_image(i);
+				Gdk.Pixbuf layer = open_image(i);
 
-				//Funktionstasten ausblennden, falls gefordert.
+				//Funktionstasten ausblenden, falls gefordert.
 				if (this.config.get("display_function_keys") == "0") {
-					var tmp =  new Gdk.Pixbuf(image_buffer[i].colorspace, image_buffer[i].has_alpha, image_buffer[i].bits_per_sample, image_buffer[i].width , image_buffer[i].height-function_keys_height);
-					this.image_buffer[i].copy_area(0, function_keys_height, tmp.width, tmp.height, tmp, 0, 0);
-					this.image_buffer[i] = tmp;
+					var tmp =  new Gdk.Pixbuf(layer.colorspace, layer.has_alpha, layer.bits_per_sample, layer.width , layer.height-function_keys_height);
+					layer.copy_area(0, function_keys_height, tmp.width, tmp.height, tmp, 0, 0);
+					layer = tmp;
 				}
 
 				//Numpad-Teil abschneiden, falls gefordert.
 				if (this.config.get("display_numpad") == "0") {
-					var tmp =  new Gdk.Pixbuf(image_buffer[i].colorspace, image_buffer[i].has_alpha, image_buffer[i].bits_per_sample, image_buffer[i].width-numpad_width , image_buffer[i].height);
-					this.image_buffer[i].copy_area(0, 0, tmp.width, tmp.height, tmp, 0, 0);
-					this.image_buffer[i] = tmp;
+					var tmp =  new Gdk.Pixbuf(layer.colorspace, layer.has_alpha, layer.bits_per_sample, layer.width-numpad_width , layer.height);
+					layer.copy_area(0, 0, tmp.width, tmp.height, tmp, 0, 0);
+					layer = tmp;
 				}
 
-				//Bilder einmaling beim Laden skalieren. (Keine spätere Skalierung durch Größenänderung des Fensters)
-				w = this.image_buffer[i].width;
-				h = this.image_buffer[i].height;
-				this.image_buffer[i] = this.image_buffer[i].scale_simple(width, h * width / w, Gdk.InterpType.BILINEAR);
+				string id = @"unscaled_$(i)";
+				this.image_buffer.set(id, layer);
 			}
 
+		}
+
+		/*
+		private void scale_images(int width, int height=-1) {
+
+			int w, h;
+			for (int i = 1; i < 7; i++) {
+				Gdk.Pixbuf layer = this.image_buffer.get(@"unscaled_$(i)");
+				w = layer.width;
+				h = layer.height;
+
+				if( height < 0 ){  // keep aspect ratio
+					height = h * width / w;
+				}
+				var id = @"layer_$(i)_$(monitor_w)";
+				debug(@"Generate image $(id)");
+				this.image_buffer.set(id,
+						layer.scale_simple(width, height, Gdk.InterpType.BILINEAR));
+			}
+		}
+		private int scale_images_for_monitor (int monitor_w) {
+			int width = get_image_width_for_monitor(monitor_w);
+			this.scale_images(width);
+			return width;
+		}
+		*/
+
+		private int get_image_width_for_monitor (int monitor_w) {
+
+			//int screen_width = this.get_screen_width(); //Gdk.Screen.width();
+			int max_width = (int) (double.parse(this.config.get("max_width")) * monitor_w);
+			int min_width = (int) (double.parse(this.config.get("min_width")) * monitor_w);
+			int width = int.min(int.max(int.parse(this.config.get("width")), min_width), max_width);
+
+			return width;
 		}
 
 		private bool on_key_pressed (Widget source, Gdk.EventKey key) {
@@ -541,27 +617,27 @@ namespace NeoLayoutViewer {
 					this.active_modifier_by_mouse[mod_index],
 					new_mod_state,
 					this.active_modifier_by_mouse[mod_index]
-					];
-				this.active_modifier_by_mouse[mod_index] = MODIFIER_KEYBOARD_MOUSE_MAP[
-					this.active_modifier_by_mouse[mod_index],
-					old_mod_state,
-					this.active_modifier_by_mouse[mod_index],
-					new_mod_state
+				];
+					this.active_modifier_by_mouse[mod_index] = MODIFIER_KEYBOARD_MOUSE_MAP[
+						this.active_modifier_by_mouse[mod_index],
+						old_mod_state,
+						this.active_modifier_by_mouse[mod_index],
+						new_mod_state
 					];
 			} else {
 				//Mouseclick on shift button etc.
-				old_mod_state = this.active_modifier_by_mouse[mod_index]; 
+				old_mod_state = this.active_modifier_by_mouse[mod_index];
 				this.active_modifier_by_mouse[mod_index] = MODIFIER_KEYBOARD_MOUSE_MAP[
 					old_mod_state,
 					this.active_modifier_by_keyboard[mod_index],
 					new_mod_state,
 					this.active_modifier_by_keyboard[mod_index]
-						];
-				this.active_modifier_by_keyboard[mod_index] = MODIFIER_KEYBOARD_MOUSE_MAP[
-					this.active_modifier_by_keyboard[mod_index],
-					old_mod_state,
-					this.active_modifier_by_keyboard[mod_index],
-					new_mod_state
+				];
+					this.active_modifier_by_keyboard[mod_index] = MODIFIER_KEYBOARD_MOUSE_MAP[
+						this.active_modifier_by_keyboard[mod_index],
+						old_mod_state,
+						this.active_modifier_by_keyboard[mod_index],
+						new_mod_state
 					];
 			}
 
@@ -615,11 +691,11 @@ namespace NeoLayoutViewer {
 
 
 		private void render_page () {
-			this.image.set_from_pixbuf(this.image_buffer[this.layer]);
+			this.image.select_pixbuf(this.layer-1);
 		}
 
 		public Gdk.Pixbuf getIcon() {
-			return this.image_buffer[0];
+			return this.image_buffer["icon"];
 		}
 
 		public void external_key_press(int iet1, int modifier_mask) {
@@ -676,6 +752,22 @@ namespace NeoLayoutViewer {
 			return screen_dim[0];
 		}
 
+		public int get_unscaled_height() {
+			int backgroundH_unscaled = 250;
+			if (this.config.get("display_function_keys") == "0") {
+				backgroundH_unscaled -= this.function_keys_height;
+			}
+			return backgroundH_unscaled;
+		}
+
+		public int get_unscaled_width() {
+			int backgroundW_unscaled = 1000;
+			if (this.config.get("display_numpad") == "0") {
+				backgroundW_unscaled -= this.numpad_width;
+			}
+			return backgroundW_unscaled;
+		}
+
 		public int get_screen_height(){
 			// Return value derived from config.get("screen_height")) or Gdk.Screen.height()
 
@@ -705,21 +797,21 @@ namespace NeoLayoutViewer {
 
 		private void fill_position_cycle_default(ref int[] positions){
 			/* Position          Next position    o ← o ← o
-			   9   8   9          4   7   8       ↓       ↑
-			   6   5   6  ====>   1   3   9       o   o   o
-			   3   2   3          2   3   6       ↓     ↘ ↑
-			                                      o → o → o
+				 9   8   9          4   7   8       ↓       ↑
+				 6   5   6  ====>   1   3   9       o   o   o
+				 3   2   3          2   3   6       ↓     ↘ ↑
+				 o → o → o
 
-			Values for monitor 4 are 11,…,19 and so on.
+				 Values for monitor 4 are 11,…,19 and so on.
 
-			Example output:
-				positions = {
-					-1, 3, 3, 9, 1, 3, 9, 1, 7, 7,
-					-11, 13, 13, 19, 11, 13, 19, 11, 17, 17,
-					-21, 23, 23, 29, 21, 23, 29, 21, 27, 27,
-					-31, 33, 33, 39, 31, 33, 39, 31, 37, 37,
-				};
-			*/
+				 Example output:
+				 positions = {
+				 -1, 3, 3, 9, 1, 3, 9, 1, 7, 7,
+				 -11, 13, 13, 19, 11, 13, 19, 11, 17, 17,
+				 -21, 23, 23, 29, 21, 23, 29, 21, 27, 27,
+				 -31, 33, 33, 39, 31, 33, 39, 31, 37, 37,
+				 };
+			 */
 
 			GLib.assert( positions.length%10 == 0 && positions.length > 0);
 			int n_monitors = positions.length/10;
@@ -739,5 +831,4 @@ namespace NeoLayoutViewer {
 		}
 
 	} //End class NeoWindow
-
 }

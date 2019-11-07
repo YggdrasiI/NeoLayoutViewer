@@ -1,3 +1,6 @@
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
+// modules: Gtk
+
 using Gtk;
 
 namespace NeoLayoutViewer {
@@ -38,30 +41,30 @@ namespace NeoLayoutViewer {
 			menuMain.append(menuQuit);
 
 #else
-      var aboutBox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 2);
+			var aboutBox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 2);
 			var aboutIcon = new Gtk.Image.from_icon_name( "help-about", IconSize.SMALL_TOOLBAR);
-      var aboutLabel = new Gtk.Label.with_mnemonic("_About");
-      var aboutMenuItem = new Gtk.MenuItem();
-      aboutLabel.set_use_underline(true);
-      aboutLabel.set_xalign(0.0f);
-      aboutBox.pack_start(aboutIcon, false, false, 0);
-      aboutBox.pack_end(aboutLabel, true, true, 0);
-      aboutMenuItem.add(aboutBox);
+			var aboutLabel = new Gtk.Label.with_mnemonic("_About");
+			var aboutMenuItem = new Gtk.MenuItem();
+			aboutLabel.set_use_underline(true);
+			aboutLabel.set_xalign(0.0f);
+			aboutBox.pack_start(aboutIcon, false, false, 0);
+			aboutBox.pack_end(aboutLabel, true, true, 0);
+			aboutMenuItem.add(aboutBox);
 			aboutMenuItem.activate.connect(NeoLayoutViewer.about_dialog);
-      menuMain.append(aboutMenuItem);
+			menuMain.append(aboutMenuItem);
 
-      var quitBox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 2);
+			var quitBox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 2);
 			var quitIcon = new Gtk.Image.from_icon_name( "application-exit", IconSize.SMALL_TOOLBAR);
-      var quitLabel = new Gtk.Label.with_mnemonic("_QUIT");
-      var quitMenuItem = new Gtk.MenuItem();
-      quitLabel.set_use_underline(true);
-      quitLabel.set_xalign(0.0f);
-      quitBox.pack_start(quitIcon, false, false, 0);
-      quitBox.pack_end(quitLabel, true, true, 0);
-      quitMenuItem.add(quitBox);
+			var quitLabel = new Gtk.Label.with_mnemonic("_QUIT");
+			var quitMenuItem = new Gtk.MenuItem();
+			quitLabel.set_use_underline(true);
+			quitLabel.set_xalign(0.0f);
+			quitBox.pack_start(quitIcon, false, false, 0);
+			quitBox.pack_end(quitLabel, true, true, 0);
+			quitMenuItem.add(quitBox);
 			//quitMenuItem.activate.connect(Gtk.main_quit);
 			quitMenuItem.activate.connect(NeoLayoutViewer.quit);
-      menuMain.append(quitMenuItem);
+			menuMain.append(quitMenuItem);
 #endif
 
 			menuMain.show_all();

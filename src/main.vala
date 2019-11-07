@@ -1,3 +1,6 @@
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
+// modules: X
+
 using X;
 
 namespace NeoLayoutViewer{
@@ -61,20 +64,20 @@ namespace NeoLayoutViewer{
 		about.set_program_name("Neo2.0 Ebenenanzeige");
 		about.set_comments("""Erleichtert das Nachschlagen von Tastenkombinationen im Neo 2.0-Layout.
 
- Olaf Schulz
- funwithkinect@googlemail.com
+				Olaf Schulz
+				funwithkinect@googlemail.com
 
 
-Tastenkombinationen:
- Ein-/Ausblenden - %s
- Bewegen - %s
- Beenden (sofern Fenster selektiert) - q
+				Tastenkombinationen:
+				Ein-/Ausblenden - %s
+				Bewegen - %s
+				Beenden (sofern Fenster selektiert) - q
 
- Verwendete Konfigurationsdatei:
- %s""".printf(
-				app.neo_win.config.get("show_shortcut"),
-				app.neo_win.config.get("move_shortcut"),
-				configm.used_config_path)
+				Verwendete Konfigurationsdatei:
+				%s""".printf(
+					app.neo_win.config.get("show_shortcut"),
+					app.neo_win.config.get("move_shortcut"),
+					configm.used_config_path)
 				);
 		about.set_copyright("LGPLv3");
 		center_window(about);
