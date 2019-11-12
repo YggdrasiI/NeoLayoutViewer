@@ -37,7 +37,6 @@ namespace NeoLayoutViewer {
 			this._width = this.winMain.get_allocated_width();
 			this._height = this.winMain.get_allocated_height();
 			this.set_size_request(_width, _height);
-			this.set_size(_width, _height);
 
 			this.color_event_boxes = (winMain.config.get("color_event_boxes") == "1");
 
@@ -48,8 +47,11 @@ namespace NeoLayoutViewer {
 
 		private void main_resized(){
 
-			int width = this.winMain.get_allocated_width();
-			int height = this.winMain.get_allocated_height();
+			int width;
+			int height;
+			//width = this.winMain.get_allocated_width();
+			//height = this.winMain.get_allocated_height();
+			this.winMain.get_size(out width, out height);
 
 			if( this._width == width && this._height == height ){
 				return;  // to avoid infinite resize live lock...
@@ -63,11 +65,10 @@ namespace NeoLayoutViewer {
 			this._width = width;
 			this._height = height;
 
-
-			// Propagate new window width/height to this grid. (Redundant?!)
+			// Propagate new window width/height to this grid.
 			this.set_size_request(width, height);
 
-			debug("Move cells");
+			debug("Rescale cells");
 			move_and_scale_cells();
 
 
@@ -80,11 +81,14 @@ namespace NeoLayoutViewer {
 		 */
 		public void generateCells() {
 
+			// Dimensions of unscaled background image
 			double width_unscaled = (double) winMain.get_unscaled_width();
 			double height_unscaled = (double) winMain.get_unscaled_height();
 
 			int width, height;
-			winMain.get_size(out width, out height);
+			// Desirered target size
+			width = this._width;
+			height = this._height;
 
 			double scaleX = width/width_unscaled;
 			double scaleY = height/height_unscaled;

@@ -258,20 +258,22 @@ namespace NeoLayoutViewer {
 			int win_width = get_image_width_for_monitor(this.monitor_w);
 			int win_height = (backgroundH_unscaled * win_width)/ backgroundW_unscaled;
 
+			//this.set_size_request(1, 1);
 			this.resize(win_width, win_height);
+			this.set_default_size(win_width, win_height);
 
 			image.show();
-			var fixed = new Fixed();
-			fixed.put(this.image, 0, 0);
+			var layout = new Layout();
+			layout.put(this.image, 0, 0);
 
 #if _NO_WIN
 			this.key_overlay = new KeyOverlay(this);
 			this.key_overlay.show();
-			fixed.put(this.key_overlay, 0, 0);
+			layout.put(this.key_overlay, 0, 0);
 #endif
 
-			add(fixed);
-			fixed.show();
+			add(layout);
+			layout.show();
 
 			//Fenstereigenschaften setzen
 			this.key_press_event.connect(on_key_pressed);
@@ -400,7 +402,7 @@ namespace NeoLayoutViewer {
 
 
 			// Check images of layers need to be rescaled
-			if (monitor_rect_dest.width != this.monitor_w && true){
+			if (monitor_rect_dest.width != this.monitor_w) {
 				this.monitor_w = monitor_rect_dest.width;
 
 				int width;
@@ -408,7 +410,8 @@ namespace NeoLayoutViewer {
 				width = get_image_width_for_monitor(this.monitor_w);
 				height = get_unscaled_height() * width / get_unscaled_width();
 
-				this.resize(width, height);
+				//this.resize(width, height);
+				this.set_default_size(width, height);
 			}
 
 			int x, y, w, h;

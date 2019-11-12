@@ -58,8 +58,11 @@ namespace NeoLayoutViewer {
 		private void main_resized(){
 
 			// Get new window size
-			int win_width2 = this.winMain.get_allocated_width();
-			int win_height2 = this.winMain.get_allocated_height();
+			int win_width2;
+			int win_height2;
+			//win_width2 = this.winMain.get_allocated_width();
+			//win_height2 = this.winMain.get_allocated_height();
+			this.winMain.get_size(out win_width2, out win_height2);
 
 			if (win_width == win_width2 && win_height == win_height2) {
 				//debug(@"(ScalingImage $(this.id)) same width $(win_width)");
