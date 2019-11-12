@@ -45,7 +45,8 @@ namespace NeoLayoutViewer {
 
 		public Gee.Map<string, Gdk.Pixbuf> image_buffer;
 		private Gdk.Pixbuf[] layer_pixbufs;
-		private int monitor_w = -1;
+		private int monitor_id = -1;
+		private Gee.Map<int, Size> size_for_monitor;
 
 		public Gee.List<Modkey> modifier_key_images; // for modifier which didn't toggle a layout layer. I.e. ctrl, alt.
 		public Gee.Map<string, string> config;
@@ -67,6 +68,7 @@ namespace NeoLayoutViewer {
 		private int position_on_hide_y;
 		private int screen_dim[2];
 		private bool screen_dim_auto[2]; //if true, x/y screen dimension will detect on every show event.
+		private bool already_shown_on_monitor1;  // flag to prevent first hide()-call during monitor cycle in some cases.
 
 		/* Die Neo-Modifier unterscheiden sich zum Teil von den Normalen, für die Konstanten definiert sind. Bei der Initialisierung werden aus den Standardkonstanen die Konstanten für die Ebenen 1-6 berechnet.*/
 		public int[] NEO_MODIFIER_MASK;
@@ -157,6 +159,10 @@ namespace NeoLayoutViewer {
 
 			this.modifier_key_images = new Gee.ArrayList<Modkey>();
 			this.position_num = int.min(200, int.max(int.parse(this.config.get("position")), 1));
+			this.already_shown_on_monitor1 = ( this.position_num < 10
+					&& this.config.get("show_on_startup") != "0");
+			this.size_for_monitor = new Gee.HashMap<int, Size>();
+			this.check_resize.connect(main_resized);
 
 			//Anlegen des Arrays, welches den Positionsdurchlauf beschreibt.
 			try {
@@ -252,10 +258,10 @@ namespace NeoLayoutViewer {
 					this, backgroundW_unscaled, backgroundH_unscaled,
 					layer_pixbufs, 0);
 
-			this.monitor_w = this.screen_dim[0];
+			this.monitor_id = this.position_num / 10;
 
 			// Setup startup size of window
-			int win_width = get_image_width_for_monitor(this.monitor_w);
+			int win_width = get_image_width_for_monitor(this.screen_dim[0]);
 			int win_height = (backgroundH_unscaled * win_width)/ backgroundW_unscaled;
 
 			//this.set_size_request(1, 1);
@@ -292,11 +298,13 @@ namespace NeoLayoutViewer {
 
 			if( this.config.get("show_on_startup") != "0" ){
 				//Move ist erst nach show() erfolgreich
-				this.numkeypad_move(int.parse(this.config.get("position")));
+				//this.numkeypad_move(int.parse(this.config.get("position")));
+				this.numkeypad_move(this.position_num);
 				this.show();
 			}else{
 				this.hide();
-				this.numkeypad_move(int.parse(this.config.get("position")));
+				//this.numkeypad_move(int.parse(this.config.get("position")));
+				this.numkeypad_move(this.position_num);
 			}
 
 		}
@@ -400,27 +408,48 @@ namespace NeoLayoutViewer {
 			debug(@"Monitor($(monitor_index)) values: x=$(monitor_rect_dest.x), " +
 					@"y=$(monitor_rect_dest.y), w=$(monitor_rect_dest.width), h=$(monitor_rect_dest.height)\n");
 
+			this.monitor_id = monitor_index;
 
-			// Check images of layers need to be rescaled
-			if (monitor_rect_dest.width != this.monitor_w) {
-				this.monitor_w = monitor_rect_dest.width;
-
-				int width;
-				int height;
-				width = get_image_width_for_monitor(this.monitor_w);
+			/* Get the desired size for the current monitor. */
+			int width;
+			int height;
+			Size user_size = this.size_for_monitor[this.monitor_id];
+			if (user_size != null &&
+					monitor_rect_dest.width == user_size.monitor_width /* catch resolution changes */
+				 ){
+			  // Use stored values
+				width = user_size.width;
+				height = user_size.height;
+			}else{
+				// Default values
+				width = get_image_width_for_monitor(monitor_rect_dest.width);
 				height = get_unscaled_height() * width / get_unscaled_width();
 
-				//this.resize(width, height);
-				this.set_default_size(width, height);
+				// Store values
+				Size tmp = new Size();
+				tmp.width = width;
+				tmp.height = height;
+				tmp.monitor_width = monitor_rect_dest.width;
+				this.size_for_monitor.set(this.monitor_id, tmp);
 			}
 
+			/* Compare current window size with desired new value and resize if required.*/
 			int x, y, w, h;
 			this.get_size(out w, out h);  // wrong if resolution changed?! TODO: Edit comment
 			//this.get_size2(out w, out h);  // this reflect resolution changes
 
+			if (w != width || h != height){
+			  // Window should move on monitor where the window needs an other width.
+				this.resize(width, height);
+				this.set_default_size(width, height);
+				w = width;
+				h = height;
+			}
+
+			/* Positioning window */
 			switch(pos_on_screen) {
-				case 0: //Zur nächsten Position wechseln
-					GLib.assert(false); // Case should already handled.
+				case 0: // Jump to next position
+					GLib.assert(false); // Deprecated case. It should be already handled.
 					return;
 				case 7:
 					x = 0;
@@ -459,6 +488,7 @@ namespace NeoLayoutViewer {
 					y = monitor_rect_dest.height - h;
 					break;
 			}
+			// Multi monitor support: Add offset of current monitor
 			x += monitor_rect_dest.x;
 			y += monitor_rect_dest.y;
 
@@ -467,7 +497,6 @@ namespace NeoLayoutViewer {
 			//store current coordinates
 			this.position_on_hide_x = x;
 			this.position_on_hide_y = y;
-
 
 			this.move(x, y);
 		}
@@ -489,10 +518,21 @@ namespace NeoLayoutViewer {
 			}
 			debug(@"New position: $(this.position_num)");
 
-			if( hide_after_latest && this.position_num < 10 ){
+			if( hide_after_latest && this.position_num < 10 && this.already_shown_on_monitor1 ){
 				// First monitor reached again
 				debug(@"Hide window. $(this.position_num)");
+
+				// Workaround: get_positon() call in hide still returns old position.
+				// reset new value after call.
+				int tmpx = this.position_on_hide_x;
+				int tmpy = this.position_on_hide_y;
 				this.hide();
+				//debug(@"AAAA $(this.position_on_hide_x), $(tmpx)");
+				this.position_on_hide_x = tmpx;
+				this.position_on_hide_y = tmpy;
+			}
+			if ( this.position_num < 10 ){
+				this.already_shown_on_monitor1 = true;
 			}
 		}
 
@@ -547,36 +587,11 @@ namespace NeoLayoutViewer {
 
 		}
 
-		/*
-		private void scale_images(int width, int height=-1) {
-
-			int w, h;
-			for (int i = 1; i < 7; i++) {
-				Gdk.Pixbuf layer = this.image_buffer.get(@"unscaled_$(i)");
-				w = layer.width;
-				h = layer.height;
-
-				if( height < 0 ){  // keep aspect ratio
-					height = h * width / w;
-				}
-				var id = @"layer_$(i)_$(monitor_w)";
-				debug(@"Generate image $(id)");
-				this.image_buffer.set(id,
-						layer.scale_simple(width, height, Gdk.InterpType.BILINEAR));
-			}
-		}
-		private int scale_images_for_monitor (int monitor_w) {
-			int width = get_image_width_for_monitor(monitor_w);
-			this.scale_images(width);
-			return width;
-		}
-		*/
-
-		private int get_image_width_for_monitor (int monitor_w) {
+		private int get_image_width_for_monitor (int monitor_width) {
 
 			//int screen_width = this.get_screen_width(); //Gdk.Screen.width();
-			int max_width = (int) (double.parse(this.config.get("max_width")) * monitor_w);
-			int min_width = (int) (double.parse(this.config.get("min_width")) * monitor_w);
+			int max_width = (int) (double.parse(this.config.get("max_width")) * monitor_width);
+			int min_width = (int) (double.parse(this.config.get("min_width")) * monitor_width);
 			int width = int.min(int.max(int.parse(this.config.get("width")), min_width), max_width);
 
 			return width;
@@ -833,5 +848,38 @@ namespace NeoLayoutViewer {
 			}
 		}
 
+		private void main_resized(){
+
+		  // Overwrite stored size for current monitor
+			int width;
+			int height;
+			this.get_size(out width, out height);
+
+			Size user_size = this.size_for_monitor[this.monitor_id];
+			GLib.assert (user_size != null);
+			if (user_size != null ){
+				user_size.width = width;
+				user_size.height = height;
+			}
+		}
+
 	} //End class NeoWindow
+
+	private class Size {
+		private int _width;
+		private int _height;
+		private int _monitor_width;
+		public int width {
+			get { return _width; }
+			set { if (value < 1 ) { _width = 1; }else{ _width = value; } }
+		}
+		public int height {
+			get { return _height; }
+			set { if (value < 1 ) { _height = 1; }else{ _height = value; } }
+		}
+		public int monitor_width {
+			get { return _monitor_width; }
+			set { if (value < 1 ) { _monitor_width = 1; }else{ _monitor_width = value; } }
+		}
+	}
 }

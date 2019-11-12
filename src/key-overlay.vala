@@ -56,7 +56,7 @@ namespace NeoLayoutViewer {
 			if( this._width == width && this._height == height ){
 				return;  // to avoid infinite resize live lock...
 			}
-			debug(@"Window resize signal. New width/height: $(width)/$(height)\n");
+			debug(@"Window resize signal. New width/height: $(width)/$(height)");
 
 			if( width == 1 && height == 1){
 				return;  // (1,1) send if user show/hides window very fast.
