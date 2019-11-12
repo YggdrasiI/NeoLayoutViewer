@@ -56,6 +56,20 @@ namespace NeoLayoutViewer{
 	private static void about_dialog() {
 		/* This function create the about dialog in
 			 tray menu or indicator menu */
+
+		var show_shortcut = configm.getConfig().get("show_shortcut").strip();
+		var move_shortcut = configm.getConfig().get("move_shortcut").strip();
+		var monitor_shortcut = configm.getConfig().get("monitor_shortcut").strip();
+
+		string tmp = "";
+		if (show_shortcut == monitor_shortcut && false){
+				tmp = "Monitor wechseln/Ausblenden - %s".printf(show_shortcut);
+		}else{
+				tmp = """Ein-/Ausblenden - %s
+				Monitor wechseln - %s""".printf(show_shortcut,
+								monitor_shortcut);
+		}
+
 		var about = new Gtk.AboutDialog();
 		about.set_logo(app.neo_win.getIcon());
 		about.set_destroy_with_parent (true);
@@ -65,18 +79,17 @@ namespace NeoLayoutViewer{
 		about.set_comments("""Erleichtert das Nachschlagen von Tastenkombinationen im Neo 2.0-Layout.
 
 				Olaf Schulz
-				funwithkinect@googlemail.com
-
+				olaf_schulz+neo@posteo.de
 
 				Tastenkombinationen:
-				Ein-/Ausblenden - %s
+				%s
 				Bewegen - %s
 				Beenden (sofern Fenster selektiert) - q
 
 				Verwendete Konfigurationsdatei:
 				%s""".printf(
-					app.neo_win.config.get("show_shortcut"),
-					app.neo_win.config.get("move_shortcut"),
+					tmp,
+					move_shortcut,
 					configm.used_config_path)
 				);
 		about.set_copyright("LGPLv3");
