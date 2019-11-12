@@ -29,7 +29,7 @@ namespace NeoLayoutViewer {
 			this.active = new_state;
 			if (this.active == 0) {
 				modKeyImage.hide();
-			}else{
+			} else {
 				modKeyImage.show();
 			}
 		}
@@ -55,7 +55,7 @@ namespace NeoLayoutViewer {
 		private int _layer = 1;
 		public int layer {
 			get { return _layer; }
-			set { if (value < 1 || value > 6) { _layer = 1; }else{ _layer = value; } }
+			set { if (value < 1 || value > 6) { _layer = 1; } else { _layer = value; } }
 		}
 		public int[] active_modifier_by_keyboard;
 		public int[] active_modifier_by_mouse;
@@ -190,7 +190,7 @@ namespace NeoLayoutViewer {
 					// Valid range: [1, 10*number_of_monitors - 1]
 					position_cycle[j] = int.max(int.min(int.parse(split[i]), position_cycle.length-1), 1);
 
-					if ( position_cycle[j] == 0 ){
+					if (position_cycle[j] == 0) {
 						// Invalid number parsed (or parsing failed). Print error message and use predefined array
 						GLib.stdout.printf("Position cycle reading failed. Problematic value: $(split[i])\n");
 						throw new PositionArrayParsingError.CODE_1A("Unexpected Integer");
@@ -198,18 +198,20 @@ namespace NeoLayoutViewer {
 					GLib.assert( position_cycle[j] > 0 );
 
 					j++;
-					if (j%10 == 0){ j++; }
+					if (j%10 == 0) { j++; }
 				}
 			} catch (PositionArrayParsingError e) {
 				fill_position_cycle_default(ref position_cycle);
 			} catch (RegexError e) {
 				fill_position_cycle_default(ref position_cycle);
 			}
+
+			debug("Position cycle map:");
 			for (int i = 0;i < position_cycle.length; i++) {
-				GLib.stdout.printf(@"$(i)=> $(position_cycle[i])\n");
+				debug(@"$(i)=> $(position_cycle[i])");
 			}
 
-			if (app.start_layer > 0 ){
+			if (app.start_layer > 0) {
 				this.fix_layer = true;
 				this.layer = app.start_layer;
 				this.active_modifier_by_mouse[1] = this.LAYER_TO_MODIFIERS[this.layer-1, 0];
@@ -229,7 +231,7 @@ namespace NeoLayoutViewer {
 				this.screen_dim[0] = int.max(1, int.parse(this.config.get("screen_width")));
 			}
 
-			if(screen_dim_auto[1]) {
+			if (screen_dim_auto[1]) {
 				this.screen_dim[1] = this.get_screen_height();
 				this.screen_dim_auto[1] = false; // Disables further re-evaluations
 			} else {
@@ -296,12 +298,12 @@ namespace NeoLayoutViewer {
 			//Nicht selektierbar (für virtuelle Tastatur)
 			this.set_accept_focus((this.config.get("window_selectable") != "0"));
 
-			if( this.config.get("show_on_startup") != "0" ){
+			if (this.config.get("show_on_startup") != "0") {
 				//Move ist erst nach show() erfolgreich
 				//this.numkeypad_move(int.parse(this.config.get("position")));
 				this.numkeypad_move(this.position_num);
 				this.show();
-			}else{
+			} else {
 				this.hide();
 				//this.numkeypad_move(int.parse(this.config.get("position")));
 				this.numkeypad_move(this.position_num);
@@ -328,7 +330,7 @@ namespace NeoLayoutViewer {
 			}
 		}
 
-		public override void hide(){
+		public override void hide() {
 			//store current coordinates
 			int tmpx;
 			int tmpy;
@@ -341,13 +343,13 @@ namespace NeoLayoutViewer {
 			base.hide();
 		}
 
-		public bool toggle(){
-			if(this.minimized) show();
+		public bool toggle() {
+			if (this.minimized) show();
 			else hide();
 			return this.minimized;
 		}
 
-		public void numkeypad_move(int pos){
+		public void numkeypad_move(int pos) {
 
 			var display = Gdk.Display.get_default();
 			//var screen = Gdk.Screen.get_default();
@@ -366,7 +368,7 @@ namespace NeoLayoutViewer {
 			GLib.assert(n_monitors > 0);
 
 			// Automatic set of next position
-			if( (pos%10) == 0 ){
+			if ((pos%10) == 0) {
 				/* Resolve next position */
 				pos = this.position_cycle[this.position_num];
 			}
@@ -374,11 +376,11 @@ namespace NeoLayoutViewer {
 
 			// Validate input for manual set of position.
 			// Note that 'extra monitors', which are not respected in position_cycle, will be ignored.
-			if ( pos >= this.position_cycle.length ){
+			if (pos >= this.position_cycle.length) {
 				pos %= 10;  // go back to first monitor
 			}
 
-			if ( pos < 1 ){
+			if (pos < 1) {
 				GLib.stdout.printf(@"Positioning error! Can not handle $(pos). Fall back on pos=5.\n");
 				pos = 5;
 			}
@@ -395,7 +397,7 @@ namespace NeoLayoutViewer {
 			// Get monitor for this position
 			int monitor_index = pos/10;
 			GLib.assert(monitor_index >= 0);
-			if (monitor_index >= n_monitors){
+			if (monitor_index >= n_monitors) {
 				monitor_index %= n_monitors;
 			}
 
@@ -416,11 +418,11 @@ namespace NeoLayoutViewer {
 			Size user_size = this.size_for_monitor[this.monitor_id];
 			if (user_size != null &&
 					monitor_rect_dest.width == user_size.monitor_width /* catch resolution changes */
-				 ){
+				) {
 			  // Use stored values
 				width = user_size.width;
 				height = user_size.height;
-			}else{
+			} else {
 				// Default values
 				width = get_image_width_for_monitor(monitor_rect_dest.width);
 				height = get_unscaled_height() * width / get_unscaled_width();
@@ -438,7 +440,7 @@ namespace NeoLayoutViewer {
 			this.get_size(out w, out h);  // wrong if resolution changed?! TODO: Edit comment
 			//this.get_size2(out w, out h);  // this reflect resolution changes
 
-			if (w != width || h != height){
+			if (w != width || h != height) {
 			  // Window should move on monitor where the window needs an other width.
 				this.resize(width, height);
 				this.set_default_size(width, height);
@@ -501,24 +503,24 @@ namespace NeoLayoutViewer {
 			this.move(x, y);
 		}
 
-		public void monitor_move(int i_monitor=-1, bool hide_after_latest=false){
+		public void monitor_move(int i_monitor=-1, bool hide_after_latest=false) {
 
-			if (hide_after_latest ){
-				if (this.minimized ){
+			if (hide_after_latest) {
+				if (this.minimized) {
 					debug(@"Show minimized window again. $(this.position_num)");
 					show();
 					return;
 				}
 			}
 
-			if ( i_monitor < 0 ){
+			if (i_monitor < 0) {
 				numkeypad_move(this.position_num + 10);
-			}else{
+			} else {
 				numkeypad_move( 10 * i_monitor + (this.position_num % 10));
 			}
 			debug(@"New position: $(this.position_num)");
 
-			if( hide_after_latest && this.position_num < 10 && this.already_shown_on_monitor1 ){
+			if (hide_after_latest && this.position_num < 10 && this.already_shown_on_monitor1) {
 				// First monitor reached again
 				debug(@"Hide window. $(this.position_num)");
 
@@ -531,7 +533,7 @@ namespace NeoLayoutViewer {
 				this.position_on_hide_x = tmpx;
 				this.position_on_hide_y = tmpy;
 			}
-			if ( this.position_num < 10 ){
+			if (this.position_num < 10) {
 				this.already_shown_on_monitor1 = true;
 			}
 		}
@@ -686,7 +688,7 @@ namespace NeoLayoutViewer {
 					this.active_modifier_by_mouse[3] //neo-mod4
 				] + 1;
 
-			}else{
+			} else {
 				this.layer = this.MODIFIER_MAP2[
 					this.active_modifier_by_keyboard[1] | this.active_modifier_by_mouse[1], //shift
 					this.active_modifier_by_keyboard[2] | this.active_modifier_by_mouse[2], //neo-mod3
@@ -743,10 +745,10 @@ namespace NeoLayoutViewer {
 			this.check_modifier(iet1);
 		}
 
-		public int get_screen_width(){
+		public int get_screen_width() {
 			// Return value derived from config.get("screen_width")) or Gdk.Screen.width()
 
-			if( this.screen_dim_auto[0] ){
+			if (this.screen_dim_auto[0]) {
 				//Re-evaluate
 
 #if GTK_MINOR_VERSION == 18 || GTK_MINOR_VERSION == 19 || GTK_MINOR_VERSION == 20 || GTK_MINOR_VERSION == 21
@@ -760,7 +762,7 @@ namespace NeoLayoutViewer {
 				var screen = this.get_screen();
 				var monitor = display.get_monitor_at_window(screen.get_active_window());
 				//Note that type of this is Gtk.Window, but get_active_window() return Gdk.Window
-				if( monitor == null){
+				if (monitor == null) {
 					monitor = display.get_primary_monitor();
 				}
 				Gdk.Rectangle geometry = monitor.get_geometry();
@@ -786,10 +788,10 @@ namespace NeoLayoutViewer {
 			return backgroundW_unscaled;
 		}
 
-		public int get_screen_height(){
+		public int get_screen_height() {
 			// Return value derived from config.get("screen_height")) or Gdk.Screen.height()
 
-			if( this.screen_dim_auto[1] ){
+			if (this.screen_dim_auto[1]) {
 				//Re-evaluate
 
 #if GTK_MINOR_VERSION == 18 || GTK_MINOR_VERSION == 19 || GTK_MINOR_VERSION == 20 || GTK_MINOR_VERSION == 21
@@ -803,7 +805,7 @@ namespace NeoLayoutViewer {
 				var screen = this.get_screen();
 				var monitor = display.get_monitor_at_window(screen.get_active_window());
 				//Note that type of this is Gtk.Window, but get_active_window() return Gdk.Window
-				if( monitor == null){
+				if (monitor == null) {
 					monitor = display.get_primary_monitor();
 				}
 				Gdk.Rectangle geometry = monitor.get_geometry();
@@ -813,14 +815,14 @@ namespace NeoLayoutViewer {
 			return screen_dim[1];
 		}
 
-		private void fill_position_cycle_default(ref int[] positions){
+		private void fill_position_cycle_default(ref int[] positions) {
 			/* Position          Next position    o ← o ← o
 				 9   8   9          4   7   8       ↓       ↑
 				 6   5   6  ====>   1   3   9       o   o   o
 				 3   2   3          2   3   6       ↓     ↘ ↑
 				 o → o → o
 
-				 Values for monitor 4 are 11,…,19 and so on.
+				 Values for monitor 4 are 11, …, 19 and so on.
 
 				 Example output:
 				 positions = {
@@ -833,7 +835,7 @@ namespace NeoLayoutViewer {
 
 			GLib.assert( positions.length%10 == 0 && positions.length > 0);
 			int n_monitors = positions.length/10;
-			for(int i_monitor=0; i_monitor < n_monitors; i_monitor++){
+			for (int i_monitor=0; i_monitor < n_monitors; i_monitor++) {
 				int s = i_monitor*10;
 				positions[s] = -1;
 				positions[s+1] = s + 2;
@@ -848,7 +850,7 @@ namespace NeoLayoutViewer {
 			}
 		}
 
-		private void main_resized(){
+		private void main_resized() {
 
 		  // Overwrite stored size for current monitor
 			int width;
@@ -857,7 +859,7 @@ namespace NeoLayoutViewer {
 
 			Size user_size = this.size_for_monitor[this.monitor_id];
 			GLib.assert (user_size != null);
-			if (user_size != null ){
+			if (user_size != null) {
 				user_size.width = width;
 				user_size.height = height;
 			}
@@ -871,15 +873,15 @@ namespace NeoLayoutViewer {
 		private int _monitor_width;
 		public int width {
 			get { return _width; }
-			set { if (value < 1 ) { _width = 1; }else{ _width = value; } }
+			set { if (value < 1) { _width = 1; } else { _width = value; } }
 		}
 		public int height {
 			get { return _height; }
-			set { if (value < 1 ) { _height = 1; }else{ _height = value; } }
+			set { if (value < 1) { _height = 1; } else { _height = value; } }
 		}
 		public int monitor_width {
 			get { return _monitor_width; }
-			set { if (value < 1 ) { _monitor_width = 1; }else{ _monitor_width = value; } }
+			set { if (value < 1) { _monitor_width = 1; } else { _monitor_width = value; } }
 		}
 	}
 }

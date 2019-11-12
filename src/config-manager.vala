@@ -20,10 +20,10 @@ namespace NeoLayoutViewer {
 			string conffile2 = null;
 
 			//1. Try to read conf file
-			foreach( var path in paths ){
+			foreach (var path in paths) {
 				string testfile = @"$(path)/$(conffile)";
 				debug(@"Search $(testfile)\n");
-				if( search_config_file(testfile) ){
+				if (search_config_file(testfile)) {
 					conffile2 = testfile;
 					debug(@"Found $(testfile)\n");
 					break;
@@ -31,11 +31,11 @@ namespace NeoLayoutViewer {
 			}
 
 			//2. Try deprecated name with leading dot
-			if( conffile2 == null ){
-				foreach( var path in paths ){
+			if (conffile2 == null) {
+				foreach (var path in paths) {
 					string testfile = @"$(path)/.$(conffile)";
 					debug(@"Search $(testfile)\n");
-					if( search_config_file(testfile) ){
+					if (search_config_file(testfile)) {
 						conffile2 = testfile;
 						debug(@"Found $(testfile)\n");
 						break;
@@ -44,10 +44,10 @@ namespace NeoLayoutViewer {
 			}
 
 			//3. Try to write new conf file if read had failed
-			if( conffile2 == null ){
-				foreach( var path in paths ){
+			if (conffile2 == null) {
+				foreach (var path in paths) {
 					string testfile = @"$(path)/$(conffile)";
-					if( create_conf_file(testfile) > -1){
+					if (create_conf_file(testfile) > -1) {
 						debug(@"Create $(testfile)\n");
 						conffile2 = testfile;
 						break;
@@ -57,7 +57,7 @@ namespace NeoLayoutViewer {
 
 			debug(@"Config file: $(conffile2)");
 
-			if(search_config_file(conffile2))
+			if (search_config_file(conffile2))
 				load_config_file(conffile2);
 
 			add_intern_values();
@@ -80,7 +80,7 @@ namespace NeoLayoutViewer {
 			 Standard values. This vaules will be written in the config file
 			 if it was not found.
 		 */
-		public void add_defaults(){
+		public void add_defaults() {
 			//config.set("show_shortcut", "<Mod4><Super_L>n", "Toggle the visibility of the window.");
 			addSetting("show_shortcut", "<Ctrl><Alt>q", "Toggle the visibility of the window.");
 			addSetting("on_top", "1", "Show window on top.");
@@ -161,8 +161,8 @@ namespace NeoLayoutViewer {
 					data_stream.put_string(e.key + " = " + e.value + "\n");
 				}
 			} // Streams
-			catch ( GLib.IOError e){ return -1; }
-			catch ( GLib.Error e){ return -1; }
+			catch ( GLib.IOError e) { return -1; }
+			catch ( GLib.Error e) { return -1; }
 
 			return 0;
 		}
@@ -187,7 +187,7 @@ namespace NeoLayoutViewer {
 					if (comment.match(line)) continue;
 
 					split = regex.split(line);
-					if(split.length>1){
+					if (split.length>1) {
 						this.config.set(split[0].strip(), split[1].strip());
 					}
 				}

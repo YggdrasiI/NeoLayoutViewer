@@ -20,7 +20,7 @@ namespace NeoLayoutViewer{
 
 		// Try to find asset folder (images)
 		string asset_folder = search_asset_folder( configm.getConfig().get("asset_folder") );
-		if( asset_folder == null ){
+		if (asset_folder == null) {
 			stdout.printf(@"Application start failed because asset folder was not found.\nTry to set path manually in the config file '$(configm.used_config_path)'\n");
 			stdout.flush();
 			return 0;
@@ -42,7 +42,7 @@ namespace NeoLayoutViewer{
 		if (app.is_remote) {
 			print(@"Application is already running.\n");
 			app.activate();
-		}else{
+		} else {
 			return app.run(args);
 		}
 
@@ -62,9 +62,9 @@ namespace NeoLayoutViewer{
 		var monitor_shortcut = configm.getConfig().get("monitor_shortcut").strip();
 
 		string tmp = "";
-		if (show_shortcut == monitor_shortcut && false){
+		if (show_shortcut == monitor_shortcut && false) {
 				tmp = "Monitor wechseln/Ausblenden - %s".printf(show_shortcut);
-		}else{
+		} else {
 				tmp = """Ein-/Ausblenden - %s
 				Monitor wechseln - %s""".printf(show_shortcut,
 								monitor_shortcut);
@@ -100,7 +100,7 @@ namespace NeoLayoutViewer{
 
 	}
 
-	private void center_window(Gtk.Window win){
+	private void center_window(Gtk.Window win) {
 		int screen_width = app.neo_win.get_screen_width();
 		int screen_height = app.neo_win.get_screen_height();
 		int x, y, w, h;
@@ -114,7 +114,7 @@ namespace NeoLayoutViewer{
 		 The folder will be assumed as right one if one required file was found.
 		 @return: assed folder or null.
 	 */
-	private static string? search_asset_folder(string path){
+	private static string? search_asset_folder(string path) {
 		/*const*/ string filename = "/icons/Neo-Icon.png";
 
 		string[] paths = {
@@ -124,17 +124,17 @@ namespace NeoLayoutViewer{
 			SHARED_ASSETS_PATH, // path given by Makefile
 		};
 
-		foreach( var p in paths ){
+		foreach (var p in paths) {
 			debug(@"Search assets in $(p)\n");
 			var file = File.new_for_path (p+filename);
-			if( file.query_exists(null)) return p;
+			if (file.query_exists(null)) return p;
 		}
 
-		foreach( var s in GLib.Environment.get_system_data_dirs()){
+		foreach (var s in GLib.Environment.get_system_data_dirs()) {
 			var env_path = @"$(s)/NeoLayoutViewer/assets";
 			debug(@"Search assets in $(env_path)\n");
 			var file2 = File.new_for_path (env_path+filename);
-			if( file2.query_exists(null)) return env_path;
+			if (file2.query_exists(null)) return env_path;
 		}
 
 		return null;

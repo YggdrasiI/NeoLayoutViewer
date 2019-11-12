@@ -177,7 +177,7 @@ namespace NeoLayoutViewer {
 
 			if (xevent->type == X.EventType.KeyPress) {
 
-				foreach(Keybinding binding in bindings) {
+				foreach (Keybinding binding in bindings) {
 					// remove NumLock, CapsLock and ScrollLock from key state
 					uint event_mods = xevent.xkey.state & ~ (lock_modifiers[7]);
 
@@ -194,7 +194,7 @@ namespace NeoLayoutViewer {
 		/*
 			 Checks periodically which modifier are pressed.
 		 */
-		private bool modifier_timer(){
+		private bool modifier_timer() {
 			unowned X.Display display = Gdk.X11.get_default_xdisplay();
 
 			checkModifier(display, &modifier_keycodes[0], modifier_keycodes.length, &modifier_pressed[0]);

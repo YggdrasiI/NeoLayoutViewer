@@ -45,7 +45,7 @@ namespace NeoLayoutViewer {
 			this.winMain.check_resize.connect(main_resized);
 		}
 
-		private void main_resized(){
+		private void main_resized() {
 
 			int width;
 			int height;
@@ -53,13 +53,13 @@ namespace NeoLayoutViewer {
 			//height = this.winMain.get_allocated_height();
 			this.winMain.get_size(out width, out height);
 
-			if( this._width == width && this._height == height ){
+			if (this._width == width && this._height == height) {
 				return;  // to avoid infinite resize live lock...
 			}
 			debug(@"Window resize signal. New width/height: $(width)/$(height)");
 
-			if( width == 1 && height == 1){
-				return;  // (1,1) send if user show/hides window very fast.
+			if (width == 1 && height == 1) {
+				return;  // (1, 1) send if user show/hides window very fast.
 			}
 
 			this._width = width;
@@ -132,7 +132,7 @@ namespace NeoLayoutViewer {
 					gridCell(44.0, 30.0, ref x_unscaled, ref y_unscaled, ref x, ref y, scaleX, scaleY, 96, false, 0);
 					//free space
 					gridCell(22.0, 30.0, ref x_unscaled, ref y_unscaled, ref x, ref y, scaleX, scaleY, -1, false, -1);
-					// print,scroll,break
+					// print, scroll, break
 					gridCell(44.0, 30.0, ref x_unscaled, ref y_unscaled, ref x, ref y, scaleX, scaleY, 107, false, 0);
 					gridCell(44.0, 30.0, ref x_unscaled, ref y_unscaled, ref x, ref y, scaleX, scaleY, 78, false, 0);
 					gridCell(44.0, 30.0, ref x_unscaled, ref y_unscaled, ref x, ref y, scaleX, scaleY, 127, true, 0);
@@ -367,7 +367,7 @@ namespace NeoLayoutViewer {
 			int y = 0;
 
 			// detach cells from grid
-			/*foreach (KeyEventCell w in this.eventCells.values){
+			/*foreach (KeyEventCell w in this.eventCells.values) {
 				this.remove(w);
 			}*/
 			// Reset id. Number will increased in ever moveCell call
@@ -407,7 +407,7 @@ namespace NeoLayoutViewer {
 					moveCell(44.0, 30.0, ref x_unscaled, ref y_unscaled, ref x, ref y, scaleX, scaleY, false);
 					//free space
 					moveCell(22.0, 30.0, ref x_unscaled, ref y_unscaled, ref x, ref y, scaleX, scaleY, false);
-					// print,scroll,break
+					// print, scroll, break
 					moveCell(44.0, 30.0, ref x_unscaled, ref y_unscaled, ref x, ref y, scaleX, scaleY, false);
 					moveCell(44.0, 30.0, ref x_unscaled, ref y_unscaled, ref x, ref y, scaleX, scaleY, false);
 					moveCell(44.0, 30.0, ref x_unscaled, ref y_unscaled, ref x, ref y, scaleX, scaleY, true);
@@ -645,19 +645,19 @@ namespace NeoLayoutViewer {
 			int width;
 			int height;
 
-			if( x_unscaled + width_unscaled > win_width_unscaled){
+			if (x_unscaled + width_unscaled > win_width_unscaled) {
 				debug(@"AAAA cell too wide! Change from $(width_unscaled) to $(win_width_unscaled-x_unscaled)");
 				width_unscaled = win_width_unscaled - x_unscaled;
 				width = win_width - x;
-			}else{
+			} else {
 				width = (int)GLib.Math.floor((x_unscaled + width_unscaled) * scaleX - x );
 			}
 
-			if( y_unscaled + height_unscaled > win_height_unscaled){
+			if (y_unscaled + height_unscaled > win_height_unscaled) {
 				debug(@"AAAA cell too tall! Change from $(height_unscaled) to $(win_height_unscaled-y_unscaled)");
 				height_unscaled = win_height_unscaled - y_unscaled;
 				height = win_height - y;
-			}else{
+			} else {
 				height = (int)GLib.Math.floor((y_unscaled + height_unscaled) * scaleY - y );
 			}
 			*/
@@ -675,7 +675,7 @@ namespace NeoLayoutViewer {
 					// Modifier, die andere Buchstabenebenen aktivieren. Zusätzlich Ebenen-Bild einblenden.
 					cell = new KeyEventCell.modifier(winMain, width, height, width, height, keycode /*=modifier array index*/ );
 					break;
-					//Andere Modifier (CTRL, Alt,... )
+					//Andere Modifier (CTRL, Alt, ... )
 				case 2: //left ctrl
 					//cell = new KeyEventCell.modifier(winMain, width, height, width, height, keycode );
 					cell = new KeyEventCell.modifier2(winMain, width, height, width, height, keycode /*modifier array index */, "tastatur_ctrl_left_2.png" );
@@ -724,7 +724,7 @@ namespace NeoLayoutViewer {
 			}
 
 			// TODO
-			if (this.color_event_boxes && cell.get_children().length() == 0){
+			if (this.color_event_boxes && cell.get_children().length() == 0) {
 				Label l = new Label(""); // do not use non-empty string
 				l.show();
 
@@ -760,19 +760,19 @@ namespace NeoLayoutViewer {
 			int width;
 			int height;
 
-			if( x_unscaled + width_unscaled > win_width_unscaled){
+			if (x_unscaled + width_unscaled > win_width_unscaled) {
 				debug(@"AAAA cell too wide! Change from $(width_unscaled) to $(win_width_unscaled-x_unscaled)");
 				width_unscaled = win_width_unscaled - x_unscaled;
 				width = win_width - x;
-			}else{
+			} else {
 				width = (int)GLib.Math.floor((x_unscaled + width_unscaled) * scaleX - x );
 			}
 
-			if( y_unscaled + height_unscaled > win_height_unscaled){
+			if (y_unscaled + height_unscaled > win_height_unscaled) {
 				debug(@"AAAA cell too tall! Change from $(height_unscaled) to $(win_height_unscaled-y_unscaled)");
 				height_unscaled = win_height_unscaled - y_unscaled;
 				height = win_height - y;
-			}else{
+			} else {
 				height = (int)GLib.Math.floor((y_unscaled + height_unscaled) * scaleY - y );
 			}
 			*/
@@ -822,7 +822,7 @@ namespace NeoLayoutViewer {
 			 Achtung, mittlerweile ist es die Identitätsabbildung, da die zwei
 			 redundanten Layer, die durch Caps-Lock entstehen, entfernt wurden.
 		 */
-		private const short[] layer_permutation = {0,1,2,3,5,4,6};
+		private const short[] layer_permutation = {0, 1, 2, 3, 5, 4, 6};
 
 		private KeyEventCell.all(NeoWindow winMain, double unscaled_width, double unscaled_height, int width, int height) {
 			this.winMain = winMain;
@@ -844,21 +844,21 @@ namespace NeoLayoutViewer {
 			this.keysym = keysym;
 
 			this.button_press_event.connect ((event) => {
-					if (event.button != 1){
+					if (event.button != 1) {
 					return false;
 					}
 
 					uint ks = this.keysym[NeoLayoutViewer.KeyEventCell.layer_permutation[winMain.layer] - 1];
-					int modi = winMain.getActiveModifierMask({4,5}); //ctrl+alt mask
+					int modi = winMain.getActiveModifierMask({4, 5}); //ctrl+alt mask
 					if (ks < 1) return false;
 
 #if _NO_WIN
 					if (modi == 0 || true) {
 					// Alt-Mask do not work :-(
-					keysend(ks,modi);
+					keysend(ks, modi);
 					} else {
 					//debug("Variante mit zweitem Modifier.");
-					keysend2(ks,modi & Gdk.ModifierType.CONTROL_MASK, modi & Gdk.ModifierType.MOD1_MASK);
+					keysend2(ks, modi & Gdk.ModifierType.CONTROL_MASK, modi & Gdk.ModifierType.MOD1_MASK);
 					}
 #endif
 					//GLib.stdout.printf(@"Key: $(ks)\n"); GLib.stdout.flush();
@@ -885,7 +885,7 @@ namespace NeoLayoutViewer {
 					});
 		}
 
-		public KeyEventCell.modifier2(NeoWindow winMain, double unscaled_width, double unscaled_height, int width, int height, int modifier_index, string pressed_key_image ){
+		public KeyEventCell.modifier2(NeoWindow winMain, double unscaled_width, double unscaled_height, int width, int height, int modifier_index, string pressed_key_image) {
 			this.all(winMain, unscaled_width, unscaled_height, width, height);
 			this.modifier_index = modifier_index;
 			this.image_source_id = @"modifier_$(pressed_key_image)";
@@ -902,7 +902,7 @@ namespace NeoLayoutViewer {
 
 				// store unscaled variant (TODO: redundant)
 				winMain.image_buffer.set(this.image_source_id, modifier_pixbufs[0]);
-			}else{
+			} else {
 				modifier_pixbufs = {
 					winMain.image_buffer.get(this.image_source_id)
 				};
@@ -952,11 +952,11 @@ namespace NeoLayoutViewer {
 		 * that Gtk+ will actually give this size to the widget.
 		 */
 
-		public override void get_preferred_width(out int minimum_width, out int natural_width){
+		public override void get_preferred_width(out int minimum_width, out int natural_width) {
 			minimum_width = width;
 			natural_width = width;
 		}
-		public override void get_preferred_height(out int minimum_height, out int natural_height){
+		public override void get_preferred_height(out int minimum_height, out int natural_height) {
 			minimum_height = height;
 			natural_height = height;
 		}
@@ -966,12 +966,12 @@ namespace NeoLayoutViewer {
 	// Wrapper to store array into hash map?!
 	public class KeycodeArray {
 		public uint[] val;
-		public KeycodeArray(uint[] val){
+		public KeycodeArray(uint[] val) {
 			this.val = val;
 		}
 	}
 
-	public Gee.HashMap<int, KeycodeArray> generateKeysyms(){
+	public Gee.HashMap<int, KeycodeArray> generateKeysyms() {
 			Gee.HashMap<int, KeycodeArray> keysyms = new Gee.HashMap<int, KeycodeArray>();
 
 			/* Define keyboard layout. this object maps the keycodes to the list of keycodes of each keyboard layer. */

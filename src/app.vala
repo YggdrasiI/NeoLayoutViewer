@@ -31,7 +31,7 @@ namespace NeoLayoutViewer{
 		}
 
 		protected override void activate () {
-			if (this.neo_win == null ) {
+			if (this.neo_win == null) {
 				// Create the window of this application and show it
 				this.neo_win = new NeoWindow (this);
 
@@ -48,32 +48,32 @@ namespace NeoLayoutViewer{
 #endif
 
 				this.add_window(this.neo_win);
-			}else{
+			} else {
 				// reached if app.activate() called by remote instance
 				this.neo_win.toggle();
 			}
 		}
 
-		private void bind_shortcuts(){
+		private void bind_shortcuts() {
 			manager = new KeybindingManager(this.neo_win);
 			var show_shortcut = configm.getConfig().get("show_shortcut").strip();
 			var move_shortcut = configm.getConfig().get("move_shortcut").strip();
 			var monitor_shortcut = configm.getConfig().get("monitor_shortcut").strip();
 
-			if (move_shortcut.length > 0){
+			if (move_shortcut.length > 0) {
 				manager.bind(move_shortcut, ()=>{this.neo_win.numkeypad_move(0);});
 			}
 
-			if (show_shortcut == monitor_shortcut){
+			if (show_shortcut == monitor_shortcut) {
 				// combination of show + monitor move
 				debug("Use combined shortcut for window showing and monitor switching.");
 				manager.bind(monitor_shortcut, ()=>{this.neo_win.monitor_move(-1, true);});
 
-			}else{
-				if (monitor_shortcut.length > 0){
+			} else {
+				if (monitor_shortcut.length > 0) {
 					manager.bind(monitor_shortcut, ()=>{this.neo_win.monitor_move();});
 				}
-				if (show_shortcut.length > 0){
+				if (show_shortcut.length > 0) {
 					manager.bind(show_shortcut, ()=>{this.neo_win.toggle();});
 				}
 			}

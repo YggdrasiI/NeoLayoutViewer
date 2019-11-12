@@ -55,7 +55,7 @@ namespace NeoLayoutViewer {
 			this.winMain.check_resize.connect(main_resized);
 		}
 
-		private void main_resized(){
+		private void main_resized() {
 
 			// Get new window size
 			int win_width2;
@@ -71,8 +71,8 @@ namespace NeoLayoutViewer {
 
 			debug(@"Window resize signal. New width/height: $(width)/$(height)\n");
 
-			if( win_width2 == 1 && win_height2 == 1){
-				return;  // (1,1) send if user show/hides window very fast.
+			if (win_width2 == 1 && win_height2 == 1) {
+				return;  // (1, 1) send if user show/hides window very fast.
 			}
 
 			// Eval new image size
