@@ -62,7 +62,7 @@ namespace NeoLayoutViewer{
 		var monitor_shortcut = configm.getConfig().get("monitor_shortcut").strip();
 
 		string tmp = "";
-		if (show_shortcut == monitor_shortcut && false) {
+		if (show_shortcut == monitor_shortcut) {
 				tmp = "Monitor wechseln/Ausblenden - %s".printf(show_shortcut);
 		} else {
 				tmp = """Ein-/Ausblenden - %s

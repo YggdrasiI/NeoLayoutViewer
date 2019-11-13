@@ -539,7 +539,7 @@ namespace NeoLayoutViewer {
 		}
 
 		public Gdk.Pixbuf open_image (int layer) {
-			var bildpfad = @"$(config.get("asset_folder"))/neo2.0/tastatur_neo_Ebene$(layer).png";
+			var bildpfad = @"$(config.get("asset_folder"))/neo2.0_hires/tastatur_neo_Ebene$(layer).png";
 			return open_image_str(bildpfad);
 		}
 
