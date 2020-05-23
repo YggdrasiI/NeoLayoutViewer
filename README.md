@@ -23,7 +23,7 @@ und die Developer-Pakete einiger Bibliotheken. Die Abhängigkeiten können unter
 mit dem folgenden Befehl nachinstalliert werden, sofern sie nicht bereits vorhanden sind
 (Stand: Ubuntu 16.04, November 2017). Bei anderen Distributionen muss der Befehl ggf. angepasst werden.
 
-    sudo apt-get install valac libgee-0.8-dev libgtk-3-dev libx11-dev libappindicator3-dev
+    sudo apt install valac libgee-0.8-dev libgtk-3-dev libx11-dev libappindicator3-dev
 
 Mittels
 
