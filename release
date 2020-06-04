@@ -168,7 +168,7 @@ perform_release() {
     git commit -m "[release] Prepare next development version" --allow-empty && \
     git push && \
     git push origin $new_version_tag && \
-    gh_upload_release $new_version_tag dist/* && \
+    gh_upload_release $new_version_tag dist/*$new_version* && \
     rm release_info
     #TODO: Provide changelog to gh_upload_release
   } || {
