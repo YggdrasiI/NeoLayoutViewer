@@ -11,6 +11,8 @@ Alle Einstellungen können über eine Konfigurationsdatei angepasst werden.
 
 Autoren: Olaf Schulz 2011-2019, rixx 2013, Marco Herrn 2018-2019
 
+modifiziert für ADNW (Aus der Neo Welt) durch Jonathan Vetter 2020
+
 Lizenz: GNU Lesser General Public License version 3 (LGPLv3)
 
 
@@ -31,7 +33,7 @@ Mittels
 
 kann das Programm kompiliert und unter /usr/local installiert werden.
 Unter Gnome 2.x wird eine andere Bibliothek für die Anzeige des Tray-Icons benötigt.
-Geben Sie in diesem Falle „ICON=tray make“ ein.
+Geben Sie in diesem Falle „ICON=tray make“ ein. Dies gilt unter anderem auch für Cinnamon und Mate.
 
 
 Hinweise
@@ -43,6 +45,7 @@ Hinweise
 	In der Konfigurationsdatei können unter anderem folgende Einstellungen vorgenommen
 	werden:
 
+ - Tastaturbelegung: NEO_2, ADNW oder KOY
 	- Breite des Fensters. Mit „width“ können Sie die exakte Breite einstellen und mit
 		„max_width“ und „min_width“ die relative Breite in Bezug auf die derzeitige Auflösung.
 	- Anzeige des Numblocks und der Funktionstasten.
@@ -59,13 +62,20 @@ Hinweise
   eingetragen werden.
 
 * Das Programm zeigt unter Gnome 3.x in der Indicator-Leiste ein Symbol an. Unter Gnome 2.x
-	war für diese Funktion noch eine andere Bibliothek verantwortlich. Sie können im
-	Makefile zwischen den beiden Varianten wechseln, indem Sie die Variable ICON anpassen.
+	 war für diese Funktion noch eine andere Bibliothek verantwortlich. Sie können im
+	 Makefile zwischen den beiden Varianten wechseln, indem Sie die Variable ICON anpassen.
 
-
+* Bei verwendung eines Programmstarters muss dieser noch auf das gewünschte Layout angepasst werden 
+  und dann unter /usr/share/applications bzw. /usr/local/share/applications eingefügt werden.
+  Für automatisches Einblenden beim Anmelden kann der Programmstarter zusätzlich
+  nach /home/<user>/.config/autostart kopiert werden.
 
 ______________________________________________________________________
 
 ¹NEO ist eine Tastaturbelegung, welche für die deutsche Sprache optimiert ist.
 
-Die offizielle Seite des Projektes: https://neo-layout.org/
+Die offizielle Seiten der Projekte:
+Neo-Layout:     https://neo-layout.org/
+ADNW-Layout:    http://www.adnw.de/
+KOY-Layout:     http://www.adnw.de/index.php?n=Main.SeitlicheNachbaranschl%c3%a4ge
+

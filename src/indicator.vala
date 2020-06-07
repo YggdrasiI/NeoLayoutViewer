@@ -40,6 +40,7 @@ namespace NeoLayoutViewer {
 #if _OLD_GTK_STOCK
 			var menuAnzeigen = new Gtk.MenuItem.with_label("Anzeigen");
 			menuAnzeigen.activate.connect(() => { this.neo_win.toggle(); });
+
 			menuMain.append(menuAnzeigen);
 
 			var menuAbout = new ImageMenuItem.from_stock(Stock.ABOUT, null);

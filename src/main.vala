@@ -7,6 +7,7 @@ namespace NeoLayoutViewer{
 
 	public ConfigManager configm;
 	public NeoLayoutViewerApp app;
+//  public string layoutType;
 
 	public static int main(string[] args) {
 
@@ -115,7 +116,26 @@ namespace NeoLayoutViewer{
 		 @return: assed folder or null.
 	 */
 	private static string? search_asset_folder(string path) {
-		/*const*/ string filename = "/icons/Neo-Icon.png";
+    string filename = "/icons/Neo-Icon.png";
+/*  string filename;    
+    switch (app.neo_win.layoutType) {
+      case "NEO_2": {
+        filename = "/icons/Neo-Icon.png";  // for NEO-layout
+        break;
+      }
+      case "ADNW": {
+    	  filename = "/icons/ADNW-Icon.png"; // for ADNW-layout
+        break;
+      }
+      case "KOY": {
+    	  filename = "/icons/KOY-Icon.png";  // for KOY-layout
+        break;
+      }
+      default: {
+        filename = "/icons/Neo-Icon.png";  // for NEO-layout
+        break;
+      }
+    }*/
 
 		string[] paths = {
 			path, // path from config file

@@ -43,6 +43,8 @@ namespace NeoLayoutViewer {
 		private KeyOverlay key_overlay;
 #endif
 
+    public string layoutType; // = "NEO_2";
+
 		public Gee.Map<string, Gdk.Pixbuf> image_buffer;
 		private Gdk.Pixbuf[] layer_pixbufs;
 		private int monitor_id = -1;
@@ -132,6 +134,8 @@ namespace NeoLayoutViewer {
 		public NeoWindow (NeoLayoutViewerApp app) {
 			this.config = app.configm.getConfig();
 			this.minimized = true;
+
+      this.layoutType = this.config.get("layout_type");
 
 			/* Set window type to let tiling window manager, i.e. i3-wm,
 			 * the chance to float the window automatically.
@@ -538,9 +542,27 @@ namespace NeoLayoutViewer {
 			}
 		}
 
-		public Gdk.Pixbuf open_image (int layer) {
-			var bildpfad = @"$(config.get("asset_folder"))/neo2.0/tastatur_neo_Ebene$(layer).png";
-			return open_image_str(bildpfad);
+		public Gdk.Pixbuf open_image(int layer) {
+      string bildpfad = "";
+      switch (this.layoutType) {
+        case "NEO_2": {
+			    bildpfad = @"$(config.get("asset_folder"))/neo2.0/tastatur_neo_Ebene$(layer).png";
+          break;
+        }
+        case "ADNW": {
+		    	bildpfad = @"$(config.get("asset_folder"))/adnw/tastatur_adnw_Ebene$(layer).png";
+          break;
+        }
+        case "KOY": {
+		    	bildpfad = @"$(config.get("asset_folder"))/koy/tastatur_koy_Ebene$(layer).png";
+          break;
+        }
+        default: {
+          bildpfad = @"$(config.get("asset_folder"))/neo2.0/tastatur_neo_Ebene$(layer).png";
+          break;
+        }
+      }
+      return open_image_str(bildpfad);
 		}
 
 		public Gdk.Pixbuf open_image_str (string bildpfad) {
@@ -552,8 +574,24 @@ namespace NeoLayoutViewer {
 		}
 
 		public void load_images () {
-			this.image_buffer["icon"] = open_image_str(
+      switch (this.layoutType) {
+        case "NEO_2": {
+			    this.image_buffer["icon"] = open_image_str(
 					@"$(config.get("asset_folder"))/icons/Neo-Icon.png");
+          break;
+        }
+        case "ADNW": {
+          this.image_buffer["icon"] = open_image_str(
+					@"$(config.get("asset_folder"))/icons/ADNW-Icon.png");
+          break;
+        }
+        case "KOY": {
+          this.image_buffer["icon"] = open_image_str(
+					@"$(config.get("asset_folder"))/icons/KOY-Icon.png");
+          break;
+        }
+      }
+
 
 			/*
 				 int screen_width = this.get_screen_width(); //Gdk.Screen.width();
