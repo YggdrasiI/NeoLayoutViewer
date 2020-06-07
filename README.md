@@ -11,7 +11,7 @@ Alle Einstellungen können über eine Konfigurationsdatei angepasst werden.
 
 Autoren: Olaf Schulz 2011-2019, rixx 2013, Marco Herrn 2018-2019
 
-modifiziert für ADNW (Aus der Neo Welt) durch Jonathan Vetter 2020
+modifiziert für ADNW (Aus der Neo Welt) und KOY durch Jonathan Vetter 2020
 
 Lizenz: GNU Lesser General Public License version 3 (LGPLv3)
 
@@ -65,7 +65,7 @@ Hinweise
 	 war für diese Funktion noch eine andere Bibliothek verantwortlich. Sie können im
 	 Makefile zwischen den beiden Varianten wechseln, indem Sie die Variable ICON anpassen.
 
-* Bei verwendung eines Programmstarters muss dieser noch auf das gewünschte Layout angepasst werden 
+* Bei Verwendung eines Programmstarters muss dieser noch auf das gewünschte Layout angepasst werden 
   und dann unter /usr/share/applications bzw. /usr/local/share/applications eingefügt werden.
   Für automatisches Einblenden beim Anmelden kann der Programmstarter zusätzlich
   nach /home/<user>/.config/autostart kopiert werden.

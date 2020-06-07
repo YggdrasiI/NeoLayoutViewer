@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Neo Layout Viewer
+GenericName=Keyboard Layout Viewer
+Comment=version neo2
+Categories=Education;
+Exec=neo_layout_viewer
+Icon=/usr/local/share/NeoLayoutViewer/assets/icons/Neo-Icon.png
+Name[de_DE]=Neo_Layout_Viewer
