@@ -14,13 +14,7 @@ using Posix;//system-call
 
 namespace NeoLayoutViewer {
 
-  // public string layoutType;
-  // Select layout
-  // public const string layoutType = "NEO_2";
-  // public const string layoutType = "ADNW";
-  // public const string layoutType = "KOY";
-
-  /* Use Layout instead of Fixed because size of Layout content does not
+	/* Use Layout instead of Fixed because size of Layout content does not
 	influence the window size. (=> No feedback loop) */
 	public class KeyOverlay : Gtk.Layout {
 
@@ -35,24 +29,24 @@ namespace NeoLayoutViewer {
 
 		public KeyOverlay(NeoWindow winMain) {
 			this.winMain = winMain;
-      switch (winMain.layoutType) {
-        case "NEO_2": {
-    	    this.keysyms = generateKeysymsNeo2();  // for NEO-layout
-          break;
-        }
-        case "ADNW": {
-    			this.keysyms = generateKeysymsAdnw(); // for ADNW-layout
-          break;
-        }
-        case "KOY": {
-    			this.keysyms = generateKeysymsKoy();  // for KOY-layout
-          break;
-        }
-        default: {
-    	    this.keysyms = generateKeysymsNeo2();  // for NEO-layout
-          break;
-        }
-      }
+			switch (winMain.layoutType) {
+				case "ADNW":
+					{
+						this.keysyms = generateKeysymsAdnw(); // for ADNW-layout
+						break;
+					}
+				case "KOY":
+					{
+						this.keysyms = generateKeysymsKoy();  // for KOY-layout
+						break;
+					}
+				case "NEO2":
+				default:
+					{
+						this.keysyms = generateKeysymsNeo2();  // for NEO-layout
+						break;
+					}
+			}
 
 			this.eventCells = new Gee.HashMap<int, KeyEventCell>();
 
@@ -1252,7 +1246,7 @@ namespace NeoLayoutViewer {
 			return keysyms;
 		}
 
-  // Define Keyboard layout ADNW (Aus der Neo Welt) 
+  // Define Keyboard layout ADNW (Aus der Neo Welt)
 	public Gee.HashMap<int, KeycodeArray> generateKeysymsAdnw() {
 			Gee.HashMap<int, KeycodeArray> keysyms = new Gee.HashMap<int, KeycodeArray>();
 
@@ -1511,7 +1505,7 @@ namespace NeoLayoutViewer {
 			return keysyms;
 		}
 
-  // Define Keyboard layout KOY (Weiterentwicklung von Aus der Neo Welt) 
+  // Define Keyboard layout KOY (Weiterentwicklung von Aus der Neo Welt)
 	public Gee.HashMap<int, KeycodeArray> generateKeysymsKoy() {
 			Gee.HashMap<int, KeycodeArray> keysyms = new Gee.HashMap<int, KeycodeArray>();
 

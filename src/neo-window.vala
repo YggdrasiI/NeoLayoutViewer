@@ -43,7 +43,7 @@ namespace NeoLayoutViewer {
 		private KeyOverlay key_overlay;
 #endif
 
-    public string layoutType; // = "NEO_2";
+		public string layoutType; // = "NEO2";
 
 		public Gee.Map<string, Gdk.Pixbuf> image_buffer;
 		private Gdk.Pixbuf[] layer_pixbufs;
@@ -543,25 +543,25 @@ namespace NeoLayoutViewer {
 		}
 
 		public Gdk.Pixbuf open_image(int layer) {
-      string bildpfad = "";
-      switch (this.layoutType) {
-        case "NEO_2": {
-			    bildpfad = @"$(config.get("asset_folder"))/neo2.0/tastatur_neo_Ebene$(layer).png";
-          break;
-        }
-        case "ADNW": {
-		    	bildpfad = @"$(config.get("asset_folder"))/adnw/tastatur_adnw_Ebene$(layer).png";
-          break;
-        }
-        case "KOY": {
-		    	bildpfad = @"$(config.get("asset_folder"))/koy/tastatur_koy_Ebene$(layer).png";
-          break;
-        }
-        default: {
-          bildpfad = @"$(config.get("asset_folder"))/neo2.0/tastatur_neo_Ebene$(layer).png";
-          break;
-        }
-      }
+			string bildpfad = "";
+			switch (this.layoutType) {
+				case "ADNW":
+					{
+						bildpfad = @"$(config.get("asset_folder"))/adnw/tastatur_adnw_Ebene$(layer).png";
+						break;
+					}
+				case "KOY":
+					{
+						bildpfad = @"$(config.get("asset_folder"))/koy/tastatur_koy_Ebene$(layer).png";
+						break;
+					}
+				case "NEO2":
+				default:
+					{
+						bildpfad = @"$(config.get("asset_folder"))/neo2.0/tastatur_neo_Ebene$(layer).png";
+						break;
+					}
+			}
       return open_image_str(bildpfad);
 		}
 
@@ -573,33 +573,33 @@ namespace NeoLayoutViewer {
 			}
 		}
 
+		private void load_program_icon () {
+			switch (this.layoutType) {
+				case "ADNW":
+					{
+						this.image_buffer["icon"] = open_image_str(
+								@"$(config.get("asset_folder"))/icons/ADNW-Icon.png");
+						break;
+					}
+				case "KOY":
+					{
+						this.image_buffer["icon"] = open_image_str(
+								@"$(config.get("asset_folder"))/icons/KOY-Icon.png");
+						break;
+					}
+				case "NEO2":
+				default:
+					{
+						this.image_buffer["icon"] = open_image_str(
+								@"$(config.get("asset_folder"))/icons/Neo-Icon.png");
+						break;
+					}
+			}
+		}
+
 		public void load_images () {
-      switch (this.layoutType) {
-        case "NEO_2": {
-			    this.image_buffer["icon"] = open_image_str(
-					@"$(config.get("asset_folder"))/icons/Neo-Icon.png");
-          break;
-        }
-        case "ADNW": {
-          this.image_buffer["icon"] = open_image_str(
-					@"$(config.get("asset_folder"))/icons/ADNW-Icon.png");
-          break;
-        }
-        case "KOY": {
-          this.image_buffer["icon"] = open_image_str(
-					@"$(config.get("asset_folder"))/icons/KOY-Icon.png");
-          break;
-        }
-      }
 
-
-			/*
-				 int screen_width = this.get_screen_width(); //Gdk.Screen.width();
-				 int max_width = (int) (double.parse(this.config.get("max_width")) * screen_width);
-				 int min_width = (int) (double.parse(this.config.get("min_width")) * screen_width);
-				 int width = int.min(int.max(int.parse(this.config.get("width")), min_width), max_width);
-				 int w, h;
-			 */
+			this.load_program_icon();
 
 			this.numpad_width = int.parse(this.config.get("numpad_width"));
 			this.function_keys_height = int.parse(this.config.get("function_keys_height"));

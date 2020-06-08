@@ -81,7 +81,7 @@ namespace NeoLayoutViewer {
 			 if it was not found.
 		 */
 		public void add_defaults() {
-      addSetting("layout_type", "NEO_2", "Select keyboard layout: NEO_2, ADNW, KOY");
+			addSetting("layout_type", "NEO2", "Available keyboard layouts: NEO2, ADNW, KOY");
 			//config.set("show_shortcut", "<Mod4><Super_L>n", "Toggle the visibility of the window.");
 			addSetting("show_shortcut", "<Ctrl><Alt>q", "Toggle the visibility of the window.");
 			addSetting("on_top", "1", "Show window on top.");
@@ -110,9 +110,10 @@ namespace NeoLayoutViewer {
 #        monitor          1                       2
 #       position   1 2 3 4 5 6 7 8 9 | 11 12 13 14 15 18 17 18 19 |…
 # position_cycle = 3 3 9 1 3 9 1 7 7 | 13 13 19 11 13 19 11 17 17 |… (corners only)
-# position_cycle =3 3 11 1 3 9 1 7 7 | 13 13 19 11 13 19  9 17 17 |… (cycle over two monitors)""");
+# position_cycle =3 3 11 1 3 9 1 7 7 | 13 13 19 11 13 19  9 17 17 |… (cycle over two monitors)"""
+					);
 
-				addSetting("display_numpad", "1", null);
+			addSetting("display_numpad", "1", null);
 			addSetting("display_function_keys", "0", null);
 			addSetting("window_selectable", "0", "Disable window selection to use the program as virtual keyboard.");
 			addSetting("window_decoration", "0", "Show window decoration/border (not recommended).");
