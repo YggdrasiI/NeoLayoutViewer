@@ -9,7 +9,7 @@ Wird eine der Mod-Tasten (Shift,…) gedrückt oder losgelassen, wechselt die An
 Ebene. Außerdem kann das Fenster per Tastenkombination bewegt oder ausgeblendet werden.
 Alle Einstellungen können über eine Konfigurationsdatei angepasst werden.
 
-Andere Layouts können ebenfalls angezeigt werden. Für für ADNW (Aus der Neo Welt) und KOY wurden die zugehörigen Grafiken bereits erzeugt (Jonathan Vetter 2020).
+Andere Layouts können ebenfalls angezeigt werden. Für ADNW (Aus der Neo Welt) und KOY wurden die zugehörigen Grafiken bereits erzeugt (Jonathan Vetter, 2020).
 
 Autoren:
 	Olaf Schulz 2011-2020
