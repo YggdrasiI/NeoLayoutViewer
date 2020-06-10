@@ -14,8 +14,7 @@ using Posix;//system-call
 
 namespace NeoLayoutViewer {
 
-
-  /* Use Layout instead of Fixed because size of Layout content does not
+	/* Use Layout instead of Fixed because size of Layout content does not
 	influence the window size. (=> No feedback loop) */
 	public class KeyOverlay : Gtk.Layout {
 
@@ -29,9 +28,26 @@ namespace NeoLayoutViewer {
 		private int _height;
 
 		public KeyOverlay(NeoWindow winMain) {
-
 			this.winMain = winMain;
-			this.keysyms = generateKeysyms();
+			switch (winMain.layoutType) {
+				case "ADNW":
+					{
+						this.keysyms = generateKeysymsAdnw(); // for ADNW-layout
+						break;
+					}
+				case "KOY":
+					{
+						this.keysyms = generateKeysymsKoy();  // for KOY-layout
+						break;
+					}
+				case "NEO2":
+				default:
+					{
+						this.keysyms = generateKeysymsNeo2();  // for NEO-layout
+						break;
+					}
+			}
+
 			this.eventCells = new Gee.HashMap<int, KeyEventCell>();
 
 			this._width = this.winMain.get_allocated_width();
@@ -971,7 +987,8 @@ namespace NeoLayoutViewer {
 		}
 	}
 
-	public Gee.HashMap<int, KeycodeArray> generateKeysyms() {
+  // Define Keyboard layout NEO2
+	public Gee.HashMap<int, KeycodeArray> generateKeysymsNeo2() {
 			Gee.HashMap<int, KeycodeArray> keysyms = new Gee.HashMap<int, KeycodeArray>();
 
 			/* Define keyboard layout. this object maps the keycodes to the list of keycodes of each keyboard layer. */
@@ -1228,6 +1245,525 @@ namespace NeoLayoutViewer {
 
 			return keysyms;
 		}
+
+  // Define Keyboard layout ADNW (Aus der Neo Welt)
+	public Gee.HashMap<int, KeycodeArray> generateKeysymsAdnw() {
+			Gee.HashMap<int, KeycodeArray> keysyms = new Gee.HashMap<int, KeycodeArray>();
+
+			/* Define keyboard layout. this object maps the keycodes to the list of keycodes of each keyboard layer. */
+			keysyms.set(8, new KeycodeArray({}));
+			keysyms.set( 9, new KeycodeArray({ XK_Escape, XK_Escape, XK_Escape, XK_Escape, XK_Escape }));
+			keysyms.set( 10, new KeycodeArray({ XK_1, XK_degree, XK_onesuperior, XK_onesubscript, XK_ordfeminine, XK_notsign, 0 /*NoSymbol*/ }));
+			keysyms.set( 11, new KeycodeArray({ XK_2, XK_section, XK_twosuperior, XK_twosubscript, XK_masculine, XK_logicalor, 0 /*NoSymbol*/ }));
+			keysyms.set( 12, new KeycodeArray({ XK_3, (uint)X.string_to_keysym("U2113"), XK_threesuperior, XK_threesubscript, XK_numerosign, XK_logicaland, 0 /*NoSymbol*/ }));
+			keysyms.set( 13, new KeycodeArray({ XK_4, XK_guillemotright, (uint)X.string_to_keysym("U203A"), XK_femalesymbol, 0 /*NoSymbol*/, (uint)X.string_to_keysym("U22A5"), 0 /*NoSymbol*/ }));
+			keysyms.set( 14, new KeycodeArray({ XK_5, XK_guillemotleft, (uint)X.string_to_keysym("U2039"), XK_malesymbol, XK_periodcentered, (uint)X.string_to_keysym("U2221"), 0 /*NoSymbol*/ }));
+			keysyms.set( 15, new KeycodeArray({ XK_6, XK_dollar, XK_cent, (uint)X.string_to_keysym("U26A5"), XK_sterling, (uint)X.string_to_keysym("U2225"), 0 /*NoSymbol*/ }));
+			keysyms.set( 16, new KeycodeArray({ XK_7, XK_EuroSign, XK_yen, (uint)X.string_to_keysym("U03F0"), XK_currency, XK_rightarrow, 0 /*NoSymbol*/ }));
+			keysyms.set( 17, new KeycodeArray({ XK_8, XK_doublelowquotemark, XK_singlelowquotemark, (uint)X.string_to_keysym("U27E8"), XK_Tab, (uint)X.string_to_keysym("U221E"), 0 /*NoSymbol*/ }));
+			keysyms.set( 18, new KeycodeArray({ XK_9, XK_leftdoublequotemark, XK_leftsinglequotemark, (uint)X.string_to_keysym("U27E9"), XK_KP_Divide, XK_variation, 0 /*NoSymbol*/ }));
+			keysyms.set( 19, new KeycodeArray({ XK_0, XK_rightdoublequotemark, XK_rightsinglequotemark, XK_zerosubscript, XK_KP_Multiply, XK_emptyset, 0 /*NoSymbol*/ }));
+			keysyms.set( 20, new KeycodeArray({ XK_minus, XK_emdash, 0 /*NoSymbol*/, (uint)X.string_to_keysym("U2011"), XK_KP_Subtract, XK_hyphen, 0 /*NoSymbol*/ }));
+			keysyms.set( 21, new KeycodeArray({ XK_dead_grave, XK_dead_cedilla, XK_dead_abovering, XK_dead_abovereversedcomma, XK_dead_diaeresis, XK_dead_macron, 0 /*NoSymbol*/ }));
+			keysyms.set( 22, new KeycodeArray({ XK_BackSpace, XK_BackSpace, XK_BackSpace, XK_BackSpace, XK_BackSpace }));
+			keysyms.set( 23, new KeycodeArray({ XK_Tab, XK_ISO_Left_Tab, XK_Multi_key, XK_ISO_Level5_Lock, 0 /*NoSymbol*/, 0 /*NoSymbol*/, XK_ISO_Level5_Lock }));
+			keysyms.set( 24, new KeycodeArray({ XK_k, XK_K, XK_ellipsis, XK_Greek_kappa, XK_Prior, XK_multiply, 0 /*NoSymbol*/ }));
+			keysyms.set( 25, new KeycodeArray({ XK_u, XK_U, XK_underscore, 0 /*NoSymbol*/, XK_BackSpace, XK_includedin, 0 /*NoSymbol*/ }));
+			keysyms.set( 26, new KeycodeArray({ XK_udiaeresis, XK_Udiaeresis, XK_bracketleft, 0 /*NoSymbol*/, XK_Up, XK_union, 0 /*NoSymbol*/ }));
+			keysyms.set( 27, new KeycodeArray({ XK_period, XK_enfilledcircbullet, XK_bracketright, (uint)X.string_to_keysym("U03D1"), XK_Delete, (uint)X.string_to_keysym("U21A6"), 0 /*NoSymbol*/ }));
+			keysyms.set( 28, new KeycodeArray({ XK_adiaeresis, XK_Adiaeresis, XK_asciicircum, XK_Greek_eta, XK_Next, (uint)X.string_to_keysym("U2135"), 0 /*NoSymbol*/ }));
+			keysyms.set( 29, new KeycodeArray({ XK_v, XK_V, XK_exclam, 0 /*NoSymbol*/, XK_exclamdown, XK_radical, 0 /*NoSymbol*/ }));
+			keysyms.set( 30, new KeycodeArray({ XK_g, XK_G, XK_less, XK_Greek_gamma, XK_KP_7, XK_Greek_GAMMA, 0 /*NoSymbol*/ }));
+			keysyms.set( 31, new KeycodeArray({ XK_c, XK_C, XK_greater, XK_Greek_chi, XK_KP_8, (uint)X.string_to_keysym("U2102"), 0 /*NoSymbol*/ }));
+			keysyms.set( 32, new KeycodeArray({ XK_l, XK_L, XK_equal, XK_Greek_lamda, XK_KP_9, XK_Greek_LAMDA, 0 /*NoSymbol*/ }));
+			keysyms.set( 33, new KeycodeArray({ XK_j, XK_J, XK_ampersand, XK_Greek_theta, XK_KP_Add, XK_Greek_THETA, 0 /*NoSymbol*/ }));
+			keysyms.set( 34, new KeycodeArray({ XK_f, XK_F, (uint)X.string_to_keysym("U017F"), XK_Greek_phi, (uint)X.string_to_keysym("U2212"), XK_Greek_PHI, 0 /*NoSymbol*/ }));
+			keysyms.set( 35, new KeycodeArray({ XK_dead_acute, XK_dead_tilde, XK_dead_stroke, XK_dead_abovecomma, XK_dead_doubleacute, XK_dead_breve, 0 /*NoSymbol*/ }));
+			keysyms.set( 36, new KeycodeArray({ XK_Return, XK_Return, XK_Return, XK_Return, XK_Return }));
+			keysyms.set( 37, new KeycodeArray({ XK_Control_L, XK_Control_L, XK_Control_L, XK_Control_L, XK_Control_L }));
+			keysyms.set( 38, new KeycodeArray({ XK_h, XK_H, XK_backslash, XK_Greek_psi, XK_Home, XK_Greek_PSI, 0 /*NoSymbol*/ }));
+			keysyms.set( 39, new KeycodeArray({ XK_i, XK_I, XK_slash, XK_Greek_iota, XK_Left, XK_integral, 0 /*NoSymbol*/ }));
+			keysyms.set( 40, new KeycodeArray({ XK_e, XK_E, XK_braceleft, XK_Greek_epsilon, XK_Down, (uint)X.string_to_keysym("U2203"), 0 /*NoSymbol*/ }));
+			keysyms.set( 41, new KeycodeArray({ XK_a, XK_A, XK_braceright, XK_Greek_alpha, XK_Right, (uint)X.string_to_keysym("U2200"), 0 /*NoSymbol*/ }));
+			keysyms.set( 42, new KeycodeArray({ XK_o, XK_O, XK_asterisk, XK_Greek_omicron, XK_End, XK_elementof, 0 /*NoSymbol*/ }));
+			keysyms.set( 43, new KeycodeArray({ XK_d, XK_D, XK_question, XK_Greek_delta, XK_questiondown, XK_Greek_DELTA, 0 /*NoSymbol*/ }));
+			keysyms.set( 44, new KeycodeArray({ XK_t, XK_T, XK_parenleft, XK_Greek_tau, XK_KP_4, XK_partialderivative, 0 /*NoSymbol*/ }));
+			keysyms.set( 45, new KeycodeArray({ XK_r, XK_R, XK_parenright, XK_Greek_rho, XK_KP_5, (uint)X.string_to_keysym("U211D"), 0 /*NoSymbol*/ }));
+			keysyms.set( 46, new KeycodeArray({ XK_n, XK_N, XK_minus, XK_Greek_nu, XK_KP_6, (uint)X.string_to_keysym("U2115"), 0 /*NoSymbol*/ }));
+			keysyms.set( 47, new KeycodeArray({ XK_s, XK_S, XK_colon, XK_Greek_sigma, XK_KP_Separator, XK_Greek_SIGMA, 0 /*NoSymbol*/ }));
+			keysyms.set( 48, new KeycodeArray({ XK_ssharp, (uint)X.string_to_keysym("U1E9E"), XK_at, XK_Greek_finalsmallsigma, XK_jot, 0 /*NoSymbol*/ }));
+			keysyms.set( 49, new KeycodeArray({ XK_dead_circumflex, XK_dead_caron, (uint)X.string_to_keysym("U21BB"), (uint)X.string_to_keysym("U02DE"), XK_dead_abovedot, XK_dead_belowdot, 0 /*NoSymbol*/ }));
+			keysyms.set( 50, new KeycodeArray({ XK_Shift_L, XK_Caps_Lock }));
+			keysyms.set( 51, new KeycodeArray({ XK_ISO_Level3_Shift }));
+			keysyms.set( 52, new KeycodeArray({ XK_x, XK_X, XK_numbersign, XK_Greek_xi, XK_Escape, XK_Greek_XI, 0 /*NoSymbol*/ }));
+			keysyms.set( 53, new KeycodeArray({ XK_y, XK_Y, XK_dollar, XK_Greek_upsilon, XK_Tab, XK_nabla, 0 /*NoSymbol*/ }));
+			keysyms.set( 54, new KeycodeArray({ XK_odiaeresis, XK_Odiaeresis, XK_bar, (uint)X.string_to_keysym("U03F5"), XK_Insert, XK_intersection, 0 /*NoSymbol*/ }));
+			keysyms.set( 55, new KeycodeArray({ XK_comma, XK_endash, XK_asciitilde, (uint)X.string_to_keysym("U03F1"), XK_Return, (uint)X.string_to_keysym("U21D2"), 0 /*NoSymbol*/ }));
+			keysyms.set( 56, new KeycodeArray({ XK_q, XK_Q, XK_grave, (uint)X.string_to_keysym("U03D5"), XK_Undo, (uint)X.string_to_keysym("U211A"), 0 /*NoSymbol*/ }));
+			keysyms.set( 57, new KeycodeArray({ XK_b, XK_B, XK_plus, XK_Greek_beta, XK_colon, (uint)X.string_to_keysym("U21D0"), 0 /*NoSymbol*/ }));
+			keysyms.set( 58, new KeycodeArray({ XK_p, XK_P, XK_percent, XK_Greek_pi, XK_KP_1, XK_Greek_PI, 0 /*NoSymbol*/ }));
+			keysyms.set( 59, new KeycodeArray({ XK_w, XK_W, XK_quotedbl, XK_Greek_omega, XK_KP_2, XK_Greek_OMEGA, 0 /*NoSymbol*/ }));
+			keysyms.set( 60, new KeycodeArray({ XK_m, XK_M, XK_apostrophe, XK_Greek_mu, XK_KP_3, XK_ifonlyif, 0 /*NoSymbol*/ }));
+			keysyms.set( 61, new KeycodeArray({ XK_z, XK_Z, XK_semicolon, XK_Greek_zeta, XK_semicolon, (uint)X.string_to_keysym("U2124"), 0 /*NoSymbol*/ }));
+			keysyms.set( 62, new KeycodeArray({ XK_Shift_R, XK_Caps_Lock }));
+			keysyms.set( 63, new KeycodeArray({ XK_KP_Multiply, XK_KP_Multiply, (uint)X.string_to_keysym("U2219"), (uint)X.string_to_keysym("U2299"), XK_multiply, (uint)X.string_to_keysym("U2297"), 0 /*NoSymbol*/ }));
+			keysyms.set( 64, new KeycodeArray({ XK_Alt_L, XK_Alt_L, XK_Alt_L, XK_Alt_L, XK_Alt_L, XK_Alt_L }));
+			keysyms.set( 65, new KeycodeArray({ XK_space, XK_space, XK_space, XK_nobreakspace, XK_KP_0, (uint)X.string_to_keysym("U202F"), 0 /*NoSymbol*/ }));
+			keysyms.set( 66, new KeycodeArray({ XK_ISO_Level3_Shift }));
+			keysyms.set( 67, new KeycodeArray({ XK_F1, 0 /*XK_XF86_Switch_VT_1*/ }));
+			keysyms.set( 68, new KeycodeArray({ XK_F2, 0 /*XK_XF86_Switch_VT_2*/ }));
+			keysyms.set( 69, new KeycodeArray({ XK_F3, 0 /*XK_XF86_Switch_VT_3*/ }));
+			keysyms.set( 70, new KeycodeArray({ XK_F4, 0 /*XK_XF86_Switch_VT_4*/ }));
+			keysyms.set( 71, new KeycodeArray({ XK_F5, 0 /*XK_XF86_Switch_VT_5*/ }));
+			keysyms.set( 72, new KeycodeArray({ XK_F6, 0 /*XK_XF86_Switch_VT_6*/ }));
+			keysyms.set( 73, new KeycodeArray({ XK_F7, 0 /*XK_XF86_Switch_VT_7*/ }));
+			keysyms.set( 74, new KeycodeArray({ XK_F8, 0 /*XK_XF86_Switch_VT_8*/ }));
+			keysyms.set( 75, new KeycodeArray({ XK_F9, 0 /*XK_XF86_Switch_VT_9*/ }));
+			keysyms.set( 76, new KeycodeArray({ XK_F10, 0 /*XK_XF86_Switch_VT_10*/ }));
+			keysyms.set( 77, new KeycodeArray({ XK_Tab, XK_ISO_Left_Tab, XK_equal, XK_approxeq, XK_notequal, XK_identical, 0 /*NoSymbol*/ }));
+			keysyms.set( 78, new KeycodeArray({ XK_Scroll_Lock, XK_Scroll_Lock, XK_Scroll_Lock, XK_Scroll_Lock, XK_Scroll_Lock }));
+			keysyms.set( 79, new KeycodeArray({ XK_KP_7, (uint)X.string_to_keysym("U2714"), (uint)X.string_to_keysym("U2195"), (uint)X.string_to_keysym("U226A"), XK_KP_Home, XK_upstile, 0 /*NoSymbol*/ }));
+			keysyms.set( 80, new KeycodeArray({ XK_KP_8, (uint)X.string_to_keysym("U2718"), XK_uparrow, XK_intersection, XK_KP_Up, (uint)X.string_to_keysym("U22C2"),
+						0 /*NoSymbol*/ }));
+			keysyms.set( 81, new KeycodeArray({ XK_KP_9, XK_dagger, (uint)X.string_to_keysym("U20D7"), (uint)X.string_to_keysym("U226B"), XK_KP_Prior, (uint)X.string_to_keysym("U2309"), 0 /*NoSymbol*/ }));
+			keysyms.set( 82, new KeycodeArray({ XK_KP_Subtract, XK_KP_Subtract, (uint)X.string_to_keysym("U2212"), (uint)X.string_to_keysym("U2296"), (uint)X.string_to_keysym("U2216"), (uint)X.string_to_keysym("U2238"), 0 /*NoSymbol*/ }));
+			keysyms.set( 83, new KeycodeArray({ XK_KP_4, XK_club, XK_leftarrow, XK_includedin, XK_KP_Left, (uint)X.string_to_keysym("U2286"), 0 /*NoSymbol*/ }));
+			keysyms.set( 84, new KeycodeArray({ XK_KP_5, XK_EuroSign, XK_colon, (uint)X.string_to_keysym("U22B6"), XK_KP_Begin, (uint)X.string_to_keysym("U22B7"), 0 /*NoSymbol*/ }));
+			keysyms.set( 85, new KeycodeArray({ XK_KP_6, (uint)X.string_to_keysym("U2023"), XK_rightarrow, XK_includes, XK_KP_Right, (uint)X.string_to_keysym("U2287"), 0 /*NoSymbol*/ }));
+			keysyms.set( 86, new KeycodeArray({ XK_KP_Add, XK_KP_Add, XK_plusminus, (uint)X.string_to_keysym("U2295"), (uint)X.string_to_keysym("U2213"), (uint)X.string_to_keysym("U2214"), 0 /*NoSymbol*/ }));
+			keysyms.set( 87, new KeycodeArray({ XK_KP_1, XK_diamond, (uint)X.string_to_keysym("U2194"), XK_lessthanequal, XK_KP_End, XK_downstile, 0 /*NoSymbol*/ }));
+			keysyms.set( 88, new KeycodeArray({ XK_KP_2, XK_heart, XK_downarrow, XK_union, XK_KP_Down, (uint)X.string_to_keysym("U22C3"), 0 /*NoSymbol*/ }));
+			keysyms.set( 89, new KeycodeArray({ XK_KP_3, (uint)X.string_to_keysym("U2660"), (uint)X.string_to_keysym("U21CC"), XK_greaterthanequal, XK_KP_Next, (uint)X.string_to_keysym("U230B"), 0 /*NoSymbol*/ }));
+			keysyms.set( 90, new KeycodeArray({ XK_KP_0, (uint)X.string_to_keysym("U2423"), XK_percent, (uint)X.string_to_keysym("U2030"), XK_KP_Insert, (uint)X.string_to_keysym("U25A1"), 0 /*NoSymbol*/ }));
+			keysyms.set( 91, new KeycodeArray({ XK_KP_Separator, XK_period, XK_comma, XK_minutes, XK_KP_Delete, XK_seconds, 0 /*NoSymbol*/ }));
+			keysyms.set( 92, new KeycodeArray({ XK_ISO_Level3_Shift }));
+			keysyms.set( 93, new KeycodeArray({ }));
+			keysyms.set( 94, new KeycodeArray({ XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Lock, XK_ISO_Level5_Lock, XK_ISO_Level5_Lock }));
+			keysyms.set( 95, new KeycodeArray({ XK_F11, 0 /*XK_XF86_Switch_VT_11*/ }));
+			keysyms.set( 96, new KeycodeArray({ XK_F12, 0 /*XK_XF86_Switch_VT_12*/ }));
+			keysyms.set( 97, new KeycodeArray({ }));
+			keysyms.set( 98, new KeycodeArray({ XK_Katakana }));
+			keysyms.set( 99, new KeycodeArray({ XK_Hiragana }));
+			keysyms.set(100, new KeycodeArray({ XK_Henkan_Mode }));
+			keysyms.set(101, new KeycodeArray({ XK_Hiragana_Katakana }));
+			keysyms.set(102, new KeycodeArray({ XK_Muhenkan }));
+			keysyms.set(103, new KeycodeArray({ }));
+			keysyms.set(104, new KeycodeArray({ XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, 0 /*NoSymbol*/ }));
+			keysyms.set(105, new KeycodeArray({ XK_Control_R, XK_Control_R, XK_Control_R, XK_Control_R, XK_Control_R }));
+			keysyms.set(106, new KeycodeArray({ XK_KP_Divide, XK_KP_Divide, XK_division, (uint)X.string_to_keysym("U2300"), (uint)X.string_to_keysym("U2215"), (uint)X.string_to_keysym("U2223"), 0 /*NoSymbol*/ }));
+			keysyms.set(107, new KeycodeArray({ XK_Print, XK_Sys_Req }));
+			keysyms.set(108, new KeycodeArray({ XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Lock, XK_ISO_Level5_Lock, XK_ISO_Level5_Lock }));
+			keysyms.set(109, new KeycodeArray({ XK_Linefeed, XK_Linefeed, XK_Linefeed, XK_Linefeed, XK_Linefeed }));
+			keysyms.set(110, new KeycodeArray({ XK_Home, XK_Home, XK_Home, XK_Home, XK_Home }));
+			keysyms.set(111, new KeycodeArray({ XK_Up, XK_Up, XK_Up, XK_Up, XK_Up }));
+			keysyms.set(112, new KeycodeArray({ XK_Prior, XK_Prior, XK_Prior, XK_Prior, XK_Prior }));
+			keysyms.set(113, new KeycodeArray({ XK_Left, XK_Left, XK_Left, XK_Left, XK_Left }));
+			keysyms.set(114, new KeycodeArray({ XK_Right, XK_Right, XK_Right, XK_Right, XK_Right }));
+			keysyms.set(115, new KeycodeArray({ XK_End, XK_End, XK_End, XK_End, XK_End }));
+			keysyms.set(116, new KeycodeArray({ XK_Down, XK_Down, XK_Down, XK_Down, XK_Down }));
+			keysyms.set(117, new KeycodeArray({ XK_Next, XK_Next, XK_Next, XK_Next, XK_Next }));
+			keysyms.set(118, new KeycodeArray({ XK_Insert, XK_Insert, XK_Insert, XK_Insert, XK_Insert }));
+			keysyms.set(119, new KeycodeArray({ XK_Delete, XK_Delete, XK_Delete, XK_Delete, XK_Delete }));
+			keysyms.set(120, new KeycodeArray({ }));
+			keysyms.set(121, new KeycodeArray({ 0 /*XK_XF86AudioMute*/ }));
+			keysyms.set(122, new KeycodeArray({ 0 /*XK_XF86AudioLowerVolume*/ }));
+			keysyms.set(123, new KeycodeArray({ 0 /*XK_XF86AudioRaiseVolume*/ }));
+			keysyms.set(124, new KeycodeArray({ 0 /*XK_XF86PowerOff*/ }));
+			keysyms.set(125, new KeycodeArray({ XK_KP_Equal, 0 /*NoSymbol*/, 0 /*NoSymbol*/, 0 /*NoSymbol*/, 0 /*NoSymbol*/, 0 /*NoSymbol*/, 0 /*NoSymbol*/ }));
+			keysyms.set(126, new KeycodeArray({ XK_plusminus }));
+			keysyms.set(127, new KeycodeArray({ XK_Pause, XK_Break }));
+			keysyms.set(128, new KeycodeArray({ 0 /*XK_XF86LaunchA*/ }));
+			keysyms.set(129, new KeycodeArray({ XK_KP_Decimal }));
+			keysyms.set(130, new KeycodeArray({ XK_Hangul }));
+			keysyms.set(131, new KeycodeArray({ XK_Hangul_Hanja }));
+			keysyms.set(132, new KeycodeArray({ }));
+			keysyms.set(133, new KeycodeArray({ XK_Super_L }));
+			keysyms.set(134, new KeycodeArray({ XK_Super_R }));
+			keysyms.set(135, new KeycodeArray({ XK_Menu }));
+			keysyms.set(136, new KeycodeArray({ XK_Cancel }));
+			keysyms.set(137, new KeycodeArray({ XK_Redo }));
+			keysyms.set(138, new KeycodeArray({ 0 /*XK_SunProps*/ }));
+			keysyms.set(139, new KeycodeArray({ XK_Undo }));
+			keysyms.set(140, new KeycodeArray({ 0 /*XK_SunFront*/ }));
+			keysyms.set(141, new KeycodeArray({ 0 /*XK_XF86Copy*/ }));
+			keysyms.set(142, new KeycodeArray({ 0 /*XK_SunOpen*/ }));
+			keysyms.set(143, new KeycodeArray({ 0 /*XK_XF86Paste*/ }));
+			keysyms.set(144, new KeycodeArray({ XK_Find }));
+			keysyms.set(145, new KeycodeArray({ 0 /*XK_XF86Cut*/ }));
+			keysyms.set(146, new KeycodeArray({ XK_Help }));
+			keysyms.set(147, new KeycodeArray({ 0 /*XK_XF86MenuKB*/ }));
+			keysyms.set(148, new KeycodeArray({ 0 /*XK_XF86Calculator*/ }));
+			keysyms.set(149, new KeycodeArray({ }));
+			keysyms.set(150, new KeycodeArray({ 0 /*XK_XF86Sleep*/ }));
+			keysyms.set(151, new KeycodeArray({ 0 /*XK_XF86WakeUp*/ }));
+			keysyms.set(152, new KeycodeArray({ 0 /*XK_XF86Explorer*/ }));
+			keysyms.set(153, new KeycodeArray({ 0 /*XK_XF86Send*/ }));
+			keysyms.set(154, new KeycodeArray({ }));
+			keysyms.set(155, new KeycodeArray({ 0 /*XK_XF86Xfer*/ }));
+			keysyms.set(156, new KeycodeArray({ 0 /*XK_XF86Launch1*/ }));
+			keysyms.set(157, new KeycodeArray({ 0 /*XK_XF86Launch2*/ }));
+			keysyms.set(158, new KeycodeArray({ 0 /*XK_XF86WWW*/ }));
+			keysyms.set(159, new KeycodeArray({ 0 /*XK_XF86DOS*/ }));
+			keysyms.set(160, new KeycodeArray({ 0 /*XK_XF86ScreenSaver*/ }));
+			keysyms.set(161, new KeycodeArray({ }));
+			keysyms.set(162, new KeycodeArray({ 0 /*XK_XF86RotateWindows*/ }));
+			keysyms.set(163, new KeycodeArray({ 0 /*XK_XF86Mail*/ }));
+			keysyms.set(164, new KeycodeArray({ 0 /*XK_XF86Favorites*/ }));
+			keysyms.set(165, new KeycodeArray({ 0 /*XK_XF86MyComputer*/ }));
+			keysyms.set(166, new KeycodeArray({ 0 /*XK_XF86Back*/ }));
+			keysyms.set(167, new KeycodeArray({ 0 /*XK_XF86Forward*/ }));
+			keysyms.set(168, new KeycodeArray({ }));
+			keysyms.set(169, new KeycodeArray({ 0 /*XK_XF86Eject*/ }));
+			keysyms.set(170, new KeycodeArray({ 0 /*XK_XF86Eject*/, 0 /*XK_XF86Eject*/ }));
+			keysyms.set(171, new KeycodeArray({ 0 /*XK_XF86AudioNext*/ }));
+			keysyms.set(172, new KeycodeArray({ 0 /*XK_XF86AudioPlay*/, 0 /*XK_XF86AudioPause*/ }));
+			keysyms.set(173, new KeycodeArray({ 0 /*XK_XF86AudioPrev*/ }));
+			keysyms.set(174, new KeycodeArray({ 0 /*XK_XF86AudioStop*/, 0 /*XK_XF86Eject*/ }));
+			keysyms.set(175, new KeycodeArray({ 0 /*XK_XF86AudioRecord*/ }));
+			keysyms.set(176, new KeycodeArray({ 0 /*XK_XF86AudioRewind*/ }));
+			keysyms.set(177, new KeycodeArray({ 0 /*XK_XF86Phone*/ }));
+			keysyms.set(178, new KeycodeArray({ }));
+			keysyms.set(179, new KeycodeArray({ 0 /*XK_XF86Tools*/ }));
+			keysyms.set(180, new KeycodeArray({ 0 /*XK_XF86HomePage*/ }));
+			keysyms.set(181, new KeycodeArray({ 0 /*XK_XF86Reload*/ }));
+			keysyms.set(182, new KeycodeArray({ 0 /*XK_XF86Close*/ }));
+			keysyms.set(183, new KeycodeArray({ }));
+			keysyms.set(184, new KeycodeArray({ }));
+			keysyms.set(185, new KeycodeArray({ 0 /*XK_XF86ScrollUp*/ }));
+			keysyms.set(186, new KeycodeArray({ 0 /*XK_XF86ScrollDown*/ }));
+			keysyms.set(187, new KeycodeArray({ XK_parenleft }));
+			keysyms.set(188, new KeycodeArray({ XK_parenright }));
+			keysyms.set(189, new KeycodeArray({ 0 /*XK_XF86New*/ }));
+			keysyms.set(190, new KeycodeArray({ XK_Redo }));
+			keysyms.set(191, new KeycodeArray({ 0 /*XK_XF86Tools*/ }));
+			keysyms.set(192, new KeycodeArray({ 0 /*XK_XF86Launch5*/ }));
+			keysyms.set(193, new KeycodeArray({ 0 /*XK_XF86MenuKB*/ }));
+			keysyms.set(194, new KeycodeArray({ }));
+			keysyms.set(195, new KeycodeArray({ }));
+			keysyms.set(196, new KeycodeArray({ }));
+			keysyms.set(197, new KeycodeArray({ }));
+			keysyms.set(198, new KeycodeArray({ }));
+			keysyms.set(199, new KeycodeArray({ }));
+			keysyms.set(200, new KeycodeArray({ 0 /*XK_XF86TouchpadToggle*/ }));
+			keysyms.set(201, new KeycodeArray({ }));
+			keysyms.set(202, new KeycodeArray({ }));
+			keysyms.set(203, new KeycodeArray({ XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift }));
+			keysyms.set(204, new KeycodeArray({ XK_Alt_L }));
+			keysyms.set(205, new KeycodeArray({ XK_Alt_L }));
+			keysyms.set(206, new KeycodeArray({ XK_Super_L }));
+			keysyms.set(207, new KeycodeArray({ }));
+			keysyms.set(208, new KeycodeArray({ 0 /*XK_XF86AudioPlay*/ }));
+			keysyms.set(209, new KeycodeArray({ 0 /*XK_XF86AudioPause*/ }));
+			keysyms.set(210, new KeycodeArray({ 0 /*XK_XF86Launch3*/ }));
+			keysyms.set(211, new KeycodeArray({ 0 /*XK_XF86Launch4*/ }));
+			keysyms.set(212, new KeycodeArray({ 0 /*XK_XF86LaunchB*/ }));
+			keysyms.set(213, new KeycodeArray({ 0 /*XK_XF86Suspend*/ }));
+			keysyms.set(214, new KeycodeArray({ 0 /*XK_XF86Close*/ }));
+			keysyms.set(215, new KeycodeArray({ 0 /*XK_XF86AudioPlay*/ }));
+			keysyms.set(216, new
+					KeycodeArray({ 0 /*XK_XF86AudioForward*/ }));
+			keysyms.set(217, new KeycodeArray({ }));
+			keysyms.set(218, new KeycodeArray({ XK_Print }));
+			keysyms.set(219, new KeycodeArray({ }));
+			keysyms.set(220, new KeycodeArray({ 0 /*XK_XF86WebCam*/ }));
+			keysyms.set(221, new KeycodeArray({ }));
+			keysyms.set(222, new KeycodeArray({ }));
+			keysyms.set(223, new KeycodeArray({ 0 /*XK_XF86Mail*/ }));
+			keysyms.set(224, new KeycodeArray({ }));
+			keysyms.set(225, new KeycodeArray({ 0 /*XK_XF86Search*/ }));
+			keysyms.set(226, new KeycodeArray({ }));
+			keysyms.set(227, new KeycodeArray({ 0 /*XK_XF86Finance*/ }));
+			keysyms.set(228, new KeycodeArray({ }));
+			keysyms.set(229, new KeycodeArray({ 0 /*XK_XF86Shop*/ }));
+			keysyms.set(230, new KeycodeArray({ }));
+			keysyms.set(231, new KeycodeArray({ XK_Cancel }));
+			keysyms.set(232, new KeycodeArray({ 0 /*XK_XF86MonBrightnessDown*/ }));
+			keysyms.set(233, new KeycodeArray({ 0 /*XK_XF86MonBrightnessUp*/ }));
+			keysyms.set(234, new KeycodeArray({ 0 /*XK_XF86AudioMedia*/ }));
+			keysyms.set(235, new KeycodeArray({ 0 /*XK_XF86Display*/ }));
+			keysyms.set(236, new KeycodeArray({ 0 /*XK_XF86KbdLightOnOff*/ }));
+			keysyms.set(237, new KeycodeArray({ 0 /*XK_XF86KbdBrightnessDown*/ }));
+			keysyms.set(238, new KeycodeArray({ 0 /*XK_XF86KbdBrightnessUp*/ }));
+			keysyms.set(239, new KeycodeArray({ 0 /*XK_XF86Send*/ }));
+			keysyms.set(240, new KeycodeArray({ 0 /*XK_XF86Reply*/ }));
+			keysyms.set(241, new KeycodeArray({ 0 /*XK_XF86MailForward*/ }));
+			keysyms.set(242, new KeycodeArray({ 0 /*XK_XF86Save*/ }));
+			keysyms.set(243, new KeycodeArray({ 0 /*XK_XF86Documents*/ }));
+			keysyms.set(244, new KeycodeArray({ 0 /*XK_XF86Battery*/ }));
+			keysyms.set(245, new KeycodeArray({ 0 /*XK_XF86Bluetooth*/ }));
+			keysyms.set(246, new KeycodeArray({ 0 /*XK_XF86WLAN*/ }));
+			keysyms.set(247, new KeycodeArray({ }));
+			keysyms.set(248, new KeycodeArray({ }));
+			keysyms.set(249, new KeycodeArray({ }));
+			keysyms.set(250, new KeycodeArray({ }));
+			keysyms.set(251, new KeycodeArray({ }));
+			keysyms.set(252, new KeycodeArray({ }));
+			keysyms.set(253, new KeycodeArray({ }));
+			keysyms.set(254, new KeycodeArray({ }));
+			keysyms.set(255, new KeycodeArray({ }));
+
+			return keysyms;
+		}
+
+  // Define Keyboard layout KOY (Weiterentwicklung von Aus der Neo Welt)
+	public Gee.HashMap<int, KeycodeArray> generateKeysymsKoy() {
+			Gee.HashMap<int, KeycodeArray> keysyms = new Gee.HashMap<int, KeycodeArray>();
+
+			/* Define keyboard layout. this object maps the keycodes to the list of keycodes of each keyboard layer. */
+			keysyms.set(8, new KeycodeArray({}));
+			keysyms.set( 9, new KeycodeArray({ XK_Escape, XK_Escape, XK_Escape, XK_Escape, XK_Escape }));
+			keysyms.set( 10, new KeycodeArray({ XK_1, XK_degree, XK_onesuperior, XK_onesubscript, XK_ordfeminine, XK_notsign, 0 /*NoSymbol*/ }));
+			keysyms.set( 11, new KeycodeArray({ XK_2, XK_section, XK_twosuperior, XK_twosubscript, XK_masculine, XK_logicalor, 0 /*NoSymbol*/ }));
+			keysyms.set( 12, new KeycodeArray({ XK_3, (uint)X.string_to_keysym("U2113"), XK_threesuperior, XK_threesubscript, XK_numerosign, XK_logicaland, 0 /*NoSymbol*/ }));
+			keysyms.set( 13, new KeycodeArray({ XK_4, XK_guillemotright, (uint)X.string_to_keysym("U203A"), XK_femalesymbol, 0 /*NoSymbol*/, (uint)X.string_to_keysym("U22A5"), 0 /*NoSymbol*/ }));
+			keysyms.set( 14, new KeycodeArray({ XK_5, XK_guillemotleft, (uint)X.string_to_keysym("U2039"), XK_malesymbol, XK_periodcentered, (uint)X.string_to_keysym("U2221"), 0 /*NoSymbol*/ }));
+			keysyms.set( 15, new KeycodeArray({ XK_6, XK_dollar, XK_cent, (uint)X.string_to_keysym("U26A5"), XK_sterling, (uint)X.string_to_keysym("U2225"), 0 /*NoSymbol*/ }));
+			keysyms.set( 16, new KeycodeArray({ XK_7, XK_EuroSign, XK_yen, (uint)X.string_to_keysym("U03F0"), XK_currency, XK_rightarrow, 0 /*NoSymbol*/ }));
+			keysyms.set( 17, new KeycodeArray({ XK_8, XK_doublelowquotemark, XK_singlelowquotemark, (uint)X.string_to_keysym("U27E8"), XK_Tab, (uint)X.string_to_keysym("U221E"), 0 /*NoSymbol*/ }));
+			keysyms.set( 18, new KeycodeArray({ XK_9, XK_leftdoublequotemark, XK_leftsinglequotemark, (uint)X.string_to_keysym("U27E9"), XK_KP_Divide, XK_variation, 0 /*NoSymbol*/ }));
+			keysyms.set( 19, new KeycodeArray({ XK_0, XK_rightdoublequotemark, XK_rightsinglequotemark, XK_zerosubscript, XK_KP_Multiply, XK_emptyset, 0 /*NoSymbol*/ }));
+			keysyms.set( 20, new KeycodeArray({ XK_minus, XK_emdash, 0 /*NoSymbol*/, (uint)X.string_to_keysym("U2011"), XK_KP_Subtract, XK_hyphen, 0 /*NoSymbol*/ }));
+			keysyms.set( 21, new KeycodeArray({ XK_dead_grave, XK_dead_cedilla, XK_dead_abovering, XK_dead_abovereversedcomma, XK_dead_diaeresis, XK_dead_macron, 0 /*NoSymbol*/ }));
+			keysyms.set( 22, new KeycodeArray({ XK_BackSpace, XK_BackSpace, XK_BackSpace, XK_BackSpace, XK_BackSpace }));
+			keysyms.set( 23, new KeycodeArray({ XK_Tab, XK_ISO_Left_Tab, XK_Multi_key, XK_ISO_Level5_Lock, 0 /*NoSymbol*/, 0 /*NoSymbol*/, XK_ISO_Level5_Lock }));
+			keysyms.set( 24, new KeycodeArray({ XK_k, XK_K, XK_ellipsis, XK_Greek_kappa, XK_Prior, XK_multiply, 0 /*NoSymbol*/ }));
+			keysyms.set( 25, new KeycodeArray({ XK_period, XK_enfilledcircbullet, XK_underscore, (uint)X.string_to_keysym("U03D1"), XK_BackSpace, (uint)X.string_to_keysym("U21A6"), 0 /*NoSymbol*/ }));
+			keysyms.set( 26, new KeycodeArray({ XK_o, XK_O, XK_bracketleft, XK_Greek_omicron, XK_Up, XK_elementof, 0 /*NoSymbol*/ }));
+			keysyms.set( 27, new KeycodeArray({ XK_comma, XK_endash, XK_bracketright, (uint)X.string_to_keysym("U03F1"), XK_Delete, (uint)X.string_to_keysym("U21D2"), 0 /*NoSymbol*/ }));
+			keysyms.set( 28, new KeycodeArray({ XK_y, XK_Y, XK_asciicircum, XK_Greek_upsilon, XK_Next, XK_nabla, 0 /*NoSymbol*/ }));
+			keysyms.set( 29, new KeycodeArray({ XK_v, XK_V, XK_exclam, 0 /*NoSymbol*/, 0 /*NoSymbol*/, XK_radical, 0 /*NoSymbol*/ }));
+			keysyms.set( 30, new KeycodeArray({ XK_g, XK_G, XK_less, XK_Greek_gamma, XK_KP_7, XK_Greek_GAMMA, 0 /*NoSymbol*/ }));
+			keysyms.set( 31, new KeycodeArray({ XK_c, XK_C, XK_greater, XK_Greek_chi, XK_KP_8, (uint)X.string_to_keysym("U2102"), 0 /*NoSymbol*/ }));
+			keysyms.set( 32, new KeycodeArray({ XK_l, XK_L, (uint)X.string_to_keysym("U1E9E"), XK_equal, XK_Greek_lamda, XK_KP_9, XK_Greek_LAMDA, 0 /*NoSymbol*/ }));
+			keysyms.set( 33, new KeycodeArray({ XK_ssharp, XK_ampersand, XK_Greek_finalsmallsigma, XK_KP_Add, XK_jot, 0 /*NoSymbol*/ }));
+			keysyms.set( 34, new KeycodeArray({ XK_z, XK_Z, (uint)X.string_to_keysym("U017F"), XK_Greek_zeta, (uint)X.string_to_keysym("U2212"), (uint)X.string_to_keysym("U2124"), 0 /*NoSymbol*/ }));
+			keysyms.set( 35, new KeycodeArray({ XK_dead_acute, XK_dead_tilde, XK_dead_stroke, XK_dead_abovecomma, XK_dead_doubleacute, XK_dead_breve, 0 /*NoSymbol*/ }));
+			keysyms.set( 36, new KeycodeArray({ XK_Return, XK_Return, XK_Return, XK_Return, XK_Return }));
+			keysyms.set( 37, new KeycodeArray({ XK_Control_L, XK_Control_L, XK_Control_L, XK_Control_L, XK_Control_L }));
+			keysyms.set( 38, new KeycodeArray({ XK_h, XK_H, XK_backslash, XK_Greek_psi, XK_Home, XK_Greek_PSI, 0 /*NoSymbol*/ }));
+			keysyms.set( 39, new KeycodeArray({ XK_a, XK_A, XK_slash, XK_Greek_alpha, XK_Left, (uint)X.string_to_keysym("U2200"), 0 /*NoSymbol*/ }));
+			keysyms.set( 40, new KeycodeArray({ XK_e, XK_E, XK_braceleft, XK_Greek_epsilon, XK_Down, (uint)X.string_to_keysym("U2203"), 0 /*NoSymbol*/ }));
+			keysyms.set( 41, new KeycodeArray({ XK_i, XK_I, XK_braceright, XK_Greek_iota, XK_Right, XK_integral, 0 /*NoSymbol*/ }));
+			keysyms.set( 42, new KeycodeArray({ XK_u, XK_U, XK_asterisk, 0 /*NoSymbol*/, XK_End, XK_includedin, 0 /*NoSymbol*/ }));
+			keysyms.set( 43, new KeycodeArray({ XK_d, XK_D, XK_question, XK_Greek_delta, XK_questiondown, XK_Greek_DELTA, 0 /*NoSymbol*/ }));
+			keysyms.set( 44, new KeycodeArray({ XK_t, XK_T, XK_parenleft, XK_Greek_tau, XK_KP_4, XK_partialderivative, 0 /*NoSymbol*/ }));
+			keysyms.set( 45, new KeycodeArray({ XK_r, XK_R, XK_parenright, XK_Greek_rho, XK_KP_5, (uint)X.string_to_keysym("U211D"), 0 /*NoSymbol*/ }));
+			keysyms.set( 46, new KeycodeArray({ XK_n, XK_N, XK_minus, XK_Greek_nu, XK_KP_6, (uint)X.string_to_keysym("U2115"), 0 /*NoSymbol*/ }));
+			keysyms.set( 47, new KeycodeArray({ XK_s, XK_S, XK_colon, XK_Greek_sigma, XK_KP_Separator, XK_Greek_SIGMA, 0 /*NoSymbol*/ }));
+			keysyms.set( 48, new KeycodeArray({ XK_f, XK_F, XK_at, XK_Greek_phi, XK_Return, XK_Greek_PHI, 0 /*NoSymbol*/ }));
+			keysyms.set( 49, new KeycodeArray({ XK_dead_circumflex, XK_dead_caron, (uint)X.string_to_keysym("U21BB"), (uint)X.string_to_keysym("U02DE"), XK_dead_abovedot, XK_dead_belowdot, 0 /*NoSymbol*/ }));
+			keysyms.set( 50, new KeycodeArray({ XK_Shift_L, XK_Caps_Lock }));
+			keysyms.set( 51, new KeycodeArray({ XK_ISO_Level3_Shift }));
+			keysyms.set( 52, new KeycodeArray({ XK_x, XK_X, XK_numbersign, XK_Greek_xi, XK_Escape, XK_Greek_XI, 0 /*NoSymbol*/ }));
+			keysyms.set( 53, new KeycodeArray({ XK_q, XK_Q, XK_dollar, (uint)X.string_to_keysym("U03D5"), XK_Tab, (uint)X.string_to_keysym("U211A"), 0 /*NoSymbol*/ }));
+			keysyms.set( 54, new KeycodeArray({ XK_adiaeresis, XK_Adiaeresis, XK_bar, XK_Greek_eta, XK_Insert, (uint)X.string_to_keysym("U2135"), 0 /*NoSymbol*/ }));
+			keysyms.set( 55, new KeycodeArray({ XK_udiaeresis, XK_Udiaeresis, XK_asciitilde, 0 /*NoSymbol*/, XK_Return, XK_union, 0 /*NoSymbol*/ }));
+			keysyms.set( 56, new KeycodeArray({ XK_odiaeresis, XK_Odiaeresis, XK_grave, (uint)X.string_to_keysym("U03F5"), XK_Undo, XK_intersection, 0 /*NoSymbol*/ }));
+			keysyms.set( 57, new KeycodeArray({ XK_b, XK_B, XK_plus, XK_Greek_beta, XK_colon, (uint)X.string_to_keysym("U21D0"), 0 /*NoSymbol*/ }));
+			keysyms.set( 58, new KeycodeArray({ XK_p, XK_P, XK_percent, XK_Greek_pi, XK_KP_1, XK_Greek_PI, 0 /*NoSymbol*/ }));
+			keysyms.set( 59, new KeycodeArray({ XK_w, XK_W, XK_quotedbl, XK_Greek_omega, XK_KP_2, XK_Greek_OMEGA, 0 /*NoSymbol*/ }));
+			keysyms.set( 60, new KeycodeArray({ XK_m, XK_M, XK_apostrophe, XK_Greek_mu, XK_KP_3, XK_ifonlyif, 0 /*NoSymbol*/ }));
+			keysyms.set( 61, new KeycodeArray({ XK_j, XK_J, XK_semicolon, XK_Greek_theta, XK_semicolon, XK_Greek_THETA, 0 /*NoSymbol*/ }));
+			keysyms.set( 62, new KeycodeArray({ XK_Shift_R, XK_Caps_Lock }));
+			keysyms.set( 63, new KeycodeArray({ XK_KP_Multiply, XK_KP_Multiply, (uint)X.string_to_keysym("U2219"), (uint)X.string_to_keysym("U2299"), XK_multiply, (uint)X.string_to_keysym("U2297"), 0 /*NoSymbol*/ }));
+			keysyms.set( 64, new KeycodeArray({ XK_Alt_L, XK_Alt_L, XK_Alt_L, XK_Alt_L, XK_Alt_L, XK_Alt_L }));
+			keysyms.set( 65, new KeycodeArray({ XK_space, XK_space, XK_space, XK_nobreakspace, XK_KP_0, (uint)X.string_to_keysym("U202F"), 0 /*NoSymbol*/ }));
+			keysyms.set( 66, new KeycodeArray({ XK_ISO_Level3_Shift }));
+			keysyms.set( 67, new KeycodeArray({ XK_F1, 0 /*XK_XF86_Switch_VT_1*/ }));
+			keysyms.set( 68, new KeycodeArray({ XK_F2, 0 /*XK_XF86_Switch_VT_2*/ }));
+			keysyms.set( 69, new KeycodeArray({ XK_F3, 0 /*XK_XF86_Switch_VT_3*/ }));
+			keysyms.set( 70, new KeycodeArray({ XK_F4, 0 /*XK_XF86_Switch_VT_4*/ }));
+			keysyms.set( 71, new KeycodeArray({ XK_F5, 0 /*XK_XF86_Switch_VT_5*/ }));
+			keysyms.set( 72, new KeycodeArray({ XK_F6, 0 /*XK_XF86_Switch_VT_6*/ }));
+			keysyms.set( 73, new KeycodeArray({ XK_F7, 0 /*XK_XF86_Switch_VT_7*/ }));
+			keysyms.set( 74, new KeycodeArray({ XK_F8, 0 /*XK_XF86_Switch_VT_8*/ }));
+			keysyms.set( 75, new KeycodeArray({ XK_F9, 0 /*XK_XF86_Switch_VT_9*/ }));
+			keysyms.set( 76, new KeycodeArray({ XK_F10, 0 /*XK_XF86_Switch_VT_10*/ }));
+			keysyms.set( 77, new KeycodeArray({ XK_Tab, XK_ISO_Left_Tab, XK_equal, XK_approxeq, XK_notequal, XK_identical, 0 /*NoSymbol*/ }));
+			keysyms.set( 78, new KeycodeArray({ XK_Scroll_Lock, XK_Scroll_Lock, XK_Scroll_Lock, XK_Scroll_Lock, XK_Scroll_Lock }));
+			keysyms.set( 79, new KeycodeArray({ XK_KP_7, (uint)X.string_to_keysym("U2714"), (uint)X.string_to_keysym("U2195"), (uint)X.string_to_keysym("U226A"), XK_KP_Home, XK_upstile, 0 /*NoSymbol*/ }));
+			keysyms.set( 80, new KeycodeArray({ XK_KP_8, (uint)X.string_to_keysym("U2718"), XK_uparrow, XK_intersection, XK_KP_Up, (uint)X.string_to_keysym("U22C2"),
+						0 /*NoSymbol*/ }));
+			keysyms.set( 81, new KeycodeArray({ XK_KP_9, XK_dagger, (uint)X.string_to_keysym("U20D7"), (uint)X.string_to_keysym("U226B"), XK_KP_Prior, (uint)X.string_to_keysym("U2309"), 0 /*NoSymbol*/ }));
+			keysyms.set( 82, new KeycodeArray({ XK_KP_Subtract, XK_KP_Subtract, (uint)X.string_to_keysym("U2212"), (uint)X.string_to_keysym("U2296"), (uint)X.string_to_keysym("U2216"), (uint)X.string_to_keysym("U2238"), 0 /*NoSymbol*/ }));
+			keysyms.set( 83, new KeycodeArray({ XK_KP_4, XK_club, XK_leftarrow, XK_includedin, XK_KP_Left, (uint)X.string_to_keysym("U2286"), 0 /*NoSymbol*/ }));
+			keysyms.set( 84, new KeycodeArray({ XK_KP_5, XK_EuroSign, XK_colon, (uint)X.string_to_keysym("U22B6"), XK_KP_Begin, (uint)X.string_to_keysym("U22B7"), 0 /*NoSymbol*/ }));
+			keysyms.set( 85, new KeycodeArray({ XK_KP_6, (uint)X.string_to_keysym("U2023"), XK_rightarrow, XK_includes, XK_KP_Right, (uint)X.string_to_keysym("U2287"), 0 /*NoSymbol*/ }));
+			keysyms.set( 86, new KeycodeArray({ XK_KP_Add, XK_KP_Add, XK_plusminus, (uint)X.string_to_keysym("U2295"), (uint)X.string_to_keysym("U2213"), (uint)X.string_to_keysym("U2214"), 0 /*NoSymbol*/ }));
+			keysyms.set( 87, new KeycodeArray({ XK_KP_1, XK_diamond, (uint)X.string_to_keysym("U2194"), XK_lessthanequal, XK_KP_End, XK_downstile, 0 /*NoSymbol*/ }));
+			keysyms.set( 88, new KeycodeArray({ XK_KP_2, XK_heart, XK_downarrow, XK_union, XK_KP_Down, (uint)X.string_to_keysym("U22C3"), 0 /*NoSymbol*/ }));
+			keysyms.set( 89, new KeycodeArray({ XK_KP_3, (uint)X.string_to_keysym("U2660"), (uint)X.string_to_keysym("U21CC"), XK_greaterthanequal, XK_KP_Next, (uint)X.string_to_keysym("U230B"), 0 /*NoSymbol*/ }));
+			keysyms.set( 90, new KeycodeArray({ XK_KP_0, (uint)X.string_to_keysym("U2423"), XK_percent, (uint)X.string_to_keysym("U2030"), XK_KP_Insert, (uint)X.string_to_keysym("U25A1"), 0 /*NoSymbol*/ }));
+			keysyms.set( 91, new KeycodeArray({ XK_KP_Separator, XK_period, XK_comma, XK_minutes, XK_KP_Delete, XK_seconds, 0 /*NoSymbol*/ }));
+			keysyms.set( 92, new KeycodeArray({ XK_ISO_Level3_Shift }));
+			keysyms.set( 93, new KeycodeArray({ }));
+			keysyms.set( 94, new KeycodeArray({ XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Lock, XK_ISO_Level5_Lock, XK_ISO_Level5_Lock }));
+			keysyms.set( 95, new KeycodeArray({ XK_F11, 0 /*XK_XF86_Switch_VT_11*/ }));
+			keysyms.set( 96, new KeycodeArray({ XK_F12, 0 /*XK_XF86_Switch_VT_12*/ }));
+			keysyms.set( 97, new KeycodeArray({ }));
+			keysyms.set( 98, new KeycodeArray({ XK_Katakana }));
+			keysyms.set( 99, new KeycodeArray({ XK_Hiragana }));
+			keysyms.set(100, new KeycodeArray({ XK_Henkan_Mode }));
+			keysyms.set(101, new KeycodeArray({ XK_Hiragana_Katakana }));
+			keysyms.set(102, new KeycodeArray({ XK_Muhenkan }));
+			keysyms.set(103, new KeycodeArray({ }));
+			keysyms.set(104, new KeycodeArray({ XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, XK_KP_Enter, 0 /*NoSymbol*/ }));
+			keysyms.set(105, new KeycodeArray({ XK_Control_R, XK_Control_R, XK_Control_R, XK_Control_R, XK_Control_R }));
+			keysyms.set(106, new KeycodeArray({ XK_KP_Divide, XK_KP_Divide, XK_division, (uint)X.string_to_keysym("U2300"), (uint)X.string_to_keysym("U2215"), (uint)X.string_to_keysym("U2223"), 0 /*NoSymbol*/ }));
+			keysyms.set(107, new KeycodeArray({ XK_Print, XK_Sys_Req }));
+			keysyms.set(108, new KeycodeArray({ XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Lock, XK_ISO_Level5_Lock, XK_ISO_Level5_Lock }));
+			keysyms.set(109, new KeycodeArray({ XK_Linefeed, XK_Linefeed, XK_Linefeed, XK_Linefeed, XK_Linefeed }));
+			keysyms.set(110, new KeycodeArray({ XK_Home, XK_Home, XK_Home, XK_Home, XK_Home }));
+			keysyms.set(111, new KeycodeArray({ XK_Up, XK_Up, XK_Up, XK_Up, XK_Up }));
+			keysyms.set(112, new KeycodeArray({ XK_Prior, XK_Prior, XK_Prior, XK_Prior, XK_Prior }));
+			keysyms.set(113, new KeycodeArray({ XK_Left, XK_Left, XK_Left, XK_Left, XK_Left }));
+			keysyms.set(114, new KeycodeArray({ XK_Right, XK_Right, XK_Right, XK_Right, XK_Right }));
+			keysyms.set(115, new KeycodeArray({ XK_End, XK_End, XK_End, XK_End, XK_End }));
+			keysyms.set(116, new KeycodeArray({ XK_Down, XK_Down, XK_Down, XK_Down, XK_Down }));
+			keysyms.set(117, new KeycodeArray({ XK_Next, XK_Next, XK_Next, XK_Next, XK_Next }));
+			keysyms.set(118, new KeycodeArray({ XK_Insert, XK_Insert, XK_Insert, XK_Insert, XK_Insert }));
+			keysyms.set(119, new KeycodeArray({ XK_Delete, XK_Delete, XK_Delete, XK_Delete, XK_Delete }));
+			keysyms.set(120, new KeycodeArray({ }));
+			keysyms.set(121, new KeycodeArray({ 0 /*XK_XF86AudioMute*/ }));
+			keysyms.set(122, new KeycodeArray({ 0 /*XK_XF86AudioLowerVolume*/ }));
+			keysyms.set(123, new KeycodeArray({ 0 /*XK_XF86AudioRaiseVolume*/ }));
+			keysyms.set(124, new KeycodeArray({ 0 /*XK_XF86PowerOff*/ }));
+			keysyms.set(125, new KeycodeArray({ XK_KP_Equal, 0 /*NoSymbol*/, 0 /*NoSymbol*/, 0 /*NoSymbol*/, 0 /*NoSymbol*/, 0 /*NoSymbol*/, 0 /*NoSymbol*/ }));
+			keysyms.set(126, new KeycodeArray({ XK_plusminus }));
+			keysyms.set(127, new KeycodeArray({ XK_Pause, XK_Break }));
+			keysyms.set(128, new KeycodeArray({ 0 /*XK_XF86LaunchA*/ }));
+			keysyms.set(129, new KeycodeArray({ XK_KP_Decimal }));
+			keysyms.set(130, new KeycodeArray({ XK_Hangul }));
+			keysyms.set(131, new KeycodeArray({ XK_Hangul_Hanja }));
+			keysyms.set(132, new KeycodeArray({ }));
+			keysyms.set(133, new KeycodeArray({ XK_Super_L }));
+			keysyms.set(134, new KeycodeArray({ XK_Super_R }));
+			keysyms.set(135, new KeycodeArray({ XK_Menu }));
+			keysyms.set(136, new KeycodeArray({ XK_Cancel }));
+			keysyms.set(137, new KeycodeArray({ XK_Redo }));
+			keysyms.set(138, new KeycodeArray({ 0 /*XK_SunProps*/ }));
+			keysyms.set(139, new KeycodeArray({ XK_Undo }));
+			keysyms.set(140, new KeycodeArray({ 0 /*XK_SunFront*/ }));
+			keysyms.set(141, new KeycodeArray({ 0 /*XK_XF86Copy*/ }));
+			keysyms.set(142, new KeycodeArray({ 0 /*XK_SunOpen*/ }));
+			keysyms.set(143, new KeycodeArray({ 0 /*XK_XF86Paste*/ }));
+			keysyms.set(144, new KeycodeArray({ XK_Find }));
+			keysyms.set(145, new KeycodeArray({ 0 /*XK_XF86Cut*/ }));
+			keysyms.set(146, new KeycodeArray({ XK_Help }));
+			keysyms.set(147, new KeycodeArray({ 0 /*XK_XF86MenuKB*/ }));
+			keysyms.set(148, new KeycodeArray({ 0 /*XK_XF86Calculator*/ }));
+			keysyms.set(149, new KeycodeArray({ }));
+			keysyms.set(150, new KeycodeArray({ 0 /*XK_XF86Sleep*/ }));
+			keysyms.set(151, new KeycodeArray({ 0 /*XK_XF86WakeUp*/ }));
+			keysyms.set(152, new KeycodeArray({ 0 /*XK_XF86Explorer*/ }));
+			keysyms.set(153, new KeycodeArray({ 0 /*XK_XF86Send*/ }));
+			keysyms.set(154, new KeycodeArray({ }));
+			keysyms.set(155, new KeycodeArray({ 0 /*XK_XF86Xfer*/ }));
+			keysyms.set(156, new KeycodeArray({ 0 /*XK_XF86Launch1*/ }));
+			keysyms.set(157, new KeycodeArray({ 0 /*XK_XF86Launch2*/ }));
+			keysyms.set(158, new KeycodeArray({ 0 /*XK_XF86WWW*/ }));
+			keysyms.set(159, new KeycodeArray({ 0 /*XK_XF86DOS*/ }));
+			keysyms.set(160, new KeycodeArray({ 0 /*XK_XF86ScreenSaver*/ }));
+			keysyms.set(161, new KeycodeArray({ }));
+			keysyms.set(162, new KeycodeArray({ 0 /*XK_XF86RotateWindows*/ }));
+			keysyms.set(163, new KeycodeArray({ 0 /*XK_XF86Mail*/ }));
+			keysyms.set(164, new KeycodeArray({ 0 /*XK_XF86Favorites*/ }));
+			keysyms.set(165, new KeycodeArray({ 0 /*XK_XF86MyComputer*/ }));
+			keysyms.set(166, new KeycodeArray({ 0 /*XK_XF86Back*/ }));
+			keysyms.set(167, new KeycodeArray({ 0 /*XK_XF86Forward*/ }));
+			keysyms.set(168, new KeycodeArray({ }));
+			keysyms.set(169, new KeycodeArray({ 0 /*XK_XF86Eject*/ }));
+			keysyms.set(170, new KeycodeArray({ 0 /*XK_XF86Eject*/, 0 /*XK_XF86Eject*/ }));
+			keysyms.set(171, new KeycodeArray({ 0 /*XK_XF86AudioNext*/ }));
+			keysyms.set(172, new KeycodeArray({ 0 /*XK_XF86AudioPlay*/, 0 /*XK_XF86AudioPause*/ }));
+			keysyms.set(173, new KeycodeArray({ 0 /*XK_XF86AudioPrev*/ }));
+			keysyms.set(174, new KeycodeArray({ 0 /*XK_XF86AudioStop*/, 0 /*XK_XF86Eject*/ }));
+			keysyms.set(175, new KeycodeArray({ 0 /*XK_XF86AudioRecord*/ }));
+			keysyms.set(176, new KeycodeArray({ 0 /*XK_XF86AudioRewind*/ }));
+			keysyms.set(177, new KeycodeArray({ 0 /*XK_XF86Phone*/ }));
+			keysyms.set(178, new KeycodeArray({ }));
+			keysyms.set(179, new KeycodeArray({ 0 /*XK_XF86Tools*/ }));
+			keysyms.set(180, new KeycodeArray({ 0 /*XK_XF86HomePage*/ }));
+			keysyms.set(181, new KeycodeArray({ 0 /*XK_XF86Reload*/ }));
+			keysyms.set(182, new KeycodeArray({ 0 /*XK_XF86Close*/ }));
+			keysyms.set(183, new KeycodeArray({ }));
+			keysyms.set(184, new KeycodeArray({ }));
+			keysyms.set(185, new KeycodeArray({ 0 /*XK_XF86ScrollUp*/ }));
+			keysyms.set(186, new KeycodeArray({ 0 /*XK_XF86ScrollDown*/ }));
+			keysyms.set(187, new KeycodeArray({ XK_parenleft }));
+			keysyms.set(188, new KeycodeArray({ XK_parenright }));
+			keysyms.set(189, new KeycodeArray({ 0 /*XK_XF86New*/ }));
+			keysyms.set(190, new KeycodeArray({ XK_Redo }));
+			keysyms.set(191, new KeycodeArray({ 0 /*XK_XF86Tools*/ }));
+			keysyms.set(192, new KeycodeArray({ 0 /*XK_XF86Launch5*/ }));
+			keysyms.set(193, new KeycodeArray({ 0 /*XK_XF86MenuKB*/ }));
+			keysyms.set(194, new KeycodeArray({ }));
+			keysyms.set(195, new KeycodeArray({ }));
+			keysyms.set(196, new KeycodeArray({ }));
+			keysyms.set(197, new KeycodeArray({ }));
+			keysyms.set(198, new KeycodeArray({ }));
+			keysyms.set(199, new KeycodeArray({ }));
+			keysyms.set(200, new KeycodeArray({ 0 /*XK_XF86TouchpadToggle*/ }));
+			keysyms.set(201, new KeycodeArray({ }));
+			keysyms.set(202, new KeycodeArray({ }));
+			keysyms.set(203, new KeycodeArray({ XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift, XK_ISO_Level5_Shift }));
+			keysyms.set(204, new KeycodeArray({ XK_Alt_L }));
+			keysyms.set(205, new KeycodeArray({ XK_Alt_L }));
+			keysyms.set(206, new KeycodeArray({ XK_Super_L }));
+			keysyms.set(207, new KeycodeArray({ }));
+			keysyms.set(208, new KeycodeArray({ 0 /*XK_XF86AudioPlay*/ }));
+			keysyms.set(209, new KeycodeArray({ 0 /*XK_XF86AudioPause*/ }));
+			keysyms.set(210, new KeycodeArray({ 0 /*XK_XF86Launch3*/ }));
+			keysyms.set(211, new KeycodeArray({ 0 /*XK_XF86Launch4*/ }));
+			keysyms.set(212, new KeycodeArray({ 0 /*XK_XF86LaunchB*/ }));
+			keysyms.set(213, new KeycodeArray({ 0 /*XK_XF86Suspend*/ }));
+			keysyms.set(214, new KeycodeArray({ 0 /*XK_XF86Close*/ }));
+			keysyms.set(215, new KeycodeArray({ 0 /*XK_XF86AudioPlay*/ }));
+			keysyms.set(216, new
+					KeycodeArray({ 0 /*XK_XF86AudioForward*/ }));
+			keysyms.set(217, new KeycodeArray({ }));
+			keysyms.set(218, new KeycodeArray({ XK_Print }));
+			keysyms.set(219, new KeycodeArray({ }));
+			keysyms.set(220, new KeycodeArray({ 0 /*XK_XF86WebCam*/ }));
+			keysyms.set(221, new KeycodeArray({ }));
+			keysyms.set(222, new KeycodeArray({ }));
+			keysyms.set(223, new KeycodeArray({ 0 /*XK_XF86Mail*/ }));
+			keysyms.set(224, new KeycodeArray({ }));
+			keysyms.set(225, new KeycodeArray({ 0 /*XK_XF86Search*/ }));
+			keysyms.set(226, new KeycodeArray({ }));
+			keysyms.set(227, new KeycodeArray({ 0 /*XK_XF86Finance*/ }));
+			keysyms.set(228, new KeycodeArray({ }));
+			keysyms.set(229, new KeycodeArray({ 0 /*XK_XF86Shop*/ }));
+			keysyms.set(230, new KeycodeArray({ }));
+			keysyms.set(231, new KeycodeArray({ XK_Cancel }));
+			keysyms.set(232, new KeycodeArray({ 0 /*XK_XF86MonBrightnessDown*/ }));
+			keysyms.set(233, new KeycodeArray({ 0 /*XK_XF86MonBrightnessUp*/ }));
+			keysyms.set(234, new KeycodeArray({ 0 /*XK_XF86AudioMedia*/ }));
+			keysyms.set(235, new KeycodeArray({ 0 /*XK_XF86Display*/ }));
+			keysyms.set(236, new KeycodeArray({ 0 /*XK_XF86KbdLightOnOff*/ }));
+			keysyms.set(237, new KeycodeArray({ 0 /*XK_XF86KbdBrightnessDown*/ }));
+			keysyms.set(238, new KeycodeArray({ 0 /*XK_XF86KbdBrightnessUp*/ }));
+			keysyms.set(239, new KeycodeArray({ 0 /*XK_XF86Send*/ }));
+			keysyms.set(240, new KeycodeArray({ 0 /*XK_XF86Reply*/ }));
+			keysyms.set(241, new KeycodeArray({ 0 /*XK_XF86MailForward*/ }));
+			keysyms.set(242, new KeycodeArray({ 0 /*XK_XF86Save*/ }));
+			keysyms.set(243, new KeycodeArray({ 0 /*XK_XF86Documents*/ }));
+			keysyms.set(244, new KeycodeArray({ 0 /*XK_XF86Battery*/ }));
+			keysyms.set(245, new KeycodeArray({ 0 /*XK_XF86Bluetooth*/ }));
+			keysyms.set(246, new KeycodeArray({ 0 /*XK_XF86WLAN*/ }));
+			keysyms.set(247, new KeycodeArray({ }));
+			keysyms.set(248, new KeycodeArray({ }));
+			keysyms.set(249, new KeycodeArray({ }));
+			keysyms.set(250, new KeycodeArray({ }));
+			keysyms.set(251, new KeycodeArray({ }));
+			keysyms.set(252, new KeycodeArray({ }));
+			keysyms.set(253, new KeycodeArray({ }));
+			keysyms.set(254, new KeycodeArray({ }));
+			keysyms.set(255, new KeycodeArray({ }));
+
+			return keysyms;
+		}
+
 
 }
 

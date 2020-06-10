@@ -115,7 +115,7 @@ namespace NeoLayoutViewer{
 		 @return: assed folder or null.
 	 */
 	private static string? search_asset_folder(string path) {
-		/*const*/ string filename = "/icons/Neo-Icon.png";
+		string filename = "/icons/Neo-Icon.png"; // Name of file we search for
 
 		string[] paths = {
 			path, // path from config file

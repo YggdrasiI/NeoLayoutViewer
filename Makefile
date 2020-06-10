@@ -35,8 +35,7 @@ UBUNTU ?= 0
 
 DISTDIR = dist
 TMPDIR = tmp
-# ARCHS = amd64 # i386 # armhf arm64
-ARCHS = amd64 i386 # armhf arm64
+ARCHS = amd64 # i386 armhf arm64
 BASETGZ_DIR = /var/cache/pbuilder
 
 ifeq ($(UBUNTU),1)

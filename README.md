@@ -9,7 +9,14 @@ Wird eine der Mod-Tasten (Shift,…) gedrückt oder losgelassen, wechselt die An
 Ebene. Außerdem kann das Fenster per Tastenkombination bewegt oder ausgeblendet werden.
 Alle Einstellungen können über eine Konfigurationsdatei angepasst werden.
 
-Autoren: Olaf Schulz 2011-2019, rixx 2013, Marco Herrn 2018-2019
+Andere Layouts können ebenfalls angezeigt werden. Für ADNW (Aus der Neo Welt) und KOY wurden die zugehörigen Grafiken bereits erzeugt (Jonathan Vetter, 2020).
+
+Autoren:
+	Olaf Schulz 2011-2020
+	rixx 2013
+	Marco Herrn 2018-2019
+	Jonathan Vetter 2020
+
 
 Lizenz: GNU Lesser General Public License version 3 (LGPLv3)
 
@@ -30,8 +37,8 @@ Mittels
     make; sudo make install
 
 kann das Programm kompiliert und unter /usr/local installiert werden.
-Unter Gnome 2.x wird eine andere Bibliothek für die Anzeige des Tray-Icons benötigt.
-Geben Sie in diesem Falle „ICON=tray make“ ein.
+Unter Gnome 2.x wird eine andere Bibliothek für die Anzeige des Tray-Icons benötigt. Dies betrifft unter anderem die Desktop-Umgebungen Cinnamon und Mate.
+Geben Sie in diesem Falle „ICON=tray make“ ein. 
 
 
 Hinweise
@@ -43,8 +50,10 @@ Hinweise
 	In der Konfigurationsdatei können unter anderem folgende Einstellungen vorgenommen
 	werden:
 
-	- Breite des Fensters. Mit „width“ können Sie die exakte Breite einstellen und mit
-		„max_width“ und „min_width“ die relative Breite in Bezug auf die derzeitige Auflösung.
+	- Tastaturbelegung (layout_type): NEO2, ADNW oder KOY
+	- Breite des Fensters: Mit „width“ können Sie die exakte Breite einstellen und 
+    mit „max_width“ und „min_width“ die relative Breite in Bezug auf 
+    die derzeitige Auflösung.
 	- Anzeige des Numblocks und der Funktionstasten.
 	- Tastenkürzel für Anzeige und Bewegung des Fensters. Möchten Sie die Tasten-
 		kombination nicht nutzen, löschen Sie den Text hinter dem Gleichheitszeichen.
@@ -52,20 +61,30 @@ Hinweise
 		acht verschiedene Positionen verschoben werden. Soll nur eine Teilmenge dieser
 		Positionen genutzt werden, kann „position_cycle“ angepasst werden.
 		Der Wert X∈{1,…,9} ist entsprechend der Position auf dem Numblocks zu interpretieren.
-		Beim Druck der Tastenkombination springt das Fenster von Position X zu position_cycle[X].
+		Beim Druck der Tastenkombination springt das Fenster von Position X zu 
+    position_cycle[X].
 
-* Das Programm kann auch als virtuelle Tastatur genutzt werden. Damit die Eingabe das
-  richtige Fenster erreicht muss in der Konfigurationsdatei „window_selectable = 0“
-  eingetragen werden.
+* Das Programm kann auch als virtuelle Tastatur genutzt werden. Damit die Eingabe
+  das richtige Fenster erreicht, muss in der Konfigurationsdatei
+  „window_selectable = 0“ eingetragen werden.
 
-* Das Programm zeigt unter Gnome 3.x in der Indicator-Leiste ein Symbol an. Unter Gnome 2.x
-	war für diese Funktion noch eine andere Bibliothek verantwortlich. Sie können im
-	Makefile zwischen den beiden Varianten wechseln, indem Sie die Variable ICON anpassen.
+* Das Programm zeigt unter Gnome 3.x in der Indicator-Leiste ein Symbol an.
+  Unter Gnome 2.x war für diese Funktion noch eine andere Bibliothek
+  verantwortlich. Sie können im Makefile zwischen beiden Varianten wechseln,
+  indem Sie die Variable ICON anpassen.
 
-
+* Bei Verwendung eines Programmstarters muss dieser noch auf das gewünschte Layout
+  angepasst werden und dann unter '/usr/share/applications' bzw.
+  '/usr/local/share/applications' eingefügt werden.
+  Für automatisches Einblenden beim Anmelden kann der Programmstarter zusätzlich
+  nach /home/<user>/.config/autostart kopiert werden.
 
 ______________________________________________________________________
 
 ¹NEO ist eine Tastaturbelegung, welche für die deutsche Sprache optimiert ist.
 
-Die offizielle Seite des Projektes: https://neo-layout.org/
+Die offizielle Seiten der Projekte:
+Neo-Layout:     https://neo-layout.org/
+ADNW-Layout:    http://www.adnw.de/
+KOY-Layout:     http://www.adnw.de/index.php?n=Main.SeitlicheNachbaranschl%c3%a4ge
+

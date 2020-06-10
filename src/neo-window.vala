@@ -43,6 +43,8 @@ namespace NeoLayoutViewer {
 		private KeyOverlay key_overlay;
 #endif
 
+		public string layoutType; // = "NEO2";
+
 		public Gee.Map<string, Gdk.Pixbuf> image_buffer;
 		private Gdk.Pixbuf[] layer_pixbufs;
 		private int monitor_id = -1;
@@ -85,7 +87,7 @@ namespace NeoLayoutViewer {
 			 Interpretationsreihenfolge der Dimensionen: Shift, Neo-Mod3, Neo-Mod4. */
 		private short[,,] MODIFIER_MAP2 = {
 			{ {0 , 3}, {2 , 5 } },  // 000, 001; 010, 011
-			{ {1 , 3}, {4 , 5}}	  // 100, 101; 110, 111
+			{ {1 , 3}, {4 , 5}}     // 100, 101; 110, 111
 		};
 
 		/* {0, 5} -> [0, 1]^3 */
@@ -132,6 +134,8 @@ namespace NeoLayoutViewer {
 		public NeoWindow (NeoLayoutViewerApp app) {
 			this.config = app.configm.getConfig();
 			this.minimized = true;
+
+      this.layoutType = this.config.get("layout_type");
 
 			/* Set window type to let tiling window manager, i.e. i3-wm,
 			 * the chance to float the window automatically.
@@ -538,9 +542,27 @@ namespace NeoLayoutViewer {
 			}
 		}
 
-		public Gdk.Pixbuf open_image (int layer) {
-			var bildpfad = @"$(config.get("asset_folder"))/neo2.0_hires/tastatur_neo_Ebene$(layer).png";
-			return open_image_str(bildpfad);
+		public Gdk.Pixbuf open_image(int layer) {
+			string bildpfad = "";
+			switch (this.layoutType) {
+				case "ADNW":
+					{
+						bildpfad = @"$(config.get("asset_folder"))/adnw/tastatur_adnw_Ebene$(layer).png";
+						break;
+					}
+				case "KOY":
+					{
+						bildpfad = @"$(config.get("asset_folder"))/koy/tastatur_koy_Ebene$(layer).png";
+						break;
+					}
+				case "NEO2":
+				default:
+					{
+						bildpfad = @"$(config.get("asset_folder"))/neo2.0/tastatur_neo_Ebene$(layer).png";
+						break;
+					}
+			}
+      return open_image_str(bildpfad);
 		}
 
 		public Gdk.Pixbuf open_image_str (string bildpfad) {
@@ -551,17 +573,33 @@ namespace NeoLayoutViewer {
 			}
 		}
 
-		public void load_images () {
-			this.image_buffer["icon"] = open_image_str(
-					@"$(config.get("asset_folder"))/icons/Neo-Icon.png");
+		public string get_layout_icon_name () {
+			// Name without extenion returned for indicator.vala
+			switch (this.layoutType) {
+				case "ADNW":
+					{
+						return "ADNW-Icon";
+					}
+				case "KOY":
+					{
+						return "KOY-Icon";
+					}
+				case "NEO2":
+				default:
+					{
+						return "Neo-Icon";
+					}
+			}
+		}
 
-			/*
-				 int screen_width = this.get_screen_width(); //Gdk.Screen.width();
-				 int max_width = (int) (double.parse(this.config.get("max_width")) * screen_width);
-				 int min_width = (int) (double.parse(this.config.get("min_width")) * screen_width);
-				 int width = int.min(int.max(int.parse(this.config.get("width")), min_width), max_width);
-				 int w, h;
-			 */
+		private void load_program_icon () {
+			this.image_buffer["icon"] = open_image_str(
+					@"$(config.get("asset_folder"))/icons/$(get_layout_icon_name()).png");
+		}
+
+		public void load_images () {
+
+			this.load_program_icon();
 
 			this.numpad_width = int.parse(this.config.get("numpad_width"));
 			this.function_keys_height = int.parse(this.config.get("function_keys_height"));
@@ -631,7 +669,7 @@ namespace NeoLayoutViewer {
 			int old_mod_state;
 			if (keyboard) {
 				//Keypress or Release of shift etc.
-				old_mod_state = this.active_modifier_by_keyboard[mod_index]; 
+				old_mod_state = this.active_modifier_by_keyboard[mod_index];
 				this.active_modifier_by_keyboard[mod_index] = MODIFIER_KEYBOARD_MOUSE_MAP[
 					old_mod_state,
 					this.active_modifier_by_mouse[mod_index],
