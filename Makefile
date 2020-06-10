@@ -220,12 +220,14 @@ install: man
 		install -D -m 0644 $(ASSET_FILE) "$(DATADIR)/$(APPNAME)/$(ASSET_FILE)" ; )
 	install -d $(PREFIX)/share/man/man1/
 	install -t $(PREFIX)/share/man/man1/ man/neo_layout_viewer.1.gz
+	install -D -t $(PREFIX)/share/applications/ Keyboard_Layout_Viewer.desktop
 
 uninstall:
 	@rm -fv "$(EXEC_PREFIX)/bin/$(BINNAME)$(BINEXT)"
 	@test -d "$(DATADIR)/$(APPNAME)/assets" && rm -v -r "$(DATADIR)/$(APPNAME)"
 # Prefixed with test because of dangerous -r-flag...
 	@rm -fv $(PREFIX)/share/man/man1/neo_layout_viewer.1.gz
+	@rm -v -r $(PREFIX)/share/applications/Keyboard_Layout_Viewer.desktop
 
 # clean all build files, but not dist results.
 clean:

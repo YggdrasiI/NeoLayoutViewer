@@ -74,8 +74,9 @@ Hinweise
   indem Sie die Variable ICON anpassen.
 
 * Bei Verwendung eines Programmstarters muss dieser noch auf das gewünschte Layout
-  angepasst werden und dann unter '/usr/share/applications' bzw.
-  '/usr/local/share/applications' eingefügt werden.
+  angepasst werden und dann unter '/usr/share/applications',
+  '/usr/local/share/applications' oder '~/.local/share/applications' 
+  eingefügt werden.
   Für automatisches Einblenden beim Anmelden kann der Programmstarter zusätzlich
   nach /home/<user>/.config/autostart kopiert werden.
 
