@@ -1,7 +1,0 @@
-convert_svg.sh erstellt PNGs, aber diese enthalten keine
-Reihe mit Funktionstasten.
-
-
-Quelle:
-https://github.com/neo-layout/neo-layout/grafik/tastatur3d
-

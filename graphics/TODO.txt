@@ -1,0 +1,5 @@
+Die automatische Erzeugung der Ebenen hat noch ihre Tücken…
+
+Die Zeichen sind nicht immer konsistent platziert/skaliert,
+was zu nervigen Wacklern beim Wechseln der Ebene führt
+Außerdem sind einige Zeichen merkwürdig platziert.
