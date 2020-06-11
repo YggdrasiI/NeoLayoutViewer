@@ -8,3 +8,4 @@ src/*.c
 src/version.vala
 dist/
 tmp/
+release_info
