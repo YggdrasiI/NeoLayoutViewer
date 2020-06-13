@@ -1,12 +1,13 @@
 neo-layout-viewer (1.6-1) sid; urgency=medium
 
+  [ olaf_schulz@posteo.de ]
   * Add command line options:
      --version --layer --hide --show --toggle
      --move --pos and --quit
      They can be used to send commands to the primary
      instance of the app.
 
- --  <olaf_schulz@posteo.de>  Sun, 14 Jun 2020 01:05:43 +0200
+ --  <build@t60>  Sun, 14 Jun 2020 01:27:24 +0200
 
 neo-layout-viewer (1.5-1) focal; urgency=medium
 
