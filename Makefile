@@ -46,7 +46,7 @@ COMPONENTS = main universe #restricted multiverse
 UBUNTU_SUFFIX = ubuntu1
 else
 # Debian
-DIST = stretch
+DIST = sid
 MIRROR = http://ftp.de.debian.org/debian
 COMPONENTS = main
 UBUNTU_SUFFIX = 
