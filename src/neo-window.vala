@@ -53,17 +53,20 @@ namespace NeoLayoutViewer {
 		public Gee.List<Modkey> modifier_key_images; // for modifier which didn't toggle a layout layer. I.e. ctrl, alt.
 		public Gee.Map<string, string> config;
 
-		public bool fix_layer = false;
+		public int fixed_layer { get; set; }
 		private int _layer = 1;
 		public int layer {
 			get { return _layer; }
-			set { if (value < 1 || value > 6) { _layer = 1; } else { _layer = value; } }
+			set {
+				if (value < 1 || value > 6) { _layer = 1; } else { _layer = value; }
+			}
 		}
 		public int[] active_modifier_by_keyboard;
 		public int[] active_modifier_by_mouse;
 		public int numpad_width;
 		public int function_keys_height;
-		private bool minimized;
+		private bool _minimized;
+		public bool minimized { get {return _minimized; } }
 		private int position_num;
 		private int[] position_cycle;
 		private int position_on_hide_x;
@@ -131,11 +134,12 @@ namespace NeoLayoutViewer {
 				{ {0, 0} , {1, 1} } }//1100, 1101; 1110, 1111; //k=m=1 should be impossible
 		};
 
-		public NeoWindow (NeoLayoutViewerApp app) {
-			this.config = app.configm.getConfig();
-			this.minimized = true;
+		public NeoWindow (ConfigManager configm, NeoLayoutViewerApp app) {
+			//this.config = app.configm.getConfig();
+			this.config = configm.getConfig();
+			this._minimized = true;
 
-      this.layoutType = this.config.get("layout_type");
+			this.layoutType = this.config.get("layout_type");
 
 			/* Set window type to let tiling window manager, i.e. i3-wm,
 			 * the chance to float the window automatically.
@@ -215,14 +219,11 @@ namespace NeoLayoutViewer {
 				debug(@"$(i)=> $(position_cycle[i])");
 			}
 
-			if (app.start_layer > 0) {
-				this.fix_layer = true;
-				this.layer = app.start_layer;
-				this.active_modifier_by_mouse[1] = this.LAYER_TO_MODIFIERS[this.layer-1, 0];
-				this.active_modifier_by_mouse[2] = this.LAYER_TO_MODIFIERS[this.layer-1, 1];
-				this.active_modifier_by_mouse[3] = this.LAYER_TO_MODIFIERS[this.layer-1, 2];
+			if (this.fixed_layer > 0 && this.fixed_layer <= 6) {
+				for (int i = 0; i < 3; i++) {
+					this.active_modifier_by_mouse[i+1] = this.LAYER_TO_MODIFIERS[this.layer-1, i];
+				}
 			}
-
 			// Crawl dimensions of screen/display/monitor
 			// Should be done before load_images() is called.
 			screen_dim_auto[0] = (this.config.get("screen_width") == "auto");
@@ -316,7 +317,7 @@ namespace NeoLayoutViewer {
 		}
 
 		public override void show() {
-			this.minimized = false;
+			this._minimized = false;
 			this.move(this.position_on_hide_x, this.position_on_hide_y);
 			debug(@"Show window on $(this.position_on_hide_x), $(this.position_on_hide_y)\n");
 			base.show();
@@ -343,7 +344,7 @@ namespace NeoLayoutViewer {
 			this.position_on_hide_y = tmpy;
 			debug(@"Hide window on $(this.position_on_hide_x), $(this.position_on_hide_y)\n");
 
-			this.minimized = true;
+			this._minimized = true;
 			base.hide();
 		}
 
@@ -370,6 +371,8 @@ namespace NeoLayoutViewer {
 			debug(@"Number of monitors: $(n_monitors)");
 
 			GLib.assert(n_monitors > 0);
+
+			if( pos < 0 ){ pos = 0; }
 
 			// Automatic set of next position
 			if ((pos%10) == 0) {
@@ -562,7 +565,7 @@ namespace NeoLayoutViewer {
 						break;
 					}
 			}
-      return open_image_str(bildpfad);
+			return open_image_str(bildpfad);
 		}
 
 		public Gdk.Pixbuf open_image_str (string bildpfad) {
@@ -719,13 +722,12 @@ namespace NeoLayoutViewer {
 
 		public void redraw() {
 			var tlayer = this.layer;
-			if (this.fix_layer) {  // Ignore key events
-				this.layer = this.MODIFIER_MAP2[
-					this.active_modifier_by_mouse[1], //shift
-					this.active_modifier_by_mouse[2], //neo-mod3
-					this.active_modifier_by_mouse[3] //neo-mod4
-				] + 1;
 
+			if (this.fixed_layer > 0) {  // Ignore key events
+				for (int i = 0; i < 3; i++) {
+					this.active_modifier_by_mouse[i+1] = this.LAYER_TO_MODIFIERS[this.fixed_layer-1, i];
+				}
+				this.layer = this.fixed_layer;
 			} else {
 				this.layer = this.MODIFIER_MAP2[
 					this.active_modifier_by_keyboard[1] | this.active_modifier_by_mouse[1], //shift
@@ -742,6 +744,7 @@ namespace NeoLayoutViewer {
 			}
 
 			if (tlayer != this.layer) {
+				debug(@"Redraw with layer $(this.layer)");
 				render_page();
 			}
 
