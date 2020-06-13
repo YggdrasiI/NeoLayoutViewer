@@ -8,7 +8,65 @@ namespace NeoLayoutViewer{
 	public ConfigManager configm;
 	public NeoLayoutViewerApp app;
 
+	public NeoWindow neo_win = null;
+
+#if tray
+	public AppStatusIcon neo_tray = null; //for gnome2.x, kde(?)
+#endif
+#if indicator
+	public NeoIndicator neo_indicator = null; //for gnome3.x
+#endif
+#if _NO_WIN
+	public KeybindingManager manager = null;
+#endif
+
+	private void bind_shortcuts() {
+		manager = new KeybindingManager(neo_win);
+		var show_shortcut = configm.getConfig().get("show_shortcut").strip();
+		var move_shortcut = configm.getConfig().get("move_shortcut").strip();
+		var monitor_shortcut = configm.getConfig().get("monitor_shortcut").strip();
+
+		if (move_shortcut.length > 0) {
+			manager.bind(move_shortcut, ()=>{neo_win.numkeypad_move(0);});
+		}
+
+		if (show_shortcut == monitor_shortcut) {
+			// combination of show + monitor move
+			debug("Use combined shortcut for window showing and monitor switching.");
+			manager.bind(monitor_shortcut, ()=>{neo_win.monitor_move(-1, true);});
+
+		} else {
+			if (monitor_shortcut.length > 0) {
+				manager.bind(monitor_shortcut, ()=>{neo_win.monitor_move();});
+			}
+			if (show_shortcut.length > 0) {
+				manager.bind(show_shortcut, ()=>{neo_win.toggle();});
+			}
+		}
+	}
+
 	public static int main(string[] args) {
+
+		// Minimal initialization. Check if primary instance and quit otherwise
+		app = new NeoLayoutViewerApp ();
+		try {
+			app.register(); // returns false if and only if throws Error
+		} catch (Error e) {
+			debug(@"Gtk.Application.register() failed.\n");
+			return -1;
+		}
+		if (app.is_remote) {
+			print(@"Application is already running.\n");
+			// Run without further initalization. It triggers transfer of arguments
+			// to command_line()-call of primary instance.
+			app.run(args);
+
+			/* Gives D-Bus some time.
+			 * Only needed if app.run() isn't called.
+			 */
+			//GLib.Thread.usleep(100000);
+			return 0;
+		}
 
 		string[] paths = {
 			GLib.Environment.get_user_config_dir(),
@@ -30,23 +88,25 @@ namespace NeoLayoutViewer{
 		configm.getConfig().set("asset_folder", asset_folder);
 		debug(@"Asset folder: $(asset_folder)\n");
 
-		// Init application window.
-		app = new NeoLayoutViewerApp (configm);
+		// Create the window of this application and show it
+		neo_win = new NeoWindow (configm, app);
 
-		try {
-			app.register(); // returns false if and only if throws Error
-		} catch (Error e) {
-			debug(@"Gtk.Application.register() failed.\n");
-			return -1;
-		}
-		if (app.is_remote) {
-			print(@"Application is already running.\n");
-			app.activate();
-		} else {
-			return app.run(args);
-		}
+#if tray
+		neo_tray = new AppStatusIcon(neo_win);
+#endif
 
-		return 0;
+#if indicator
+		neo_indicator = new NeoIndicator(neo_win);
+#endif
+
+#if _NO_WIN
+		bind_shortcuts();
+#endif
+
+		app.neo_win = neo_win; // Required for action handlers.
+		app.add_window(neo_win);
+
+		return app.run(args);
 	}
 
 	private static void quit() {

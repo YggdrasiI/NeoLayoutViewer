@@ -169,7 +169,7 @@ info:
 		"Notes:$(NL)" \
 		"  Use 'ICON=... make' to switch type of panel menu.$(NL)" \
 		"    indicator: For gnome 3.x (default)$(NL)" \
-		"    tray: For gnome 2.x (default)$(NL)" \
+		"    tray: For gnome 2.x$(NL)" \
 		"    none: Disables icon$(NL)$(NL)" \
 		"  Use 'BUILD_TYPE=[release|debug] make' to switch build type$(NL)$(NL)" \
 
