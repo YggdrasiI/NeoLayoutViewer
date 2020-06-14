@@ -1,3 +1,4 @@
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
 /* Use all keysym groups for NEO */
 #ifndef __KEY_SEND_H__
 #define __KEY_SEND_H__
@@ -25,13 +26,13 @@ typedef struct {
 
 static KeyMod 
 getKeyModCodes (GdkWindow *rootwin,
-             uint       keyval,
-             int       modifiers);
+		uint       keyval,
+		int       modifiers);
 
 /*static XKeyEvent createKeyEvent(Display *display, Window win,
-                           Window winRoot, int press,
-                           int keycode, int modifiers);
-													 */
+ * Window winRoot, int press,
+ * int keycode, int modifiers);
+ */
 
 int keysend(uint keysym, int modifiers);
 int keysend2(uint keysym, uint modsym1, uint modsym2);

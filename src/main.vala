@@ -208,5 +208,6 @@ namespace NeoLayoutViewer{
 extern int keysend(uint keysym, int modifiers);
 extern int keysend2(uint keysym, uint modsym1, uint modsym2);
 extern bool checkCapsLock(X.Display* d);
+extern uint checkIndicatorStates(X.Display* d);
 extern void checkModifier(X.Display* d, int* keycodes, int nkeycodes, int* pressed );
 #endif

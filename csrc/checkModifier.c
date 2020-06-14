@@ -1,3 +1,4 @@
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -39,20 +40,28 @@ void checkModifier(Display* display, int* keycodes, int nkeycodes, int* pressed)
 
 
 bool checkCapsLock(Display* d) {
- // platform dependent method of determining if CAPS LOCK is on
-/*#ifdef Q_OS_WIN32 // MS Windows version
- return GetKeyState(VK_CAPITAL) == 1;
+	// platform dependent method of determining if CAPS LOCK is on
+	/*#ifdef Q_OS_WIN32 // MS Windows version
+		return GetKeyState(VK_CAPITAL) == 1;
 #else // X11 version (Linux/Unix/Mac OS X/etc...)*/
- //Display* d = XOpenDisplay((char*)0);
- bool caps_state = false;
- if (d) {
-  unsigned n;
-  XkbGetIndicatorState(d, XkbUseCoreKbd, &n);
-	//printf("Indicator State: %u\n",n);
-  caps_state = (n & 0x01) == 1;
- }
- return caps_state;
-//#endif
+	//Display* d = XOpenDisplay((char*)0);
+	bool caps_state = false;
+	if (d) {
+		unsigned n;
+		XkbGetIndicatorState(d, XkbUseCoreKbd, &n);
+		caps_state = (n & 0x01) == 1;
+	}
+	return caps_state;
+	//#endif
+}
+
+
+unsigned int checkIndicatorStates(Display* d) {
+	unsigned n = 0;
+	if (d) {
+		XkbGetIndicatorState(d, XkbUseCoreKbd, &n);
+	}
+	return n;
 }
 
 

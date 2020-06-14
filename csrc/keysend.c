@@ -1,3 +1,4 @@
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
 /* keysend.c
  * Copyright (C) 2008 Alex Graveley
  * Copyright (C) 2010 Ulrik Sverdrup <ulrik.sverdrup@gmail.com>

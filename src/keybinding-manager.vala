@@ -199,13 +199,25 @@ namespace NeoLayoutViewer {
 
 			checkModifier(display, &modifier_keycodes[0], modifier_keycodes.length, &modifier_pressed[0]);
 
+			/* Verallgemeinerung von checkCapsLock:
+			 * 1. Bit: caps lock
+			 * 2. Bit: mod4 lock
+			 */
+			uint lock_flags = checkIndicatorStates(display);
+			int shift_lock = (int)(lock_flags & 0x1);
+			int mod4_lock = (int)(lock_flags & 0x2);
+
 			// Convert modifier keys to modifier/layer
-			neo_win.change_active_modifier(1, true, (int)((modifier_pressed[0] | modifier_pressed[1])
-						!= (checkCapsLock(display) ? 1 : 0)) );
-			neo_win.change_active_modifier(2, true, (int)(modifier_pressed[2] | modifier_pressed[3]));
-			neo_win.change_active_modifier(3, true, (int)(modifier_pressed[4] | modifier_pressed[5]));
-			neo_win.change_active_modifier(4, true, (int)(modifier_pressed[6] | modifier_pressed[7]));
-			neo_win.change_active_modifier(5, true, (int)(modifier_pressed[8] | modifier_pressed[9]));
+			neo_win.change_active_modifier(1, true,
+					(int)(modifier_pressed[0] | modifier_pressed[1] != shift_lock) );
+			neo_win.change_active_modifier(2, true,
+					(int)(modifier_pressed[2] | modifier_pressed[3]));
+			neo_win.change_active_modifier(3, true,
+					(int)(modifier_pressed[4] | modifier_pressed[5] != mod4_lock) );
+			neo_win.change_active_modifier(4, true,
+					(int)(modifier_pressed[6] | modifier_pressed[7]));
+			neo_win.change_active_modifier(5, true,
+					(int)(modifier_pressed[8] | modifier_pressed[9]));
 
 			neo_win.redraw();
 
