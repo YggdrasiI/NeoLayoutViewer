@@ -117,9 +117,9 @@ namespace NeoLayoutViewer{
 				if (separator != null) {
 					string[] str_xy = separator.split(opt_pos.get_string());
 					int new_x = 0; int new_y = 0;
-					if (int.try_parse(str_xy[0], out new_x) &&
-							int.try_parse(str_xy[1], out new_y) ) {
-						// TODO: Maybe the ints should get a boundary check.
+					if (try_parse(str_xy[0], out new_x) &&
+							try_parse(str_xy[1], out new_y)) {
+						// Maybe the ints should get a boundary check?!
 						debug(@"Move window to ($(new_x), $(new_y))");
 						this.neo_win.move(new_x, new_y);
 					}
@@ -176,3 +176,26 @@ namespace NeoLayoutViewer{
 
 	}
 }
+
+/* Backport of int.try_parse for older valac versions (<=0.46(?)) */
+[CCode (cname = "strtol", cheader_filename = "stdlib.h")]
+extern long strtol (string nptr, out char* endptr, int _base);
+
+public static bool try_parse (string str, out int result = null, out unowned string unparsed = null, uint _base = 0) {
+		char* endptr;
+		errno = 0;
+		long long_result = strtol (str, out endptr, (int) _base);
+		if (endptr == (char*) str + str.length) {
+			unparsed = "";
+		} else {
+			unparsed = (string) endptr;
+		}
+		if (int.MIN <= long_result <= int.MAX) {
+			result = (int) long_result;
+			return errno != ERANGE && errno != EINVAL && unparsed != endptr;
+		} else {
+			result = int.MAX;
+			return false;
+		}
+	}
+/* Backport int.try_parse end */

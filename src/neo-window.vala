@@ -316,6 +316,12 @@ namespace NeoLayoutViewer {
 
 		}
 
+		public /* override */ void move(int x, int y){
+			this.position_on_hide_x = x;
+			this.position_on_hide_y = y;
+			base.move(x,y);
+		}
+
 		public override void show() {
 			this._minimized = false;
 			this.move(this.position_on_hide_x, this.position_on_hide_y);
@@ -340,6 +346,7 @@ namespace NeoLayoutViewer {
 			int tmpx;
 			int tmpy;
 			this.get_position(out tmpx, out tmpy);
+			// TODO: Values wrong if window moved by user by mouse (i3wm)
 			this.position_on_hide_x = tmpx;
 			this.position_on_hide_y = tmpy;
 			debug(@"Hide window on $(this.position_on_hide_x), $(this.position_on_hide_y)\n");
