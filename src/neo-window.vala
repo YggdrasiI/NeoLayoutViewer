@@ -558,6 +558,16 @@ namespace NeoLayoutViewer {
 						bildpfad = @"$(config.get("asset_folder"))/koy/tastatur_koy_Ebene$(layer).png";
 						break;
 					}
+			  case "NEOQWERTZ":
+					{
+						bildpfad = @"$(config.get("asset_folder"))/neoqwertz/tastatur_neoqwertz_Ebene$(layer).png";
+						break;
+					}
+  			case "NEOQWERTY":
+					{
+						bildpfad = @"$(config.get("asset_folder"))/neoqwerty/tastatur_neoqwerty_Ebene$(layer).png";
+						break;
+					}
 				case "NEO2":
 				default:
 					{
@@ -565,7 +575,7 @@ namespace NeoLayoutViewer {
 						break;
 					}
 			}
-			return open_image_str(bildpfad);
+      return open_image_str(bildpfad);
 		}
 
 		public Gdk.Pixbuf open_image_str (string bildpfad) {
@@ -586,6 +596,14 @@ namespace NeoLayoutViewer {
 				case "KOY":
 					{
 						return "KOY-Icon";
+					}
+				case "NEOQWERTZ":
+					{
+						return "NeoQwertz-Icon";
+					}
+				case "NEOQWERTY":
+					{
+						return "NeoQwerty-Icon";
 					}
 				case "NEO2":
 				default:
