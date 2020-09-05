@@ -3,3 +3,8 @@ Die automatische Erzeugung der Ebenen hat noch ihre Tücken…
 Die Zeichen sind nicht immer konsistent platziert/skaliert,
 was zu nervigen Wacklern beim Wechseln der Ebene führt
 Außerdem sind einige Zeichen merkwürdig platziert.
+
+Liegt vermutlich an inkonsistent platzierten Zeichen 
+im original Tastatur_neo_alle_Ebenen.svg
+
+Platzierung verbessert in Tastatur_NEO2_alle_Ebenen.svg durch Jonathan Vetter
