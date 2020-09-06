@@ -81,7 +81,7 @@ namespace NeoLayoutViewer {
 			 if it was not found.
 		 */
 		public void add_defaults() {
-			addSetting("layout_type", "NEO2", "Available keyboard layouts: NEO2, ADNW, KOY");
+			addSetting("layout_type", "NEO2", "Available keyboard layouts: NEO2, ADNW, KOY, NEOQWERTZ, NEOQWERTY");
 			//config.set("show_shortcut", "<Mod4><Super_L>n", "Toggle the visibility of the window.");
 			addSetting("show_shortcut", "<Ctrl><Alt>q", "Toggle the visibility of the window.");
 			addSetting("on_top", "1", "Show window on top.");

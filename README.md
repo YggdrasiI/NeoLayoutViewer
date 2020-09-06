@@ -9,7 +9,8 @@ Wird eine der Mod-Tasten (Shift,…) gedrückt oder losgelassen, wechselt die An
 Ebene. Außerdem kann das Fenster per Tastenkombination bewegt oder ausgeblendet werden.
 Alle Einstellungen können über eine Konfigurationsdatei angepasst werden.
 
-Andere Layouts können ebenfalls angezeigt werden. Für ADNW (Aus der Neo Welt) und KOY wurden die zugehörigen Grafiken bereits erzeugt (Jonathan Vetter, 2020).
+Andere Layouts können ebenfalls angezeigt werden. Für für ADNW (Aus der Neo Welt), KOY, Neo-Qwertz² 
+und Deutsch-Neo-Qwerty² wurden die zugehörigen Grafiken bereits erzeugt (Jonathan Vetter 2020).
 
 Autoren:
 	Olaf Schulz 2011-2020
@@ -50,19 +51,19 @@ Hinweise
 	In der Konfigurationsdatei können unter anderem folgende Einstellungen vorgenommen
 	werden:
 
-	- Tastaturbelegung (layout_type): NEO2, ADNW oder KOY
+	- Tastaturbelegung (layout_type): NEO2, ADNW, KOY, NEOQWERTZ oder NEOQWERTY
 	- Breite des Fensters: Mit „width“ können Sie die exakte Breite einstellen und 
-    mit „max_width“ und „min_width“ die relative Breite in Bezug auf 
-    die derzeitige Auflösung.
+   mit „max_width“ und „min_width“ die relative Breite in Bezug auf 
+   die derzeitige Auflösung.
 	- Anzeige des Numblocks und der Funktionstasten.
 	- Tastenkürzel für Anzeige und Bewegung des Fensters. Möchten Sie die Tasten-
-		kombination nicht nutzen, löschen Sie den Text hinter dem Gleichheitszeichen.
-		In den Standardeinstellungen kann das Programmfenster mittels Strg+Alt+N an
-		acht verschiedene Positionen verschoben werden. Soll nur eine Teilmenge dieser
-		Positionen genutzt werden, kann „position_cycle“ angepasst werden.
-		Der Wert X∈{1,…,9} ist entsprechend der Position auf dem Numblocks zu interpretieren.
-		Beim Druck der Tastenkombination springt das Fenster von Position X zu 
-    position_cycle[X].
+  	kombination nicht nutzen, löschen Sie den Text hinter dem Gleichheitszeichen.
+  	In den Standardeinstellungen kann das Programmfenster mittels Strg+Alt+N an
+	  acht verschiedene Positionen verschoben werden. Soll nur eine Teilmenge dieser
+		 Positionen genutzt werden, kann „position_cycle“ angepasst werden.
+		 Der Wert X∈{1,…,9} ist entsprechend der Position auf dem Numblocks zu interpretieren.
+		 Beim Druck der Tastenkombination springt das Fenster von Position X zu 
+   position_cycle[X].
 
 * Das Programm kann auch als virtuelle Tastatur genutzt werden. Damit die Eingabe
   das richtige Fenster erreicht, muss in der Konfigurationsdatei
@@ -74,18 +75,30 @@ Hinweise
   indem Sie die Variable ICON anpassen.
 
 * Bei Verwendung eines Programmstarters muss dieser noch auf das gewünschte Layout
-  angepasst werden und dann unter '/usr/share/applications',
-  '/usr/local/share/applications' oder '~/.local/share/applications' 
-  eingefügt werden.
+  angepasst werden und dann unter '/usr/share/applications' bzw.
+  '/usr/local/share/applications' eingefügt werden.
   Für automatisches Einblenden beim Anmelden kann der Programmstarter zusätzlich
   nach /home/<user>/.config/autostart kopiert werden.
+
+* Auch für langjährige Qwertz bzw. Qwerty Schreiber können die zusätzlichen
+  Ebenen 3 (Programmierebene), 4 (Nummern + Curserblock), 
+  5 (kleine griechische Buchstaben) und 6 (große griechische Buchstaben und mathematische Symbole)
+  Zeit sparen und das Tastaturschreiben durch zentraler liegende Sonderzeichen erheblich aufwerten.
+  
+* Unter Linux Mint sind auch die weniger häufige Tastaturbelegungen Neo-Quertz bzw Neo-Querty
+  vorinstalliert unter anderen Distributionen können sie manuell eingebunden werden.
+  https://github.com/4nd1m4n/LinuxNeoQwertzXKB
 
 ______________________________________________________________________
 
 ¹NEO ist eine Tastaturbelegung, welche für die deutsche Sprache optimiert ist.
+²Neo-Qwertz und Neo-Qwerty stellen eine Kreuzung aus NEO und Qwertz bzw. Qwerty
+ Tastaturbelegung dar und sind vorwiegend für Umsteiger gedacht.
 
 Die offizielle Seiten der Projekte:
 Neo-Layout:     https://neo-layout.org/
 ADNW-Layout:    http://www.adnw.de/
 KOY-Layout:     http://www.adnw.de/index.php?n=Main.SeitlicheNachbaranschl%c3%a4ge
+Neo-Qwertz:     https://github.com/4nd1m4n/LinuxNeoQwertzXKB
+
 

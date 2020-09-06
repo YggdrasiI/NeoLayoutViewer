@@ -117,12 +117,12 @@ namespace NeoLayoutViewer{
 				if (separator != null) {
 					string[] str_xy = separator.split(opt_pos.get_string());
 					int new_x = 0; int new_y = 0;
-					if (int.try_parse(str_xy[0], out new_x) &&
+/*					if (int.try_parse(str_xy[0], out new_x) &&
 							int.try_parse(str_xy[1], out new_y) ) {
 						// TODO: Maybe the ints should get a boundary check.
 						debug(@"Move window to ($(new_x), $(new_y))");
 						this.neo_win.move(new_x, new_y);
-					}
+					}*/
 				}
 				show_handled = true;
 			}
