@@ -176,7 +176,8 @@ namespace NeoLayoutViewer {
 			try {
 				//var space = new Regex(" ");
 				//string[] split = space.split(this.config.get("position_cycle"));
-				var non_numeral = new Regex("[^0-9]+");
+//				var non_numeral = new Regex("[^0-9]+");
+				var non_numeral = new GLib.Regex("[^0-9]+");
 				string[] split = non_numeral.split(this.config.get("position_cycle"));
 
 				/* Create array which can hold the parsed integers, but also some
@@ -210,7 +211,7 @@ namespace NeoLayoutViewer {
 				}
 			} catch (PositionArrayParsingError e) {
 				fill_position_cycle_default(ref position_cycle);
-			} catch (RegexError e) {
+			} catch (GLib.RegexError e) {
 				fill_position_cycle_default(ref position_cycle);
 			}
 
@@ -558,6 +559,16 @@ namespace NeoLayoutViewer {
 						bildpfad = @"$(config.get("asset_folder"))/koy/tastatur_koy_Ebene$(layer).png";
 						break;
 					}
+			  case "NEOQWERTZ":
+					{
+						bildpfad = @"$(config.get("asset_folder"))/neoqwertz/tastatur_neoqwertz_Ebene$(layer).png";
+						break;
+					}
+  			case "NEOQWERTY":
+					{
+						bildpfad = @"$(config.get("asset_folder"))/neoqwerty/tastatur_neoqwerty_Ebene$(layer).png";
+						break;
+					}
 				case "NEO2":
 				default:
 					{
@@ -565,7 +576,7 @@ namespace NeoLayoutViewer {
 						break;
 					}
 			}
-			return open_image_str(bildpfad);
+      return open_image_str(bildpfad);
 		}
 
 		public Gdk.Pixbuf open_image_str (string bildpfad) {
@@ -586,6 +597,14 @@ namespace NeoLayoutViewer {
 				case "KOY":
 					{
 						return "KOY-Icon";
+					}
+				case "NEOQWERTZ":
+					{
+						return "NeoQwertz-Icon";
+					}
+				case "NEOQWERTY":
+					{
+						return "NeoQwerty-Icon";
 					}
 				case "NEO2":
 				default:

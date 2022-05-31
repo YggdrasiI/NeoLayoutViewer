@@ -15,5 +15,9 @@ Aufruf-Beispiele:
 SVG-Quelle:
   https://github.com/neo-layout/neo-layout/tree/master/grafik/tastatur3d
 
-  Achtung, diese alte Datei muss sie erst mit Inkskape neu speichern, 
+  Neue Layouts sollten für eine einheitlichere Darstellung auf Grundlage der
+  mit dem Neolayoutviewer mitgelieferten Tastatur_<Bez.>_alle_Ebenen.svg
+  erstellt werden.
+
+  Achtung, diese alte Datei müssen Sie erst mit Inkskape neu speichern, 
   bevor sie von ImageMagick verarbeitet werden kann.

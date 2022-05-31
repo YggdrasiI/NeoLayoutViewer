@@ -3,3 +3,50 @@ Die automatische Erzeugung der Ebenen hat noch ihre Tücken…
 Die Zeichen sind nicht immer konsistent platziert/skaliert,
 was zu nervigen Wacklern beim Wechseln der Ebene führt
 Außerdem sind einige Zeichen merkwürdig platziert.
+
+Liegt vermutlich an inkonsistent platzierten Zeichen 
+im original Tastatur_neo_alle_Ebenen.svg
+<<<<<<< HEAD
+Platzierung verbessert in Tastatur_NEO2_alle_Ebenen.svg durch Jonathan Vetter
+
+• Neues Problem:
+Alle auf Neo2 besierenden Tastaturbelegungen (Neo2, ADNW, KOY, QUERTZ) haben vier unterschiedliche Belegungen
+bei den ersten zwei Ebenen bei aktiviertem und deaktiviertem Caps Lock, es wurde jedoch angenommen, dass zwei davon redundant seien.
+
+reales Schema:
+1. Ebene:             1 a
+1. Ebene Caps Lock:   1 A
+2. Ebene:             ° A
+2. Ebene Caps Lock:   ° a
+
+Dass die Layer-Paare 
+  1. Ebene = 2. Ebene Caps Lock
+  2. Ebene = 1. Ebene Caps Lock
+identisch sind, trifft zwar auf die Buchstabenebene zu, 
+bei der Zahlenebene stimmt dies jedoch nicht, da in dem Fall
+  1. Ebene = 1. Ebene Caps Lock
+  2. Ebene = 2. Ebene Caps Lock
+gilt.
+
+Durch eine in "key-overlay.vala" in Zeile 844 beschriebene Änderung, werden somit Caps Lock Meta-Ebenen durch angeblich redundante Layer ersetzt.
+Folglich entstehenden Ebenen, bei denen die Belegung der Zahlen und Sonderzeichen in der B-Reihe auf der Tastatur nicht mit der Belegung in X11 übereinstimmen.
+Die in einer vorherigen Version des Neo Layout Viewers noch vorhandenen Acht Ebenen (zumindest die extra Grafiken für Caps-Lock-Ebenen) würden somit das Problem beseitigen.
+Außerdem ist die Permutation der Layer 4 und 5 etwas verwirrend, eine Verbesserung bedeutet jedoch vermutlich einen erheblichen Kopieraufwand).
+
+		public double unscaled_width;
+		public double unscaled_height;
+
+		/*
+			 Die Reihenfolge der Zeichen in keysyms passt nicht
+			 zur Nummerierung der Ebenen in winMain. Mit diesem Array
+			 wird der Wert permutiert.
+			 Achtung, mittlerweile ist es die Identitätsabbildung, da die zwei
+			 redundanten Layer, die durch Caps-Lock entstehen, entfernt wurden.
+		 */
+		private const short[] layer_permutation = {0, 1, 2, 3, 5, 4, 6};
+
+• Um doppelte Grafiken einzusparen wäre es zudem denkbar die Grafik-Dateien "tastatur_<Sondertaste>_<richtung>2.png direkt in den Ordner "assets" zu verschieben.
+=======
+
+Platzierung verbessert in Tastatur_NEO2_alle_Ebenen.svg durch Jonathan Vetter
+>>>>>>> d297ee6e62cea94fbee2b5d84bd2344d85f14a3b
