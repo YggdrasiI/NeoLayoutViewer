@@ -138,7 +138,7 @@ namespace NeoLayoutViewer {
 				}*/
 
 				// Disable X11 error trap
-				x11_display.error_trap_pop();
+				x11_display.error_trap_pop_ignored();
 			} else {
 				print("Current display is no X11-Display.\n");
 			}
