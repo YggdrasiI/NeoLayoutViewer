@@ -174,9 +174,9 @@ namespace NeoLayoutViewer {
 
 			//Anlegen des Arrays, welches den Positionsdurchlauf beschreibt.
 			try {
-				//var space = new Regex(" ");
+				//var space = new GLib.Regex(" ");
 				//string[] split = space.split(this.config.get("position_cycle"));
-				var non_numeral = new Regex("[^0-9]+");
+				var non_numeral = new GLib.Regex("[^0-9]+");
 				string[] split = non_numeral.split(this.config.get("position_cycle"));
 
 				/* Create array which can hold the parsed integers, but also some
@@ -210,7 +210,7 @@ namespace NeoLayoutViewer {
 				}
 			} catch (PositionArrayParsingError e) {
 				fill_position_cycle_default(ref position_cycle);
-			} catch (RegexError e) {
+			} catch (GLib.RegexError e) {
 				fill_position_cycle_default(ref position_cycle);
 			}
 

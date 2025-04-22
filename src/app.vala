@@ -108,10 +108,10 @@ namespace NeoLayoutViewer{
 				show_handled = true;
 			}else if( opt_pos != null ){
 				debug("Not implemented");
-				Regex separator = null;
+				GLib.Regex separator = null;
 				try {
-					separator = new Regex(",");
-				} catch (RegexError e) {
+					separator = new GLib.Regex(",");
+				} catch (GLib.RegexError e) {
 					error("Hm, regex compiling failed.");
 				}
 				if (separator != null) {
