@@ -2,7 +2,7 @@
 /* keysend.c
  * Copyright (C) 2008 Alex Graveley
  * Copyright (C) 2010 Ulrik Sverdrup <ulrik.sverdrup@gmail.com>
- * Copyright (C) 2011 Olaf Schulz <schulz@math.hu-berlin.de> (modified bind.c)
+ * Copyright (C) 2011,2025 Olaf Schulz <947069+YggdrasiI@users.noreply.github.com> (modified bind.c)
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -60,10 +60,11 @@
  * given group (keyboard layout) and level ("shift level").
  */
 static GdkModifierType
-FinallyGetModifiersForKeycode (XkbDescPtr xkb,
-                               KeyCode    key,
-                               uint     group,
-                               uint     level)
+FinallyGetModifiersForKeycode (
+		XkbDescPtr xkb,
+		KeyCode    key,
+		uint     group,
+		uint     level)
 {
 	int nKeyGroups;
 	int effectiveGroup;
@@ -99,7 +100,7 @@ FinallyGetModifiersForKeycode (XkbDescPtr xkb,
 		if (type->map[k].active && type->map[k].level == level) {
 			if (type->preserve) {
 				return (type->map[k].mods.mask &
-				        ~type->preserve[k].mask);
+						~type->preserve[k].mask);
 			} else {
 				return type->map[k].mods.mask;
 			}
@@ -109,12 +110,11 @@ FinallyGetModifiersForKeycode (XkbDescPtr xkb,
 }
 
 
-//++++++++++++++++++++++++++++++ Olaf
-
-static KeyMod 
-getKeyModCodes (GdkWindow *rootwin,
-             uint       keyval,
-             int       modifiers)
+	static KeyMod
+getKeyModCodes (
+		GdkWindow *rootwin,
+		uint       keyval,
+		int       modifiers)
 {
 	int k;
 	GdkKeymap *map;
@@ -122,18 +122,19 @@ getKeyModCodes (GdkWindow *rootwin,
 	gint n_keys;
 	GdkModifierType add_modifiers;
 	XkbDescPtr xmap;
-//	gboolean success = FALSE;
+	// gboolean success = FALSE;
 	KeyMod keymod;
 
 	xmap = XkbGetMap(GDK_WINDOW_XDISPLAY(rootwin),
-	                 XkbAllClientInfoMask,
-	                 XkbUseCoreKbd);
+			XkbAllClientInfoMask,
+			XkbUseCoreKbd);
 
-	map = gdk_keymap_get_default();
+	GdkDisplay *gdk_display = gdk_window_get_display(rootwin);
+	map = gdk_keymap_get_for_display(gdk_display);
 	gdk_keymap_get_entries_for_keyval(map, keyval, &keys, &n_keys);
 
 	if (n_keys == 0){
-//		return FALSE;
+		// return FALSE;
 		keymod.keyval = -1;
 		keymod.modifiers = 0;
 		return keymod;
@@ -149,21 +150,21 @@ getKeyModCodes (GdkWindow *rootwin,
 		}
 
 		add_modifiers = FinallyGetModifiersForKeycode(xmap,
-		                                              keys[k].keycode,
-		                                              keys[k].group,
-		                                              keys[k].level);
+				keys[k].keycode,
+				keys[k].group,
+				keys[k].level);
 
 		if (add_modifiers == MODIFIERS_ERROR) {
 			continue;
 		}
-//		TRACE (g_print("grab/ungrab keycode: %d, lev: %d, grp: %d, ", keys[k].keycode, keys[k].level, keys[k].group));
-//		TRACE (g_print("modifiers: 0x%x (consumed: 0x%x)\n", add_modifiers | modifiers, add_modifiers));
-// zu wählen ist 'add_modifiers | modifiers'
-			keymod.keyval = keys[k].keycode;
-			keymod.modifiers = add_modifiers | modifiers;
+		//		TRACE (g_print("grab/ungrab keycode: %d, lev: %d, grp: %d, ", keys[k].keycode, keys[k].level, keys[k].group));
+		//		TRACE (g_print("modifiers: 0x%x (consumed: 0x%x)\n", add_modifiers | modifiers, add_modifiers));
+		// zu wählen ist 'add_modifiers | modifiers'
+		keymod.keyval = keys[k].keycode;
+		keymod.modifiers = add_modifiers | modifiers;
 
-			//printf(" Foo %u %u\n", keymod.keyval, keymod.modifiers);
-			break;
+		//printf(" Foo %u %u\n", keymod.keyval, keymod.modifiers);
+		break;
 	}
 
 	g_free(keys);
@@ -176,63 +177,63 @@ getKeyModCodes (GdkWindow *rootwin,
 
 // Function to create a keyboard event
 static XKeyEvent createKeyEvent(Display *display, Window win,
-                           Window winRoot, int press,
-                           int keycode, int modifiers)
+		Window winRoot, int press,
+		int keycode, int modifiers)
 {
-   XKeyEvent event;
+	XKeyEvent event;
 
-   event.display     = display;
-   event.window      = win;
-   event.root        = winRoot;
-   event.subwindow   = None;
-   event.time        = CurrentTime;
-   event.x           = 1;
-   event.y           = 1;
-   event.x_root      = 1;
-   event.y_root      = 1;
-   event.same_screen = True;
-   event.keycode     = keycode;
-   event.state       = modifiers;
+	event.display     = display;
+	event.window      = win;
+	event.root        = winRoot;
+	event.subwindow   = None;
+	event.time        = CurrentTime;
+	event.x           = 1;
+	event.y           = 1;
+	event.x_root      = 1;
+	event.y_root      = 1;
+	event.same_screen = True;
+	event.keycode     = keycode;
+	event.state       = modifiers;
 
-   if(press)
-      event.type = KeyPress;
-   else
-      event.type = KeyRelease;
+	if(press)
+		event.type = KeyPress;
+	else
+		event.type = KeyRelease;
 
-      //test, bringen keine Verschlechterung...
-//event.send_event=true;
-//event.serial = 0;
+	//test, bringen keine Verschlechterung...
+	//event.send_event=true;
+	//event.serial = 0;
 
-   return event;
+	return event;
 }
 
 int
 keysend(uint keysym, int modifiers){
 
-//int keysym;
-KeyMod keymod;
+	//int keysym;
+	KeyMod keymod;
 
-// Obtain the X11 display.
-   Display *display = XOpenDisplay(0);
-   if(display == NULL)
-      return -1;
+	// Obtain the X11 display.
+	Display *display = XOpenDisplay(0);
+	if(display == NULL)
+		return -1;
 
-//von bind.c
-//  gdk_init (&argc, &argv);//call this in main routine
-  GdkWindow *rootwin = gdk_get_default_root_window ();
+	//von bind.c
+	//  gdk_init (&argc, &argv);//call this in main routine
+	GdkWindow *rootwin = gdk_get_default_root_window ();
 
-// Get the root window for the current display.
-   Window winRoot = XDefaultRootWindow(display);
+	// Get the root window for the current display.
+	Window winRoot = XDefaultRootWindow(display);
 
-// Find the window which has the current keyboard focus.
-   Window winFocus;
-   int    revert;
-   XGetInputFocus(display, &winFocus, &revert);
+	// Find the window which has the current keyboard focus.
+	Window winFocus;
+	int revert;
+	XGetInputFocus(display, &winFocus, &revert);
 
 	keymod = getKeyModCodes(rootwin, keysym, modifiers);
-	
+
 	/* Bugfix?!
-	 * for the first layer (=no modifier is pressed) the above fuction 
+	 * for the first layer (=no modifier is pressed) the above fuction
 	 * returns 33 for the modifier, if the neo layer is activated.
 	 * This will be corrected to 0.
 	 *
@@ -270,62 +271,62 @@ KeyMod keymod;
 
 int keysend2(uint keysym, uint modsym1, uint modsym2) {
 
-KeyMod keymod;
+	KeyMod keymod;
 
-// Obtain the X11 display.
-   Display *display = XOpenDisplay(0);
-   if(display == NULL)
-      return -1;
+	// Obtain the X11 display.
+	Display *display = XOpenDisplay(0);
+	if(display == NULL)
+		return -1;
 
-//von bind.c
-//  gdk_init (&argc, &argv);//call this in main routine
-  GdkWindow *rootwin = gdk_get_default_root_window ();
+	//von bind.c
+	//  gdk_init (&argc, &argv);//call this in main routine
+	GdkWindow *rootwin = gdk_get_default_root_window ();
 
-// Get the root window for the current display.
-   Window winRoot = XDefaultRootWindow(display);
+	// Get the root window for the current display.
+	Window winRoot = XDefaultRootWindow(display);
 
-// Find the window which has the current keyboard focus.
-   Window winFocus;
-   int    revert;
-   XGetInputFocus(display, &winFocus, &revert);
+	// Find the window which has the current keyboard focus.
+	Window winFocus;
+	int    revert;
+	XGetInputFocus(display, &winFocus, &revert);
 
-	 int xkeycode = -1;
-	 int xmodcode1 = -1;
-	 int xmodcode2 = -1;
-	 XKeyEvent event;
+	int xkeycode = -1;
+	int xmodcode1 = -1;
+	int xmodcode2 = -1;
+	XKeyEvent event;
 
-	 xkeycode = XKeysymToKeycode(display, keysym);
+	xkeycode = XKeysymToKeycode(display, keysym);
 
-	 if( modsym2 != 0 ){
-		 xmodcode2 = XKeysymToKeycode(display, modsym2);
-  	 event = createKeyEvent(display, winFocus, winRoot, True, xmodcode2, 0);
-	   XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent *)&event);
-	 }
-	 if( modsym1 != 0 ){
-		 xmodcode1 = XKeysymToKeycode(display, modsym1);
-  	 event = createKeyEvent(display, winFocus, winRoot, True, xmodcode1, 0);
-	   XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent *)&event);
-	 }
+	if( modsym2 != 0 ){
+		xmodcode2 = XKeysymToKeycode(display, modsym2);
+		event = createKeyEvent(display, winFocus, winRoot, True, xmodcode2, 0);
+		XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent *)&event);
+	}
+	if( modsym1 != 0 ){
+		xmodcode1 = XKeysymToKeycode(display, modsym1);
+		event = createKeyEvent(display, winFocus, winRoot, True, xmodcode1, 0);
+		XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent *)&event);
+	}
 
-	 // Send a fake key press event to the window.
-   event = createKeyEvent(display, winFocus, winRoot, True, xkeycode, 0);
-   XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent *)&event);
+	// Send a fake key press event to the window.
+	event = createKeyEvent(display, winFocus, winRoot, True, xkeycode, 0);
+	XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent *)&event);
 
-	 // Send a fake key release event to the window.
-   event = createKeyEvent(display, winFocus, winRoot, False, xkeycode, 0);
-   XSendEvent(event.display, event.window, True, KeyReleaseMask, (XEvent *)&event);
+	// Send a fake key release event to the window.
+	event = createKeyEvent(display, winFocus, winRoot, False, xkeycode, 0);
+	XSendEvent(event.display, event.window, True, KeyReleaseMask, (XEvent *)&event);
 
-	 if( modsym1 != 0 ){
-   	 event = createKeyEvent(display, winFocus, winRoot, False, xmodcode1, 0);
-	   XSendEvent(event.display, event.window, True, KeyReleaseMask, (XEvent *)&event);
-	 }
-	 if( modsym2 != 0 ){
-   	 event = createKeyEvent(display, winFocus, winRoot, False, xmodcode2, 0);
-	   XSendEvent(event.display, event.window, True, KeyReleaseMask, (XEvent *)&event);
-	 }
+	if( modsym1 != 0 ){
+		event = createKeyEvent(display, winFocus, winRoot, False, xmodcode1, 0);
+		XSendEvent(event.display, event.window, True, KeyReleaseMask, (XEvent *)&event);
+	}
+	if( modsym2 != 0 ){
+		event = createKeyEvent(display, winFocus, winRoot, False, xmodcode2, 0);
+		XSendEvent(event.display, event.window, True, KeyReleaseMask, (XEvent *)&event);
+	}
 
 	// Done.
-   XCloseDisplay(display);
-   return 0;
+	XCloseDisplay(display);
+	return 0;
 }
 
