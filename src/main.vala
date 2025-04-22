@@ -190,7 +190,10 @@ namespace NeoLayoutViewer{
 			if (file.query_exists(null)) return p;
 		}
 
-		foreach (var s in GLib.Environment.get_system_data_dirs()) {
+		//foreach (var s in GLib.Environment.get_system_data_dirs())
+		string[] tmp = GLib.Environment.get_system_data_dirs().copy();
+		foreach (var s in tmp)
+		{
 			var env_path = @"$(s)/NeoLayoutViewer/assets";
 			debug(@"Search assets in $(env_path)\n");
 			var file2 = File.new_for_path (env_path+filename);

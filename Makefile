@@ -23,8 +23,25 @@ PACKAGE_NAME = neo-layout-viewer
 GIT_COMMIT_VERSION=$(shell git log --oneline --max-count=1 | head --bytes=7)
 ENV_FILE = .build_env
 
+# valac preprocessor does not support conditionals like '==' in #if-#else-#endif-sections
+# If you need to enable old code sections (e.g. because you use an old gtk/vala version you has
+# to enable it here manually :-(
+
+#Gdk.Screen.get_width' has been deprecated since 3.22
+#Gdk.Screen.get_height' has been deprecated since 3.22
+#Gdk.Screen.get_n_monitors' has been deprecated since 3.22
+#Gdk.Screen.get_monitor_geometry' has been deprecated since 3.22
+#OLD_CODE_DEFINES += -D BELOW_GTK3_22
+
+#OLD_CODE_DEFINES += -D _OLD_GTK_STOCK  # Old gtk-versions (<3.16) do not define `gtk_label_set_xalign`
+
+# To avoid many warnings of this type:
+# /usr/include/glib-2.0/glib/gatomic.h:131:5: warning: argument 2 of '__atomic_load' discards 'volatile' qualifier [-Wdiscarded-qualifiers]
+#  [...]     __atomic_load (gapg_temp_atomic, &gapg_temp_newval, __ATOMIC_SEQ_CST);
+OLD_CODE_DEFINES += -X -Wno-discarded-qualifiers
+
 # compiler options for a debug build
-#VALAC_DEBUG_OPTS = -g --save-temps
+#VALAC_DEBUG_OPTS = -g --save-temps $(OLD_CODE_DEFINES)
 VALAC_DEBUG_OPTS = -g
 # compiler options for a release build.
 # Note that some cc-warnings can not resolved. Use '-X -w' to hide them.
@@ -78,8 +95,7 @@ PKG_CONFIG_PATH=$(shell pwd)/win/lib/pkgconfig
 #PKG_CONFIG_PATH=${HOME}/software/gtk/gtk+-3.10_win64/lib/pkgconfig
 GCC_WIN = x86_64-w64-mingw32-gcc
 GCC_WIN_FLAGS = -mwindows $(shell PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)" pkg-config --cflags --libs gtk+-3.0 gee-$(GEEVERSION))
-VALAC_RELEASE_OPTS += -D _OLD_GTK_STOCK  # Old gtk-versions (<3.16) do not define `gtk_label_set_xalign`
-VALAC_DEBUG_OPTS += -D _OLD_GTK_STOCK
+OLD_CODE_DEFINES += -D _OLD_GTK_STOCK  # Old gtk-versions (<3.16) do not define `gtk_label_set_xalign`
 endif
 
 
@@ -196,14 +212,14 @@ src/version.vala: Makefile gen_version
 		(mkdir -p "$(TMPDIR)")
 
 build_debug: $(SRC) "$(BINDIR)"
-	$(VALAC) $(VAPIDIR) $(VALAC_DEBUG_OPTS) $(SRC) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" $(PKGS) $(CC_INCLUDES)
+	$(VALAC) $(VAPIDIR) $(VALAC_DEBUG_OPTS) $(OLD_CODE_DEFINES) $(SRC) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" $(PKGS) $(CC_INCLUDES)
 
 build_release: $(SRC) "$(BINDIR)"
-	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" $(PKGS) $(CC_INCLUDES)
+	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(OLD_CODE_DEFINES) $(SRC) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" $(PKGS) $(CC_INCLUDES)
 
 # Two staged compiling
 build_release2: $(SRC) "$(BINDIR)"
-	$(VALAC) --ccode $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) $(PKGS) $(CC_INCLUDES)
+	$(VALAC) --ccode $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(OLD_CODE_DEFINES) $(SRC) $(PKGS) $(CC_INCLUDES)
 	gcc $(SRC:.vala=.c) $(CC_INCLUDES) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" \
 		`pkg-config --cflags --libs gtk+-3.0 gee-$(GEEVERSION)`
 
@@ -285,14 +301,14 @@ dist: src-package dist-package deb-packages
 
 # Building under MingW
 build_win: $(SRC)
-	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" $(PKGS) $(CC_INCLUDES)
+	$(VALAC) $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(OLD_CODE_DEFINES) $(SRC) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" $(PKGS) $(CC_INCLUDES)
 
 # Cross compiling under Debian/Ubuntu
 build_cross_win: bin/libgtk-3-0.dll
 	test "$(WIN)" = "1" || (echo "Call this target with WIN=1" && exit 1)
 	echo "Flags: $(GCC_WIN_FLAGS)"
 	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)" \
-									$(VALAC) --ccode $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(SRC) $(PKGS) $(CC_INCLUDES)
+									$(VALAC) --ccode $(VAPIDIR) $(VALAC_RELEASE_OPTS) $(OLD_CODE_DEFINES) $(SRC) $(PKGS) $(CC_INCLUDES)
 	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH), \
 									$(GCC_WIN) $(SRC:.vala=.c) -o "$(BINDIR)/$(BINNAME)$(BINEXT)" $(GCC_WIN_FLAGS)
 

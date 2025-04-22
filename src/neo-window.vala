@@ -365,12 +365,12 @@ namespace NeoLayoutViewer {
 
 			var display = Gdk.Display.get_default();
 			//var screen = Gdk.Screen.get_default();
+
+#if BELOW_GTK3_22
+			// Old variant for ubuntu 16.04 (Glib version < 3.22)
 			var screen = display.get_default_screen();
 			//var screen = this.get_screen();
 			//var monitor = display.get_monitor_at_window(screen.get_active_window());
-
-#if GTK_MAJOR_VERSION == 2 || GTK_MINOR_VERSION == 18 || GTK_MINOR_VERSION == 19 || GTK_MINOR_VERSION == 20 || GTK_MINOR_VERSION == 21
-			// Old variant for ubuntu 16.04 (Glib version < 3.22)
 			var n_monitors = screen.get_n_monitors();
 #else
 			var n_monitors = display.get_n_monitors(); // Könnte n_1+n_2+…n_k sein mit k Screens?!
@@ -418,8 +418,13 @@ namespace NeoLayoutViewer {
 			// Get the position within the monitor
 			int pos_on_screen = pos % 10;
 
+#if BELOW_GTK3_22
 			Gdk.Rectangle monitor_rect_dest;
 			screen.get_monitor_geometry(monitor_index, out monitor_rect_dest);
+#else
+			unowned Gdk.Monitor monitor = display.get_monitor(monitor_index);
+			Gdk.Rectangle monitor_rect_dest = monitor.get_geometry();
+#endif
 
 			debug(@"Monitor($(monitor_index)) values: x=$(monitor_rect_dest.x), " +
 					@"y=$(monitor_rect_dest.y), w=$(monitor_rect_dest.width), h=$(monitor_rect_dest.height)\n");
@@ -799,8 +804,8 @@ namespace NeoLayoutViewer {
 			if (this.screen_dim_auto[0]) {
 				//Re-evaluate
 
-#if GTK_MINOR_VERSION == 18 || GTK_MINOR_VERSION == 19 || GTK_MINOR_VERSION == 20 || GTK_MINOR_VERSION == 21
-				// Old variant for ubuntu 16.04 ( '<' check not defined in vala preprozessor :-()
+#if BELOW_GTK3_22
+				// Old variant for ubuntu 16.04
 				var display = Gdk.Display.get_default();
 				var screen = display.get_default_screen();
 				//Gdk.Rectangle geometry = {0, 0, screen.get_width(), screen.get_height()};
@@ -842,8 +847,8 @@ namespace NeoLayoutViewer {
 			if (this.screen_dim_auto[1]) {
 				//Re-evaluate
 
-#if GTK_MINOR_VERSION == 18 || GTK_MINOR_VERSION == 19 || GTK_MINOR_VERSION == 20 || GTK_MINOR_VERSION == 21
-				// Old variant for ubuntu 16.04 ( '<' check not defined in vala preprozessor :-()
+#if BELOW_GTK3_22
+				// Old variant for ubuntu 16.04
 				var display = Gdk.Display.get_default();
 				var screen = display.get_default_screen();
 				//Gdk.Rectangle geometry = {0, 0, screen.get_width(), screen.get_height()};
