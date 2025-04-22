@@ -739,20 +739,33 @@ namespace NeoLayoutViewer {
 				y += height;
 			}
 
-			// TODO
 			if (this.color_event_boxes && cell.get_children().length() == 0) {
+				// Use label as coloured box
 				Label l = new Label(""); // do not use non-empty string
 				l.show();
-
 				cell.add(l);
 
+				// Define background color
 				Gdk.RGBA color = Gdk.RGBA();
 				color.parse("#ebccd1");
 				color.blue = (double) ((keycode*232437)%230)/255.0;
 				color.red = (double) ((keycode*12393)%230)/255.0;
 				color.green = (double) ((keycode*58283)%230)/255.0;
 				color.alpha = 0.5;
-				l.override_background_color(Gtk.StateFlags.NORMAL, color);
+
+				// Deprecated
+				// l.override_background_color(Gtk.StateFlags.NORMAL, color);
+				// Add background color by CSS provider
+				Gtk.StyleContext context = l.get_style_context();
+				Gtk.CssProvider provider = new Gtk.CssProvider();
+				try {
+					provider.load_from_data(@"label { background-color: $(color)}");
+					//provider.load_from_path ("xyz.css");
+				}
+				catch (Error e){
+					GLib.error("%s", e.message);
+				}
+				context.add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
 			}
 
 		}

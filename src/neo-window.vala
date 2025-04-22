@@ -316,7 +316,7 @@ namespace NeoLayoutViewer {
 
 		}
 
-		public /* override */ void move(int x, int y){
+		public new void move(int x, int y){
 			this.position_on_hide_x = x;
 			this.position_on_hide_y = y;
 			base.move(x,y);

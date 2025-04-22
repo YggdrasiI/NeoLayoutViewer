@@ -102,32 +102,59 @@ namespace NeoLayoutViewer {
 			// convert accelerator
 			uint keysym;
 			Gdk.ModifierType modifiers;
-			Gtk.accelerator_parse(accelerator, out keysym, out modifiers);
+			Gtk.accelerator_parse(accelerator, out keysym, out modifiers); // out variables both zero if parsing failes.
+			int keycode = 0;
 
-			unowned X.Display display = Gdk.X11.get_default_xdisplay();
-			int keycode = display.keysym_to_keycode(keysym);
+			// trap XErrors to avoid closing of application
+			// even when grabing of key fails
+			//Gdk.error_trap_push();
 
-			if (keycode != 0) {
-				X.Window root_window = Gdk.X11.get_default_root_xwindow();
+			Gdk.Display display = Gdk.Display.get_default();
+			if (display is Gdk.X11.Display) {
+				Gdk.X11.Display x11_display = display as Gdk.X11.Display;
 
-				// trap XErrors to avoid closing of application
-				// even when grabing of key fails
-				Gdk.error_trap_push();
+				// Enable X11 error trap:
+				x11_display.error_trap_push();
 
-				// grab key finally
-				// also grab all keys which are combined with a lock key such NumLock
-				foreach (uint lock_modifier in lock_modifiers) {
-					display.grab_key(keycode, modifiers|lock_modifier, root_window, false, X.GrabMode.Async, X.GrabMode.Async);
-				}
+				// Valac marks this try-catch as non-required
+				//try { // Save X11 calls
 
-				// wait until all X request have been processed
-				Gdk.flush();
+					unowned X.Display xdisplay = Gdk.X11.get_default_xdisplay(); // != x11_display variable...
+					keycode = xdisplay.keysym_to_keycode(keysym);
 
-				// store binding
+					if (keycode != 0) {
+						X.Window root_window = Gdk.X11.get_default_root_xwindow();
+
+						// grab key and
+						// also grab all keys which are combined with a lock key such NumLock
+						foreach (uint lock_modifier in lock_modifiers) {
+							xdisplay.grab_key(keycode, modifiers|lock_modifier, root_window, false, X.GrabMode.Async, X.GrabMode.Async);
+						}
+					} else {
+						print("Can not convert keysym '%u' to keycode\n", keysym);
+					}
+				/*} catch (Error e) {
+					print("During key binding an error occoured: %s\n", e.message);
+				}*/
+
+				// Disable X11 error trap
+				x11_display.error_trap_pop();
+			} else {
+				print("Current display is no X11-Display.\n");
+			}
+
+			// Wait until all X request have been processed
+			//Gdk.flush();
+			display.flush(); // instead of deprecated Gdk.flush();
+
+			// Store binding
+			if (keycode != 0){
 				Keybinding binding = new Keybinding(accelerator, keycode, modifiers, handler);
 				bindings.add(binding);
 
-				debug("Successfully bound key " + accelerator);
+				debug("Successfully bound '%s'", accelerator);
+			}else{
+				print("Can not bind '%s'\n", accelerator);
 			}
 		}
 
