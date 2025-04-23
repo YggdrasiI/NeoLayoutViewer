@@ -41,8 +41,9 @@ ENV_FILE = .build_env
 OLD_CODE_DEFINES += -X -Wno-discarded-qualifiers
 
 # compiler options for a debug build
-#VALAC_DEBUG_OPTS = -g --save-temps $(OLD_CODE_DEFINES)
 VALAC_DEBUG_OPTS = -g
+VALAC_DEBUG_OPTS +=  --save-temps
+
 # compiler options for a release build.
 # Note that some cc-warnings can not resolved. Use '-X -w' to hide them.
 VALAC_RELEASE_OPTS = -X -O2 --disable-assert
@@ -176,6 +177,8 @@ last_build_env:
 
 # Clean release build, similar to 'BUILD_TYPE=release make all'
 release: clean build_release
+
+debug: clean build_debug
 
 info:
 	@/bin/echo -e " $(NL)"\
